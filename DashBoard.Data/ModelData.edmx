@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ModelData.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="custid" />
+          </Key>
+          <Property Name="custid" Type="int" Nullable="false" />
+          <Property Name="trdpwd" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="isactive" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="revs1" Type="varchar" MaxLength="32" />
+          <Property Name="ownerid" Type="int" Nullable="false" />
+          <Property Name="createdate" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="strategyorder">
+          <Key>
+            <PropertyRef Name="custid" />
+            <PropertyRef Name="ordersno" />
+            <PropertyRef Name="tradetype" />
+            <PropertyRef Name="orderdate" />
+            <PropertyRef Name="cancelflag" />
+          </Key>
+          <Property Name="custid" Type="int" Nullable="false" />
+          <Property Name="ordersno" Type="int" Nullable="false" />
+          <Property Name="tradetype" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="orderdate" Type="int" Nullable="false" />
+          <Property Name="strategyno" Type="int" Nullable="false" />
+          <Property Name="substrategyno" Type="int" Nullable="false" />
+          <Property Name="stparamid" Type="int" Nullable="false" />
+          <Property Name="sttradeno" Type="int" Nullable="false" />
+          <Property Name="opertime" Type="int" Nullable="false" />
+          <Property Name="orderid" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="fundid" Type="int" Nullable="false" />
+          <Property Name="market" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="marketacc" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="orderstatus" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="stkcode" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="bsflag" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="orderprice" Type="numeric" Precision="16" Scale="8" Nullable="false" />
+          <Property Name="orderqty" Type="int" Nullable="false" />
+          <Property Name="cancelflag" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="remark" Type="varchar" MaxLength="64" />
+          <Property Name="creditdigestid" Type="char" MaxLength="1" />
+          <Property Name="credittype" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="matchqty" Type="int" />
+          <Property Name="matchamt" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="strategytype" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="strategytrade">
+          <Key>
+            <PropertyRef Name="custid" />
+            <PropertyRef Name="ordersno" />
+            <PropertyRef Name="matchcode" />
+            <PropertyRef Name="tradetype" />
+            <PropertyRef Name="tradedate" />
+            <PropertyRef Name="matchtype" />
+          </Key>
+          <Property Name="custid" Type="int" Nullable="false" />
+          <Property Name="ordersno" Type="int" Nullable="false" />
+          <Property Name="matchcode" Type="int" Nullable="false" />
+          <Property Name="tradetype" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="tradedate" Type="int" Nullable="false" />
+          <Property Name="matchtype" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="sttradeno" Type="int" Nullable="false" />
+          <Property Name="tradetime" Type="int" Nullable="false" />
+          <Property Name="market" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="stkcode" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="matchqty" Type="int" Nullable="false" />
+          <Property Name="matchprice" Type="numeric" Precision="16" Scale="8" Nullable="false" />
+          <Property Name="matchamt" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+          <Property Name="strategyno" Type="int" Nullable="false" />
+          <Property Name="substrategyno" Type="int" Nullable="false" />
+          <Property Name="stparamid" Type="int" Nullable="false" />
+          <Property Name="secuid" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="bsflag" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="orderid" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="orderqty" Type="int" Nullable="false" />
+          <Property Name="orderprice" Type="numeric" Precision="16" Scale="8" Nullable="false" />
+          <Property Name="creditdigestid" Type="char" MaxLength="1" />
+          <Property Name="fundid" Type="int" Nullable="false" />
+        </EntityType>
+        <Function Name="sp_GetCustomer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Begindate" Type="int" Mode="In" />
+          <Parameter Name="Enddate" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="ModelDataStoreContainer">
+          <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="strategyorder" EntityType="Self.strategyorder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="strategytrade" EntityType="Self.strategytrade" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ModelData" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="ModelDataContainer" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+          <EntitySet Name="strategyorder" EntityType="ModelData.strategyorder" />
+          <EntitySet Name="strategytrade" EntityType="ModelData.strategytrade" />
+          <EntitySet Name="customer" EntityType="ModelData.customer" />
+          <FunctionImport Name="sp_GetCustomer" ReturnType="Collection(ModelData.GetCustomer)">
+            <Parameter Name="Begindate" Mode="In" Type="Int32" />
+            <Parameter Name="Enddate" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="strategyorder">
+          <Key>
+            <PropertyRef Name="custid" />
+            <PropertyRef Name="ordersno" />
+            <PropertyRef Name="tradetype" />
+            <PropertyRef Name="orderdate" />
+            <PropertyRef Name="cancelflag" />
+          </Key>
+          <Property Name="custid" Type="Int32" Nullable="false" />
+          <Property Name="ordersno" Type="Int32" Nullable="false" />
+          <Property Name="tradetype" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="orderdate" Type="Int32" Nullable="false" />
+          <Property Name="strategyno" Type="Int32" Nullable="false" />
+          <Property Name="substrategyno" Type="Int32" Nullable="false" />
+          <Property Name="stparamid" Type="Int32" Nullable="false" />
+          <Property Name="sttradeno" Type="Int32" Nullable="false" />
+          <Property Name="opertime" Type="Int32" Nullable="false" />
+          <Property Name="orderid" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="fundid" Type="Int32" Nullable="false" />
+          <Property Name="market" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="marketacc" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="orderstatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="stkcode" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="bsflag" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="orderprice" Type="Decimal" Nullable="false" Precision="16" Scale="8" />
+          <Property Name="orderqty" Type="Int32" Nullable="false" />
+          <Property Name="cancelflag" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="remark" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="creditdigestid" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="credittype" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="matchqty" Type="Int32" />
+          <Property Name="matchamt" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="strategytype" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="strategytrade">
+          <Key>
+            <PropertyRef Name="custid" />
+            <PropertyRef Name="ordersno" />
+            <PropertyRef Name="matchcode" />
+            <PropertyRef Name="tradetype" />
+            <PropertyRef Name="tradedate" />
+            <PropertyRef Name="matchtype" />
+          </Key>
+          <Property Name="custid" Type="Int32" Nullable="false" />
+          <Property Name="ordersno" Type="Int32" Nullable="false" />
+          <Property Name="matchcode" Type="Int32" Nullable="false" />
+          <Property Name="tradetype" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="tradedate" Type="Int32" Nullable="false" />
+          <Property Name="matchtype" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="sttradeno" Type="Int32" Nullable="false" />
+          <Property Name="tradetime" Type="Int32" Nullable="false" />
+          <Property Name="market" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="stkcode" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="matchqty" Type="Int32" Nullable="false" />
+          <Property Name="matchprice" Type="Decimal" Nullable="false" Precision="16" Scale="8" />
+          <Property Name="matchamt" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+          <Property Name="strategyno" Type="Int32" Nullable="false" />
+          <Property Name="substrategyno" Type="Int32" Nullable="false" />
+          <Property Name="stparamid" Type="Int32" Nullable="false" />
+          <Property Name="secuid" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="bsflag" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="orderid" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="orderqty" Type="Int32" Nullable="false" />
+          <Property Name="orderprice" Type="Decimal" Nullable="false" Precision="16" Scale="8" />
+          <Property Name="creditdigestid" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="fundid" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="custid" />
+          </Key>
+          <Property Name="custid" Type="Int32" Nullable="false" />
+          <Property Name="trdpwd" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="isactive" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="revs1" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ownerid" Type="Int32" Nullable="false" />
+          <Property Name="createdate" Type="Int32" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="GetCustomer" >
+          <Property Type="Int32" Name="allmonth" Nullable="false" />
+          <Property Type="Int32" Name="alivecustomer" Nullable="false" />
+          <Property Type="Int32" Name="createcustomer" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <Alias Key="Model" Value="ModelData" />
+        <Alias Key="Target" Value="ModelData.Store" />
+        <EntityContainerMapping CdmEntityContainer="ModelDataContainer" StorageEntityContainer="ModelDataStoreContainer">
+          <EntitySetMapping Name="strategyorder">
+            <EntityTypeMapping TypeName="ModelData.strategyorder">
+              <MappingFragment StoreEntitySet="strategyorder">
+                <ScalarProperty Name="strategytype" ColumnName="strategytype" />
+                <ScalarProperty Name="matchamt" ColumnName="matchamt" />
+                <ScalarProperty Name="matchqty" ColumnName="matchqty" />
+                <ScalarProperty Name="credittype" ColumnName="credittype" />
+                <ScalarProperty Name="creditdigestid" ColumnName="creditdigestid" />
+                <ScalarProperty Name="remark" ColumnName="remark" />
+                <ScalarProperty Name="cancelflag" ColumnName="cancelflag" />
+                <ScalarProperty Name="orderqty" ColumnName="orderqty" />
+                <ScalarProperty Name="orderprice" ColumnName="orderprice" />
+                <ScalarProperty Name="bsflag" ColumnName="bsflag" />
+                <ScalarProperty Name="stkcode" ColumnName="stkcode" />
+                <ScalarProperty Name="orderstatus" ColumnName="orderstatus" />
+                <ScalarProperty Name="marketacc" ColumnName="marketacc" />
+                <ScalarProperty Name="market" ColumnName="market" />
+                <ScalarProperty Name="fundid" ColumnName="fundid" />
+                <ScalarProperty Name="orderid" ColumnName="orderid" />
+                <ScalarProperty Name="opertime" ColumnName="opertime" />
+                <ScalarProperty Name="sttradeno" ColumnName="sttradeno" />
+                <ScalarProperty Name="stparamid" ColumnName="stparamid" />
+                <ScalarProperty Name="substrategyno" ColumnName="substrategyno" />
+                <ScalarProperty Name="strategyno" ColumnName="strategyno" />
+                <ScalarProperty Name="orderdate" ColumnName="orderdate" />
+                <ScalarProperty Name="tradetype" ColumnName="tradetype" />
+                <ScalarProperty Name="ordersno" ColumnName="ordersno" />
+                <ScalarProperty Name="custid" ColumnName="custid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="strategytrade">
+            <EntityTypeMapping TypeName="ModelData.strategytrade">
+              <MappingFragment StoreEntitySet="strategytrade">
+                <ScalarProperty Name="fundid" ColumnName="fundid" />
+                <ScalarProperty Name="creditdigestid" ColumnName="creditdigestid" />
+                <ScalarProperty Name="orderprice" ColumnName="orderprice" />
+                <ScalarProperty Name="orderqty" ColumnName="orderqty" />
+                <ScalarProperty Name="orderid" ColumnName="orderid" />
+                <ScalarProperty Name="bsflag" ColumnName="bsflag" />
+                <ScalarProperty Name="secuid" ColumnName="secuid" />
+                <ScalarProperty Name="stparamid" ColumnName="stparamid" />
+                <ScalarProperty Name="substrategyno" ColumnName="substrategyno" />
+                <ScalarProperty Name="strategyno" ColumnName="strategyno" />
+                <ScalarProperty Name="matchamt" ColumnName="matchamt" />
+                <ScalarProperty Name="matchprice" ColumnName="matchprice" />
+                <ScalarProperty Name="matchqty" ColumnName="matchqty" />
+                <ScalarProperty Name="stkcode" ColumnName="stkcode" />
+                <ScalarProperty Name="market" ColumnName="market" />
+                <ScalarProperty Name="tradetime" ColumnName="tradetime" />
+                <ScalarProperty Name="sttradeno" ColumnName="sttradeno" />
+                <ScalarProperty Name="matchtype" ColumnName="matchtype" />
+                <ScalarProperty Name="tradedate" ColumnName="tradedate" />
+                <ScalarProperty Name="tradetype" ColumnName="tradetype" />
+                <ScalarProperty Name="matchcode" ColumnName="matchcode" />
+                <ScalarProperty Name="ordersno" ColumnName="ordersno" />
+                <ScalarProperty Name="custid" ColumnName="custid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customer">
+            <EntityTypeMapping TypeName="ModelData.customer">
+              <MappingFragment StoreEntitySet="customer">
+                <ScalarProperty Name="createdate" ColumnName="createdate" />
+                <ScalarProperty Name="ownerid" ColumnName="ownerid" />
+                <ScalarProperty Name="revs1" ColumnName="revs1" />
+                <ScalarProperty Name="isactive" ColumnName="isactive" />
+                <ScalarProperty Name="trdpwd" ColumnName="trdpwd" />
+                <ScalarProperty Name="custid" ColumnName="custid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetCustomer" FunctionName="ModelData.Store.sp_GetCustomer" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ModelData.GetCustomer">
+                <ScalarProperty Name="allmonth" ColumnName="allmonth" />
+                <ScalarProperty Name="alivecustomer" ColumnName="alivecustomer" />
+                <ScalarProperty Name="createcustomer" ColumnName="createcustomer" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer>
+    <edmx:Connection>
+      <edmx:DesignerInfoPropertySet>
+        <edmx:DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </edmx:DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <edmx:DesignerInfoPropertySet>
+        <edmx:DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <edmx:DesignerProperty Name="EnablePluralization" Value="False" />
+        <edmx:DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+        <edmx:DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <edmx:DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </edmx:DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
