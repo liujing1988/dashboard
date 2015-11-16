@@ -17,9 +17,9 @@ namespace Dashboard.Common
         //股票代码
         public  string StockCode { get; set; }
         //成交量
-        public  int MatchQty { get; set; }
+        public string MatchQty { get; set; }
         //成交价格
-        public  decimal MatchPrice { get; set; }
+        public string MatchPrice { get; set; }
         //成交金额
         public  decimal MatchAmt { get; set; }
         //交易方向

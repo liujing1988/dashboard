@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DashBoard.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Common
 {
+    [Serializable]
     public class jQueryDataTableParamModel
     {
         /// <summary>
@@ -20,17 +22,17 @@ namespace Dashboard.Common
         public string sSearch { get; set; }
 
         /// <summary>
-        /// Number of records that should be shown in table
+        /// 每页显示几条数据
         /// </summary>
         public int iDisplayLength { get; set; }
 
         /// <summary>
-        /// First record that should be shown(used for paging)
+        /// 本页第一条记录是总数的第几条
         /// </summary>
         public int iDisplayStart { get; set; }
 
         /// <summary>
-        /// Number of columns in table
+        /// 总列数
         /// </summary>
         public int iColumns { get; set; }
 
@@ -44,5 +46,11 @@ namespace Dashboard.Common
         /// </summary>
         public string sColumns { get; set; }
         public string extra_search { get; set; }
+
+        /// <summary>
+        /// json数据：[{"name": "", "value": ""}]
+        /// </summary>
+        public string searchColumns { get; set; }
+        public string columnIndex { get; set; }
     }
 }

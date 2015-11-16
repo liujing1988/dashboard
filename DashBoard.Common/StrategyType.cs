@@ -10,5 +10,6 @@ namespace Dashboard.Common
     {
         public int NumStrategyType { get; set; }
         public string StrategyType { get; set; }
+        public decimal StrategyTradeAmt { get; set; }
     }
 }
