@@ -5,6 +5,25 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ModelData.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="custacctinfo">
+          <Key>
+            <PropertyRef Name="custid" />
+            <PropertyRef Name="tradetype" />
+            <PropertyRef Name="market" />
+          </Key>
+          <Property Name="custid" Type="int" Nullable="false" />
+          <Property Name="tradetype" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="market" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="fundid" Type="int" Nullable="false" />
+          <Property Name="marketacc" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="bankcode" Type="varchar" MaxLength="32" />
+          <Property Name="orgid" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="trdpwd" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="netaddr" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="operway" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="isdelete" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="ownerid" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="customer">
           <Key>
             <PropertyRef Name="custid" />
@@ -15,6 +34,29 @@
           <Property Name="revs1" Type="varchar" MaxLength="32" />
           <Property Name="ownerid" Type="int" Nullable="false" />
           <Property Name="createdate" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="strategyinfo">
+          <Key>
+            <PropertyRef Name="strategyno" />
+          </Key>
+          <Property Name="strategyno" Type="int" Nullable="false" />
+          <Property Name="strategyname" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="kindid" Type="int" Nullable="false" />
+          <Property Name="strategystatus" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="forecast" Type="numeric" Precision="16" Scale="3" />
+          <Property Name="stratinfo" Type="varchar" MaxLength="1024" />
+          <Property Name="templateid" Type="int" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="iscalculate" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="containername" Type="varchar" MaxLength="128" />
+          <Property Name="strategydir" Type="varchar" MaxLength="128" />
+          <Property Name="isoffline" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="isalgostrategy" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="isprivate" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="isdelete" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="ownerid" Type="int" Nullable="false" />
+          <Property Name="seriesno" Type="varchar" MaxLength="32" />
+          <Property Name="accounttype" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="strategyorder">
           <Key>
@@ -88,7 +130,9 @@
           <Parameter Name="Enddate" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="ModelDataStoreContainer">
+          <EntitySet Name="custacctinfo" EntityType="Self.custacctinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="strategyinfo" EntityType="Self.strategyinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategyorder" EntityType="Self.strategyorder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategytrade" EntityType="Self.strategytrade" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -104,6 +148,8 @@
             <Parameter Name="Begindate" Mode="In" Type="Int32" />
             <Parameter Name="Enddate" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="strategyinfo" EntityType="ModelData.strategyinfo" />
+          <EntitySet Name="custacctinfo" EntityType="ModelData.custacctinfo" />
         </EntityContainer>
         <EntityType Name="strategyorder">
           <Key>
@@ -188,6 +234,48 @@
           <Property Type="Int32" Name="alivecustomer" Nullable="false" />
           <Property Type="Int32" Name="createcustomer" Nullable="false" />
         </ComplexType>
+        <EntityType Name="strategyinfo">
+          <Key>
+            <PropertyRef Name="strategyno" />
+          </Key>
+          <Property Name="strategyno" Type="Int32" Nullable="false" />
+          <Property Name="strategyname" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="kindid" Type="Int32" Nullable="false" />
+          <Property Name="strategystatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="forecast" Type="Decimal" Precision="16" Scale="3" />
+          <Property Name="stratinfo" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="templateid" Type="Int32" Nullable="false" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="iscalculate" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="containername" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="strategydir" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="isoffline" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="isalgostrategy" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="isprivate" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="isdelete" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ownerid" Type="Int32" Nullable="false" />
+          <Property Name="seriesno" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="accounttype" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="custacctinfo">
+          <Key>
+            <PropertyRef Name="custid" />
+            <PropertyRef Name="tradetype" />
+            <PropertyRef Name="market" />
+          </Key>
+          <Property Name="custid" Type="Int32" Nullable="false" />
+          <Property Name="tradetype" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="market" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="fundid" Type="Int32" Nullable="false" />
+          <Property Name="marketacc" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="bankcode" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="orgid" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="trdpwd" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="netaddr" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="operway" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="isdelete" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ownerid" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -277,6 +365,48 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="strategyinfo">
+            <EntityTypeMapping TypeName="ModelData.strategyinfo">
+              <MappingFragment StoreEntitySet="strategyinfo">
+                <ScalarProperty Name="accounttype" ColumnName="accounttype" />
+                <ScalarProperty Name="seriesno" ColumnName="seriesno" />
+                <ScalarProperty Name="ownerid" ColumnName="ownerid" />
+                <ScalarProperty Name="isdelete" ColumnName="isdelete" />
+                <ScalarProperty Name="isprivate" ColumnName="isprivate" />
+                <ScalarProperty Name="isalgostrategy" ColumnName="isalgostrategy" />
+                <ScalarProperty Name="isoffline" ColumnName="isoffline" />
+                <ScalarProperty Name="strategydir" ColumnName="strategydir" />
+                <ScalarProperty Name="containername" ColumnName="containername" />
+                <ScalarProperty Name="iscalculate" ColumnName="iscalculate" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="templateid" ColumnName="templateid" />
+                <ScalarProperty Name="stratinfo" ColumnName="stratinfo" />
+                <ScalarProperty Name="forecast" ColumnName="forecast" />
+                <ScalarProperty Name="strategystatus" ColumnName="strategystatus" />
+                <ScalarProperty Name="kindid" ColumnName="kindid" />
+                <ScalarProperty Name="strategyname" ColumnName="strategyname" />
+                <ScalarProperty Name="strategyno" ColumnName="strategyno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="custacctinfo">
+            <EntityTypeMapping TypeName="ModelData.custacctinfo">
+              <MappingFragment StoreEntitySet="custacctinfo">
+                <ScalarProperty Name="ownerid" ColumnName="ownerid" />
+                <ScalarProperty Name="isdelete" ColumnName="isdelete" />
+                <ScalarProperty Name="operway" ColumnName="operway" />
+                <ScalarProperty Name="netaddr" ColumnName="netaddr" />
+                <ScalarProperty Name="trdpwd" ColumnName="trdpwd" />
+                <ScalarProperty Name="orgid" ColumnName="orgid" />
+                <ScalarProperty Name="bankcode" ColumnName="bankcode" />
+                <ScalarProperty Name="marketacc" ColumnName="marketacc" />
+                <ScalarProperty Name="fundid" ColumnName="fundid" />
+                <ScalarProperty Name="market" ColumnName="market" />
+                <ScalarProperty Name="tradetype" ColumnName="tradetype" />
+                <ScalarProperty Name="custid" ColumnName="custid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

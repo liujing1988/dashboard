@@ -8,6 +8,8 @@
         <EntityTypeShape EntityType="ModelData.strategyorder" Width="1.5" PointX="2.75" PointY="0.5" />
         <EntityTypeShape EntityType="ModelData.strategytrade" Width="1.5" PointX="4.875" PointY="0.5" />
         <EntityTypeShape EntityType="ModelData.customer" Width="1.5" PointX="0.75" PointY="0.5" />
+        <EntityTypeShape EntityType="ModelData.strategyinfo" Width="1.5" PointX="5.375" PointY="6.75" />
+        <EntityTypeShape EntityType="ModelData.custacctinfo" Width="1.5" PointX="7.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

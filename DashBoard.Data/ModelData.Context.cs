@@ -30,6 +30,8 @@ namespace DashBoard.Data
         public virtual DbSet<strategyorder> strategyorder { get; set; }
         public virtual DbSet<strategytrade> strategytrade { get; set; }
         public virtual DbSet<customer> customer { get; set; }
+        public virtual DbSet<strategyinfo> strategyinfo { get; set; }
+        public virtual DbSet<custacctinfo> custacctinfo { get; set; }
     
         public virtual ObjectResult<GetCustomer> sp_GetCustomer(Nullable<int> begindate, Nullable<int> enddate)
         {

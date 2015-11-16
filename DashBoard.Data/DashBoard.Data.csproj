@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="custacctinfo.cs">
+      <DependentUpon>ModelData.tt</DependentUpon>
+    </Compile>
     <Compile Include="customer.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>
@@ -72,6 +75,9 @@
       <DependentUpon>ModelData.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="strategyinfo.cs">
+      <DependentUpon>ModelData.tt</DependentUpon>
+    </Compile>
     <Compile Include="strategyorder.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>
