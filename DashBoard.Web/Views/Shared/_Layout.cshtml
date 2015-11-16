@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
+    @*@Styles.Render("~/Content/css")*@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -17,14 +17,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <label><font color="#FFFFFF" face="黑体" size="6">国泰君安量化交易情况统计分析系统</font></label>
+                <label><font color="#FFFFFF" face="黑体" size="6">国泰君安量化交易情况监控分析系统</font></label>
             </div>
             <br>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("主页", "Index", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("交易情况", "Index", "TradeData", new { area = "TradeData" }, null)</li>
-                    <li>@Html.ActionLink("客户情况", "Index", "Customer", new { area = "CustomerData" }, null)</li>
+                    <li>@Html.ActionLink("首页", "Index", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("策略明细", "Index", "TradeData", new { area = "TradeData" }, null)</li>
+                    <li>@Html.ActionLink("客户明细", "Index", "Customer", new { area = "CustomerData" }, null)</li>
+                    <li>@Html.ActionLink("综合查询", "Index", "Customer", new { area = "CustomerData" }, null)</li>
+                    <li>@Html.ActionLink("平台健康指数", "Index", "Customer", new { area = "CustomerData" }, null)</li>
                 </ul>
             </div>
         </div>

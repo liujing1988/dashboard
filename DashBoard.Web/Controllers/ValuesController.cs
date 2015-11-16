@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DashBoard.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,6 +10,6 @@ namespace DashBoard.Web.Controllers
 {
     public class ValuesController : ApiController
     {
-       
+        
     }
 }

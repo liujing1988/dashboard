@@ -96,7 +96,7 @@ function GetType(begindate, enddate) {
     }
     $.ajax(
         {
-            url: "/api/GetCustomer/GetStrategyType", //表示提交给的action 
+            url: "/DashBoard/api/GetCustomer/GetStrategyType", //表示提交给的action 
             type: "post",   //提交方法 
             data: da,
             datatype: "json",//数据类型

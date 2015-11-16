@@ -108,7 +108,7 @@ function GetMonth(begindate, enddate, munit) {
 
     $.ajax(
       {
-          url: "/api/GetTradeDate/GetMatchAmount", //表示提交给的action 
+          url: "/DashBoard/api/GetTradeDate/GetMatchAmount", //表示提交给的action 
           type: "post",   //提交方法 
           data: da,
           datatype: "json",//数据类型
@@ -240,7 +240,7 @@ function DynamicCreateSubChart(object, width, height, left, top) {
     }
     $.ajax(
      {
-         url: "/api/GetTradeDate/GetDateAmount", //表示提交给的action 
+         url: "/DashBoard/api/GetTradeDate/GetDateAmount", //表示提交给的action 
          type: "post",   //提交方法 
          data: da,
          datatype: "json",//数据类型

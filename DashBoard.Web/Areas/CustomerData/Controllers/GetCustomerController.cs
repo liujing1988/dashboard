@@ -1,5 +1,6 @@
 ﻿using Dashboard.Common;
 using Dashboard.Logic;
+using DashBoard.Common;
 using DashBoard.Data;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,20 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
         [HttpPost]
         public List<StrategyTypes> GetStrategyType(GetDateTime dateTime)
         {
-            return DemoService.GetStrategyType(dateTime);
+            return DataServiceHelper.GetStrategyType(dateTime);
         }
 
 
         [HttpPost]
         public List<CustomerAmount> GetCustomerAccount(CustomerAmount da)
         {
-            return DemoService.GetCustomer(da);
+            return DataServiceHelper.GetCustomer(da);
+        }
+
+        [HttpPost]
+        public CustomerOnline GetCustomerOnline()
+        {
+            return DataServiceHelper.GetCustomerOnline();
         }
     }
 }

@@ -86,7 +86,7 @@ function GetCustomer(BeginMonth, EndMonth) {
     }
     $.ajax(
         {
-            url: "/api/GetCustomer/GetCustomerAccount", //表示提交给的action 
+            url: "/DashBoard/api/GetCustomer/GetCustomerAccount", //表示提交给的action 
             type: "post",   //提交方法 
             data: da,
             datatype: "json",//数据类型

@@ -1,18 +1,27 @@
 ﻿
 var table;
+var searchtitle;
+var searchtext;
 $(document).ready(function ($) {
+
+    $('#myDataTable tfoot th').each(function () {
+        var title = $(this).text();
+        $(this).html('<input type="text" data=' + title + '  placeholder="搜索 ' + title + '" />');
+    });
+
+
     $(function () {
         table = $('#myDataTable').DataTable({
             "bServerSide": true,
-            "sAjaxSource": "Home/AjaxHandler",
-            
+            "sAjaxSource": "Customer/AjaxHandler",
             "fnServerParams": function ( aoData ) {
-                aoData.push({ "name": "extra_search", "value": $('#reportrange span').html() });
+                aoData.push({ "name": "extra_search", "value": $('#reportrange span').html() },
+                    { "name": "columnIndex", "value": searchtitle }, { "name": "searchColumns", "value": searchtext });
             },
             "bProcessing": true,
             "aoColumns": [
                             {
-                                "sName": "客户ID",
+                                "sName": "custid",
                                 "bSearchable": true,
                                 "bSortable": true,
                                 "fnRender": function (oObj) {
@@ -20,11 +29,11 @@ $(document).ready(function ($) {
                                     oObj.aData[0] + '\">View</a>';
                                 }
                             },
-                            { "sName": "交易日期" },
-                            { "sName": "股票代码" },
-                            { "sName": "交易量" },
-                            { "sName": "交易价格" },
-                            { "sName": "交易方向" }
+                            { "sName": "tradedate" },
+                            { "sName": "stockcode" },
+                            { "sName": "matchqty" },
+                            { "sName": "matchprice" },
+                            { "sName": "bsflag" }
             ],
             "language": {
                 "sProcessing": "处理中...",
@@ -51,13 +60,56 @@ $(document).ready(function ($) {
                 }
             },
             "dom":
-                    "<'row'<'col-xs-7'l<'#mytoolbox'>><'col-xs-5'f>r>" +
+                    "<'row'<'col-xs-7'l<'#mytoolbox'>><'col-xs-5'>r>" +
                     "t" +
                     "<'row'<'col-xs-6'i><'col-xs-6'p>>",
             initComplete: initComplete
 
         });
-    });
+        
+
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    var stitle = $(this).attr("data");
+                    var stext = $.fn.dataTable.util.escapeRegex($(this).val());
+                    var re = new RegExp(stitle);
+                    if (searchtitle == null)
+                    {
+                        searchtitle = stitle;
+                        searchtext = stext;
+                    }
+                    else if (searchtitle.search(re) != -1) {
+                        var st = searchtitle.split(',');
+                        var sx = searchtext.split(',');
+                        for (var i = 0; i < st.length; i++) {
+                            if (st[i] == stitle) {
+                                sx[i] = stext;
+                            }
+                            if (i == 0) {
+                                searchtitle = st[i];
+                                searchtext = sx[i];
+                            }
+                            else {
+                                searchtitle += ',' + st[i];
+                                searchtext += ',' + sx[i];
+                            }
+                        }
+                    }
+                    else {
+                        searchtitle += ',' + stitle;
+                        searchtext += ',' + stext;
+                    }
+                    table.ajax.reload();
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+    });//enddatatable
+        
 })
 
 /**
@@ -72,6 +124,7 @@ function initComplete(data) {
             '<span id="searchDateRange"></span>  ' +
             '<b class="caret"></b></div> ';
     $('#mytoolbox').append(dataPlugin);
+
     //时间插件
     $('#reportrange span').html(moment().subtract('months', 1).format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
     

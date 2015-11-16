@@ -51,6 +51,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -154,6 +156,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\ComprehensiveSearch\ComprehensiveSearchAreaRegistration.cs" />
+    <Compile Include="Areas\ComprehensiveSearch\Controllers\ComprehensiveSearchController.cs" />
+    <Compile Include="Areas\ComprehensiveSearch\Controllers\GetComprehensiveDataController.cs" />
     <Compile Include="Areas\CustomerData\Controllers\CustomerController.cs" />
     <Compile Include="Areas\CustomerData\Controllers\GetCustomerController.cs" />
     <Compile Include="Areas\CustomerData\CustomerDataAreaRegistration.cs" />
@@ -180,6 +185,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\WSService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -226,11 +236,17 @@
     <Content Include="Areas\CustomerData\Views\Customer\Index.cshtml" />
     <Content Include="Areas\TradeData\Views\Web.config" />
     <Content Include="Areas\TradeData\Views\TradeData\Index.cshtml" />
+    <Content Include="App_Data\stock.dat" />
+    <Content Include="Areas\ComprehensiveSearch\Views\Web.config" />
+    <Content Include="Areas\ComprehensiveSearch\Views\ComprehensiveSearch\Index.cshtml" />
     <None Include="Properties\PublishProfiles\DashBoard.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\DashBoard\creditbuy.js" />
+    <Content Include="Scripts\DashBoard\creditsales.js" />
     <Content Include="Scripts\DashBoard\Customer.js" />
+    <Content Include="Scripts\DashBoard\CustomerOnline.js" />
     <Content Include="Scripts\DashBoard\jquery-1.11.3.min.js" />
     <Content Include="Scripts\DashBoard\jquery.dataTables.min.js" />
     <Content Include="Scripts\DashBoard\jquery.tablesorter.js" />
@@ -238,7 +254,10 @@
     <Content Include="Scripts\DashBoard\MonthTradeAmount.js" />
     <Content Include="Scripts\DashBoard\mydashboard.js" />
     <Content Include="Scripts\DashBoard\RealTimeTradeAmount.js" />
+    <Content Include="Scripts\DashBoard\StrategyTradeAmt.js" />
     <Content Include="Scripts\DashBoard\StrategyType_use.js" />
+    <Content Include="Scripts\DashBoard\TradeDayAmount.js" />
+    <Content Include="Scripts\DashBoard\TradeDayVolume.js" />
     <Content Include="Scripts\DashBoard\TradeDetails.js" />
     <Content Include="Scripts\daterangepicker-1.3.7.js" />
     <Content Include="Scripts\highcharts\Export-csv.js" />
@@ -261,7 +280,17 @@
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\moment.js" />
-    <Content Include="Web.config" />
+    <None Include="Service References\WSService\WSService.disco" />
+    <None Include="Service References\WSService\configuration91.svcinfo" />
+    <None Include="Service References\WSService\configuration.svcinfo" />
+    <None Include="Service References\WSService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Scripts\DashBoard\StrategyTradeAct.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -289,9 +318,11 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Service References\WSService\WSService.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="Areas\ComprehensiveSearch\Models\" />
+    <Folder Include="Areas\ComprehensiveSearch\Views\Shared\" />
     <Folder Include="Areas\CustomerData\Models\" />
     <Folder Include="Areas\CustomerData\Views\Shared\" />
     <Folder Include="Areas\TradeData\Models\" />
@@ -315,6 +346,12 @@
       <Name>DashBoard.Logic</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\WSService\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -333,7 +370,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>9584</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:6320/</IISUrl>
+          <IISUrl>http://localhost:9584/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

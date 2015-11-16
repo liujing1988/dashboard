@@ -1,6 +1,6 @@
 ﻿$.ajax(
 {
-    url: "/api/GetTradeDate/GetRealTimeData", //表示提交给的action 
+    url: "/DashBoard/api/GetTradeDate/GetRealTimeData", //表示提交给的action 
     type: "post",   //提交方法 
     datatype: "json",//数据类型
     success: function (result) {
@@ -37,7 +37,7 @@ $(function () {
                         setInterval(function () {
                             $.ajax({
                                 type: "post",
-                                url: "/api/GetTradeDate/GetRealTimeData",
+                                url: "/DashBoard/api/GetTradeDate/GetRealTimeData",
                                 dataType: "json",
                                 success: function (data) {
                                     //实时更新图对应时间
@@ -59,7 +59,6 @@ $(function () {
                                                 dt = dt.replace(/-/g, "/");
                                                 var x = new Date(dt).getTime(), // current time         
                                                         y = rMinuteTrade[j];
-                                                alert(x, y);
                                                 series.addPoint([x, y], true, true);
                                             }
                                         }
@@ -79,13 +78,16 @@ $(function () {
                 type: 'datetime',
                 tickPixelInterval: 150
             },
+            scrollbar: {
+                enabled: true
+            },
             yAxis: {
                 title: {
                     text: '交易量'
                 },
                 plotLines: [{
-                    value: 0,
-                    width: 1,
+                    value: 3,
+                    width: 2,
                     color: '#808080'
                 }]
             },
