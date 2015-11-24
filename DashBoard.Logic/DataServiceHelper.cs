@@ -1,10 +1,14 @@
 ﻿using Dashboard.Common;
 using DashBoard.Common;
+using DashBoard.Common.Data;
 using DashBoard.Data;
 using DashBoard.Logic;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Data.Entity.Core.Objects;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +52,7 @@ namespace Dashboard.Logic
                 var query = from a in db.strategytrade
                             where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
                             where a.tradedate / 100 >= bmonth && a.tradedate / 100 <= emonth
+                            && a.strategyno != -1
                             group a by a.tradedate / 100 into b
                             select new
                             {
@@ -78,6 +83,7 @@ namespace Dashboard.Logic
             {
                 var query = from a in db.strategytrade
                             where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
+                            && a.strategyno != -1
                             where a.tradedate / 100 == bday
                             group a by a.tradedate into b
                             select new
@@ -102,17 +108,51 @@ namespace Dashboard.Logic
         /// <returns></returns>
         public static List<RealTimeData> GetRealTimeData()
         {
+            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             List<RealTimeData> result = new List<RealTimeData>();
             using (var db = new ModelDataContainer())
             {
                 var query = (from a in db.strategytrade
                              where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
+                             && a.strategyno != -1 && a.tradedate == tdate
                              group a by (a.tradedate + (a.tradetime / 10000) / 10000.0) into b
                              select new
                              {
                                  Minute = b.Max(p => p.tradedate + (p.tradetime / 10000) / 10000.0),
                                  TradeAmount = b.Sum(p => p.matchamt)
-                             }).OrderByDescending(p => p.Minute).Take(20);
+                             }).OrderByDescending(p => p.Minute);
+                foreach (var item in query.OrderBy(p => p.Minute))
+                {
+                    result.Add(new RealTimeData()
+                    {
+                        Minute = ConvertMinute(item.Minute),
+                        TradeAmount = item.TradeAmount,
+                    });
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取每分钟交易量
+        /// </summary>
+        /// <returns></returns>
+        public static List<RealTimeData> GetRealData(RealTimeData da)
+        {
+            int bdate = ConvertDate(da.beginDate);
+            int edate = ConvertDate(da.endDate);
+            List<RealTimeData> result = new List<RealTimeData>();
+            using (var db = new ModelDataContainer())
+            {
+                var query = (from a in db.strategytrade
+                             where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
+                             && a.strategyno != -1 && a.tradedate >= bdate && a.tradedate <= edate
+                             group a by (a.tradedate + (a.tradetime / 10000) / 10000.0) into b
+                             select new
+                             {
+                                 Minute = b.Max(p => p.tradedate + (p.tradetime / 10000) / 10000.0),
+                                 TradeAmount = b.Sum(p => p.matchamt)
+                             }).OrderByDescending(p => p.Minute);
                 foreach (var item in query.OrderBy(p => p.Minute))
                 {
                     result.Add(new RealTimeData()
@@ -168,25 +208,61 @@ namespace Dashboard.Logic
         /// <returns></returns>
         public static List<TradeDayAmount> GetDayAmount()
         {
-            int tdate = Int32.Parse(DateTime.Now.AddYears(-1).ToString("yyyyMMdd"));
+            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             List<TradeDayAmount> result = new List<TradeDayAmount>();
             using (var db = new ModelDataContainer())
             {
-                var query = (from a in db.strategytrade
-                             where a.tradedate == tdate
-                             group a by (a.custid) into b
-                             select new
-                             {
-                                 custid = b.Max(p => p.custid),
-                                 tradeamount = b.Sum(p => p.matchamt)
-                             }).OrderByDescending(p => p.tradeamount).Take(5);
-                foreach (var item in query)
-                    result.Add(new TradeDayAmount()
-                    {
-                        CustId = item.custid,
-                        TradeAmount = item.tradeamount,
-                        TradeDate = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd")
-                    });
+                var creditTrade = from a in db.strategytrade
+                                  where a.tradedate == tdate
+                                  && a.strategyno != -1 && a.matchamt > 0 && a.matchtype == "1"
+                                  select a;
+                
+                if (creditTrade.Count() > 0)
+                {
+                    var query = (from a in db.strategytrade
+                                 where a.tradedate == tdate
+                                 && a.strategyno != -1 && a.matchamt > 0
+                                 group a by new { a.custid } into b
+                                 select new
+                                 {
+                                     custid = b.Key.custid,
+                                     tradeamount = b.Sum(p => p.matchamt),
+                                     credittrade = b.Where(p => p.matchtype == "1").Sum(p => p.matchamt)
+                                 }).OrderByDescending(p => p.tradeamount).Take(5);
+
+                    foreach (var item in query)
+                        result.Add(new TradeDayAmount()
+                        {
+                            custId = item.custid,
+                            tradeAmount = item.tradeamount,
+                            creditTrade = item.credittrade,
+                            tradeDate = DateTime.Now.ToString("yyyy-MM-dd")
+
+                        });
+                }
+                else
+                {
+                    var query = (from a in db.strategytrade
+                                 where a.tradedate == tdate
+                                 && a.strategyno != -1 && a.matchamt > 0
+                                 group a by new { a.custid } into b
+                                 select new
+                                 {
+                                     custid = b.Key.custid,
+                                     tradeamount = b.Sum(p => p.matchamt),
+                                     credittrade = 0
+                                 }).OrderByDescending(p => p.tradeamount).Take(5);
+
+                    foreach (var item in query)
+                        result.Add(new TradeDayAmount()
+                        {
+                            custId = item.custid,
+                            tradeAmount = item.tradeamount,
+                            creditTrade = item.credittrade,
+                            tradeDate = DateTime.Now.ToString("yyyy-MM-dd")
+
+                        });
+                }
             }
             return result;
         }
@@ -197,7 +273,7 @@ namespace Dashboard.Logic
         /// <returns></returns>
         public static List<CreditTrade> GetCreditSalesAmount()
         {
-            int tdate = Int32.Parse(DateTime.Now.AddYears(-1).ToString("yyyyMMdd"));
+            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             List<CreditTrade> result = new List<CreditTrade>();
             using (var db = new ModelDataContainer())
             {
@@ -216,7 +292,7 @@ namespace Dashboard.Logic
                     {
                         StockName = StockDicManager.GetStockName(item.stockcode.ToString()),
                         MatchQty = item.tradeamount.ToString(),
-                        TradeDate = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd")
+                        TradeDate = DateTime.Now.ToString("yyyy-MM-dd")
                     });
             }
             return result;
@@ -228,7 +304,7 @@ namespace Dashboard.Logic
         /// <returns></returns>
         public static List<CreditTrade> GetCreditBuyAmount()
         {
-            int tdate = Int32.Parse(DateTime.Now.AddYears(-1).ToString("yyyyMMdd"));
+            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             List<CreditTrade> result = new List<CreditTrade>();
             using (var db = new ModelDataContainer())
             {
@@ -247,138 +323,64 @@ namespace Dashboard.Logic
                     {
                         StockName = StockDicManager.GetStockName(item.stockcode.ToString()),
                         MatchQty = item.tradeamount.ToString(),
-                        TradeDate = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd")
+                        TradeDate = DateTime.Now.ToString("yyyy-MM-dd")
                     });
             }
             return result;
         }
 
         /// <summary>
-        /// 获取客户交易流水
+        /// 调用存储过程，获取客户交易流水
         /// </summary>
-        /// <param name="da">搜索的起止时间</param>
+        /// <param name="da"></param>
         /// <returns></returns>
-        public static List<TradeDetails> GetTradeDetails(TradeDetails da)
+        public static RecordResult<TradeDetails> GetTradeDetails(TradeDetails da)
         {
-            List<TradeDetails> result = new List<TradeDetails>();
-            if (da == null)
-            {
-                using (var db = new ModelDataContainer())
+            RecordResult<TradeDetails> result = new RecordResult<TradeDetails>();
+            var db = DbFactory.Create();
+            
+                List<DbParameter> dbParameters = new List<DbParameter>();
+                int begindate = ConvertDate(da.begindate);
+                int enddate = ConvertDate(da.enddate);
+
+                dbParameters.Add(db.NewParameter("BeginDate", begindate, DbType.Int32));
+                dbParameters.Add(db.NewParameter("EndDate", enddate, DbType.Int32));
+                dbParameters.Add(db.NewParameter("SearchColumns", da.searchColumns, DbType.String));
+                dbParameters.Add(db.NewParameter("DisplayStart", da.DisplayStart, DbType.Int32));
+                dbParameters.Add(db.NewParameter("DisplayLength", da.DisplayLength, DbType.Int32));
+                dbParameters.Add(db.NewParameter("CurrentPage", da.CurrentPage, DbType.Int32));
+                dbParameters.Add(db.NewParameter("SortDirection", da.sortDirection, DbType.String));
+                dbParameters.Add(db.NewParameter("OrderField", da.OrderField, DbType.String));
+
+                var pageCount = db.NewParameter("PageCount", 0, DbType.Int32);
+                pageCount.Direction = ParameterDirection.Output;
+                var totalRecords = db.NewParameter("TotalRecords", 0, DbType.Int32);
+                totalRecords.Direction = ParameterDirection.Output;
+                var totalDisplayRecords = db.NewParameter("TotalDisplayRecords", 0, DbType.Int32);
+                totalDisplayRecords.Direction = ParameterDirection.Output;
+                dbParameters.Add(pageCount);
+                dbParameters.Add(totalRecords);
+                dbParameters.Add(totalDisplayRecords);
+                DataTable dt = db.GetDataTable("sp_GetCustomerTradeDetail", dbParameters);
+
+                result.List = new List<TradeDetails>();
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    var query = (from a in db.strategytrade
-                                 select new
-                                 {
-                                     custId = a.custid,
-                                     tradeDate = a.tradedate,
-                                     tradeTime = a.tradetime,
-                                     stockCode = a.stkcode,
-                                     matchQty = a.matchqty,
-                                     matchPrice = a.matchprice,
-                                     matchAmt = a.matchamt,
-                                     bsflag = a.bsflag
-
-                                 }
-                            ).OrderByDescending(p => p.tradeDate);
-                    foreach (var item in query)
+                    DataRowReader reader = new DataRowReader(dt.Rows[i]);
+                    TradeDetails detail = new TradeDetails()
                     {
-
-                        result.Add(new TradeDetails()
-                        {
-                            CustId = item.custId.ToString(),
-                            TradeDate = ConvertMinute(item.tradeDate),
-                            TradeTime = item.tradeTime.ToString(),
-                            StockCode = item.stockCode,
-                            MatchQty = item.matchQty.ToString(),
-                            MatchPrice = item.matchPrice.ToString(),
-                            MatchAmt = item.matchAmt,
-                            BsFlag = ConvertFlag(item.bsflag)
-                        });
-
-                    }
+                        CustId = reader.GetString("custid"),
+                        TradeDate = reader.GetString("tradedate"),
+                        StockCode = reader.GetString("stkcode"),
+                        MatchQty = reader.GetString("matchqty"),
+                        MatchPrice = reader.GetString("matchprice"),
+                        BsFlag = reader.GetString("bsflag")
+                    };
+                    result.List.Add(detail);
                 }
-            }
-            else
-            {
-                int bdate = ConvertDate(da.begindate);
-                int edate = ConvertDate(da.enddate);
-                if (da.CustId != null)
-                {
-                    //int[] custid = ConvertArray(da.CustId.Split(','));
-                    int custid = Int32.Parse(da.CustId);
-                    using (var db = new ModelDataContainer())
-                    {
-                        var query = (from a in db.strategytrade
-                                     where (a.tradedate >= bdate && a.tradedate <= edate)
-                                     where a.custid == custid
-                                     select new
-                                     {
-                                         custId = a.custid,
-                                         tradeDate = a.tradedate,
-                                         tradeTime = a.tradetime,
-                                         stockCode = a.stkcode,
-                                         matchQty = a.matchqty,
-                                         matchPrice = a.matchprice,
-                                         matchAmt = a.matchamt,
-                                         bsflag = a.bsflag
-
-                                     }
-                                ).OrderByDescending(p => p.tradeDate);
-                        foreach (var item in query)
-                        {
-
-                            result.Add(new TradeDetails()
-                            {
-                                CustId = item.custId.ToString(),
-                                TradeDate = ConvertMinute(item.tradeDate),
-                                TradeTime = item.tradeTime.ToString(),
-                                StockCode = item.stockCode,
-                                MatchQty = item.matchQty.ToString(),
-                                MatchPrice = item.matchPrice.ToString(),
-                                MatchAmt = item.matchAmt,
-                                BsFlag = ConvertFlag(item.bsflag)
-                            });
-
-                        }
-                    }
-                }
-                else
-                {
-                    using (var db = new ModelDataContainer())
-                    {
-                        var query = (from a in db.strategytrade
-                                     where (a.tradedate >= bdate && a.tradedate <= edate)
-                                     select new
-                                     {
-                                         custId = a.custid,
-                                         tradeDate = a.tradedate,
-                                         tradeTime = a.tradetime,
-                                         stockCode = a.stkcode,
-                                         matchQty = a.matchqty,
-                                         matchPrice = a.matchprice,
-                                         matchAmt = a.matchamt,
-                                         bsflag = a.bsflag
-
-                                     }
-                                ).OrderByDescending(p => p.tradeDate);
-                        foreach (var item in query)
-                        {
-
-                            result.Add(new TradeDetails()
-                            {
-                                CustId = item.custId.ToString(),
-                                TradeDate = ConvertMinute(item.tradeDate),
-                                TradeTime = item.tradeTime.ToString(),
-                                StockCode = item.stockCode,
-                                MatchQty = item.matchQty.ToString(),
-                                MatchPrice = item.matchPrice.ToString(),
-                                MatchAmt = item.matchAmt,
-                                BsFlag = ConvertFlag(item.bsflag)
-                            });
-
-                        }
-                    }
-                }
-            }
+                result.TotalPages = DataConvert.ToInt32(pageCount.Value);
+                result.TotalRecords = DataConvert.ToInt32(totalRecords.Value);
+                result.TotalDisplayRecords = DataConvert.ToInt32(totalDisplayRecords.Value);
             return result;
         }
 
@@ -389,11 +391,12 @@ namespace Dashboard.Logic
         public static List<StrategyTypes> GetStrategyTradeAmt()
         {
             List<StrategyTypes> result = new List<StrategyTypes>();
-            int tdate = Int32.Parse(DateTime.Now.AddYears(-1).ToString("yyyyMMdd"));
+            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             using (var db = new ModelDataContainer())
             {
                 var query = (from a in db.strategytrade
                              from b in db.strategyinfo
+                             where a.strategyno != -1
                              where a.strategyno == b.strategyno && a.tradedate / 100 == tdate / 100
                              group a by new { b.strategyname } into c
                              select new
@@ -421,24 +424,30 @@ namespace Dashboard.Logic
         public static List<StrategyTypes> GetStrategyTradeAct()
         {
             List<StrategyTypes> result = new List<StrategyTypes>();
-            int tdate = Int32.Parse(DateTime.Now.AddYears(-1).ToString("yyyyMMdd"));
+            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             using (var db = new ModelDataContainer())
             {
-                var query = (from a in db.strategytrade
+                var query = (from d in (from a in db.strategytrade
                              from b in db.strategyinfo
+                             where a.strategyno != -1
                              where a.strategyno == b.strategyno && a.tradedate / 100 == tdate / 100
-                             group a by new { b.strategyname } into c
+                                        group a by new { b.strategyname, a.sttradeno } into c
                              select new
                              {
                                  strategyname = c.Key.strategyname,
                                  strategytradenum = c.Count()
-                             }).OrderByDescending(p => p.strategytradenum).Take(5);
+                             }) group d by new { d.strategyname } into e
+                            select new
+                            {
+                                strategename = e.Key.strategyname,
+                                strategytradenum = e.Count()
+                            }).OrderByDescending(p => p.strategytradenum).Take(5);
 
                 foreach (var item in query)
                 {
                     result.Add(new StrategyTypes()
                     {
-                        StrategyType = item.strategyname,
+                        StrategyType = item.strategename,
                         NumStrategyType = item.strategytradenum
                     });
                 }
@@ -453,27 +462,27 @@ namespace Dashboard.Logic
         public static CustomerOnline GetCustomerOnline()
         {
             CustomerOnline result = new CustomerOnline();
-            int tdate = Int32.Parse(DateTime.Now.AddYears(-1).ToString("yyyyMMdd"));
+            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             int ttime = Int32.Parse(DateTime.Now.ToString("HHmm"));
-            using(var db = new ModelDataContainer())
+            using (var db = new ModelDataContainer())
             {
                 var query = from a in db.strategyorder
                             from b in db.custacctinfo
-                            where a.custid == b.custid && a.orderdate == tdate 
+                            where a.custid == b.custid && a.orderdate == tdate
                             && (b.tradetype == "0" || b.tradetype == "1")
-                            group a by new{b.tradetype,a.custid} into c 
+                            group a by new { b.tradetype, a.custid } into c
                             group c by c.Key.tradetype into d
                             select new
                             {
                                 numcust = d.Count(),
-                                creditcust = d.Count(p=>p.Key.tradetype == "1")
+                                creditcust = d.Count(p => p.Key.tradetype == "1")
                             };
                 foreach (var item in query)
                 {
                     result.NumCustomerOnline = item.numcust;
                     result.CreditCustomer = item.creditcust;
-                    result.ServerDate = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
                 }
+                result.ServerDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             return result;
         }
@@ -485,7 +494,7 @@ namespace Dashboard.Logic
         public static TradeDayVolume GetTradeDayVolume()
         {
             TradeDayVolume result = new TradeDayVolume();
-            int tdate = Int32.Parse(DateTime.Now.AddYears(-1).ToString("yyyyMMdd"));
+            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             int ttime = Int32.Parse(DateTime.Now.ToString("HHmm"));
             using (var db = new ModelDataContainer())
             {
@@ -503,9 +512,9 @@ namespace Dashboard.Logic
                 }
 
                 var volumecount = from a in db.strategyorder
-                                 where a.orderdate == tdate && a.cancelflag == "F"
-                                 && a.orderstatus != "9" && a.matchqty > 0
-                                 group a by a.orderdate into b
+                                  where a.orderdate == tdate && a.cancelflag == "F"
+                                  && a.orderstatus != "9" && a.matchqty > 0
+                                  group a by a.orderdate into b
                                   select new
                                   {
                                       volumecount = b.Count()
@@ -514,11 +523,11 @@ namespace Dashboard.Logic
                 {
                     result.NumVolum = item.volumecount;
                 }
-                            
+
                 var cancelcount = from a in db.strategyorder
-                               where a.orderdate == tdate && a.cancelflag == "T"
-                               && a.orderstatus != "9" && a.matchqty > 0
-                               group a by a.orderdate into b
+                                  where a.orderdate == tdate && a.cancelflag == "T"
+                                  && a.orderstatus != "9" && a.matchqty > 0
+                                  group a by a.orderdate into b
                                   select new
                                   {
                                       cancelcount = b.Count()
@@ -532,8 +541,9 @@ namespace Dashboard.Logic
                                 where a.orderdate == tdate && a.cancelflag == "F"
                                 && a.orderstatus != "9" && a.matchqty > 0
                                 group a by a.orderdate into b
-                                select new { 
-                                volumeamt = b.Sum(p=>p.matchamt)
+                                select new
+                                {
+                                    volumeamt = b.Sum(p => p.matchamt)
                                 };
                 foreach (var item in volumeamt)
                 {
@@ -541,14 +551,14 @@ namespace Dashboard.Logic
                 }
 
                 var rrpamt = from a in db.strategyorder
-                                where a.orderdate == tdate && a.cancelflag == "F"
-                                && a.orderstatus != "9" && a.matchqty > 0
-                                && a.bsflag == "["
-                                group a by a.orderdate into b
-                                select new
-                                {
-                                    rrpamt = b.Sum(p => p.matchamt)
-                                };
+                             where a.orderdate == tdate && a.cancelflag == "F"
+                             && a.orderstatus != "9" && a.matchqty > 0
+                             && a.bsflag == "["
+                             group a by a.orderdate into b
+                             select new
+                             {
+                                 rrpamt = b.Sum(p => p.matchamt)
+                             };
                 foreach (var item in rrpamt)
                 {
                     result.RRPAmt = item.rrpamt.ToString();
@@ -567,22 +577,23 @@ namespace Dashboard.Logic
                     result.BuyAmt = item.buyamt.ToString();
                 }
                 var salesamt = from a in db.strategyorder
-                             where a.orderdate == tdate && a.cancelflag == "F"
-                             && a.orderstatus != "9" && a.matchqty > 0
-                             && a.bsflag == "S"
-                             group a by a.orderdate into b
-                             select new
-                             {
-                                 salesamt = b.Sum(p => p.matchamt)
-                             };
+                               where a.orderdate == tdate && a.cancelflag == "F"
+                               && a.orderstatus != "9" && a.matchqty > 0
+                               && a.bsflag == "S"
+                               group a by a.orderdate into b
+                               select new
+                               {
+                                   salesamt = b.Sum(p => p.matchamt)
+                               };
                 foreach (var item in salesamt)
                 {
                     result.SalesAmt = item.salesamt.ToString();
                 }
-                
+
             }
             return result;
         }
+
 
         /// <summary>
         /// 交易类型转换
