@@ -32,5 +32,6 @@ namespace DashBoard.Data
         public int ownerid { get; set; }
         public string seriesno { get; set; }
         public int accounttype { get; set; }
+        public int basketid { get; set; }
     }
 }

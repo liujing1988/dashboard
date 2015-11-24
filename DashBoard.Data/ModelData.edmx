@@ -57,6 +57,7 @@
           <Property Name="ownerid" Type="int" Nullable="false" />
           <Property Name="seriesno" Type="varchar" MaxLength="32" />
           <Property Name="accounttype" Type="int" Nullable="false" />
+          <Property Name="basketid" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="strategyorder">
           <Key>
@@ -129,6 +130,19 @@
           <Parameter Name="Begindate" Type="int" Mode="In" />
           <Parameter Name="Enddate" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_GetCustomerTradeDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Begindate" Type="int" Mode="In" />
+          <Parameter Name="Enddate" Type="int" Mode="In" />
+          <Parameter Name="searchColumns" Type="nvarchar" Mode="In" />
+          <Parameter Name="DisplayStart" Type="int" Mode="In" />
+          <Parameter Name="DisplayLength" Type="int" Mode="In" />
+          <Parameter Name="sortDirection" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageCount" Type="int" Mode="InOut" />
+          <Parameter Name="CurrentPage" Type="int" Mode="In" />
+          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
+          <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
+          <Parameter Name="OrderField" Type="nvarchar" Mode="In" />
+        </Function>
         <EntityContainer Name="ModelDataStoreContainer">
           <EntitySet Name="custacctinfo" EntityType="Self.custacctinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
@@ -150,6 +164,19 @@
           </FunctionImport>
           <EntitySet Name="strategyinfo" EntityType="ModelData.strategyinfo" />
           <EntitySet Name="custacctinfo" EntityType="ModelData.custacctinfo" />
+          <FunctionImport Name="sp_GetCustomerTradeDetail" ReturnType="Collection(ModelData.GetCustomerTradeDetail)">
+            <Parameter Name="Begindate" Mode="In" Type="Int32" />
+            <Parameter Name="Enddate" Mode="In" Type="Int32" />
+            <Parameter Name="searchColumns" Mode="In" Type="String" />
+            <Parameter Name="DisplayStart" Mode="In" Type="Int32" />
+            <Parameter Name="DisplayLength" Mode="In" Type="Int32" />
+            <Parameter Name="sortDirection" Mode="In" Type="String" />
+            <Parameter Name="PageCount" Mode="InOut" Type="Int32" />
+            <Parameter Name="CurrentPage" Mode="In" Type="Int32" />
+            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotalDisplayRecords" Mode="InOut" Type="Int32" />
+            <Parameter Name="OrderField" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="strategyorder">
           <Key>
@@ -256,6 +283,7 @@
           <Property Name="ownerid" Type="Int32" Nullable="false" />
           <Property Name="seriesno" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="accounttype" Type="Int32" Nullable="false" />
+          <Property Name="basketid" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="custacctinfo">
           <Key>
@@ -276,6 +304,14 @@
           <Property Name="isdelete" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="ownerid" Type="Int32" Nullable="false" />
         </EntityType>
+        <ComplexType Name="GetCustomerTradeDetail" >
+          <Property Type="Int32" Name="custid" Nullable="false" />
+          <Property Type="Int32" Name="tradedate" Nullable="false" />
+          <Property Type="String" Name="stkcode" Nullable="false" />
+          <Property Type="Int32" Name="matchqty" Nullable="false" />
+          <Property Type="Decimal" Name="matchprice" Nullable="false" />
+          <Property Type="String" Name="bsflag" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -368,6 +404,7 @@
           <EntitySetMapping Name="strategyinfo">
             <EntityTypeMapping TypeName="ModelData.strategyinfo">
               <MappingFragment StoreEntitySet="strategyinfo">
+                <ScalarProperty Name="basketid" ColumnName="basketid" />
                 <ScalarProperty Name="accounttype" ColumnName="accounttype" />
                 <ScalarProperty Name="seriesno" ColumnName="seriesno" />
                 <ScalarProperty Name="ownerid" ColumnName="ownerid" />
@@ -407,6 +444,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetCustomerTradeDetail" FunctionName="ModelData.Store.sp_GetCustomerTradeDetail" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ModelData.GetCustomerTradeDetail">
+                <ScalarProperty Name="custid" ColumnName="custid" />
+                <ScalarProperty Name="tradedate" ColumnName="tradedate" />
+                <ScalarProperty Name="stkcode" ColumnName="stkcode" />
+                <ScalarProperty Name="matchqty" ColumnName="matchqty" />
+                <ScalarProperty Name="matchprice" ColumnName="matchprice" />
+                <ScalarProperty Name="bsflag" ColumnName="bsflag" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
