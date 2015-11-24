@@ -6,7 +6,7 @@
     success: function (result) {
         //用户ID
         var StrategyName = [];
-        //分钟级交易量
+        //交易金额
         var TradeAmount = [];
         //获取服务器日期
         var Date = result[0].TradeDate;
@@ -67,11 +67,19 @@
                                             var rTradeAmount = [];
                                             //实时曲线数据转换
                                             if (data[0].StrategyType != null) {
-                                                if (unit = "百万元") {
+                                                //获取当日第三名交易量
+                                                var rminresult = data[0].StrategyTradeAmt;
+                                                for (var i = 0; i < result.length; i++) {
+                                                    if (rminresult > result[i].StrategyTradeAmt) {
+                                                        rminresult = Number(result[i].StrategyTradeAmt);
+                                                    }
+                                                }
+                                                if (result[0].StrategyType != null && minresult / 1000000 >= 1) {
                                                     for (var i = 0; i < data.length; i++) {
                                                         rStrategyType[i] = data[i].StrategyType;
                                                         rTradeAmount[i] = data[i].StrategyTradeAmt / 1000000;
                                                     }
+                                                    unit = "百万元";
                                                 }
                                                 else {
                                                     for (var i = 0; i < data.length; i++) {
@@ -79,13 +87,14 @@
                                                         rTradeAmount[i] = data[i].StrategyTradeAmt;
                                                     }
                                                 }
+                                                unit = "元";
                                             }
                                             xAxis.setCategories(rStrategyType);
                                             series.setData(rTradeAmount);
                                         }
                                     });
 
-                                }, 60000/60);
+                                }, 60000);
                             }
                         }
                     },

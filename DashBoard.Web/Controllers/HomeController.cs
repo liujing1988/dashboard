@@ -14,14 +14,25 @@ namespace DashBoard.Web.Controllers
     {
         public ActionResult Index()
         {
-            //object result = WebServiceHelper.InvokeAndCallWebService(ConfigurationManager.AppSettings["ValidationUrl"], "WSService", "CanAccessDashboard");
-            //result.ToString();
-            //WSService.WSServiceSoapClient ws = new WSService.WSServiceSoapClient();
-            //int result = ws.CanAccessDashboard();
             ViewBag.Title = "国泰君安量化交易情况统计分析系统";
-            //ViewBag.Title = result.ToString();
             return View();
         }
-        
+        public ActionResult HomePage()
+        {
+            ViewBag.Title = "国泰君安量化交易情况统计分析系统";
+            return View();
+        }
+        public ActionResult Top()
+        {
+            return View();
+        }
+        public ActionResult Left()
+        {
+            return View();
+        }
+        public ActionResult Right()
+        {
+            return View();
+        }
     }
 }

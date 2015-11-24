@@ -1,0 +1,59 @@
+﻿@{
+    Layout = null;
+}
+<!doctype html>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="~/Content/jq.css" type="text/css" media="print, projection, screen" />
+    <link rel="stylesheet" href="~/Content/style.css" type="text/css" media="print, projection, screen" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/daterangepicker-bs3.css">
+    <link rel="stylesheet" href="~/Content/font-awesome.min.css">
+    <script type="text/javascript" src="~/Scripts/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="~/Scripts/highcharts/highcharts-more.js"></script>
+    <script type="text/javascript" src="~/Scripts/highcharts/solid-gauge.js"></script>
+    <script type="text/javascript" src="~/Scripts/DashBoard/RealTimeTradeAmount.js"></script>
+    <script type="text/javascript" src="~/Scripts/highcharts/grid.js"></script>
+    <script type="text/javascript" src="~/Scripts/DashBoard/MaxTrade.js"></script>
+    <title>国泰君安量化交易监控系统</title>
+    <style>
+        #navigation {
+            background: #F6F6F6;
+        }
+
+            #navigation li {
+                list-style-type: none;
+            }
+
+            #navigation a {
+                color: black;
+            }
+    </style>
+</head>
+<body>
+    <table border="0" width="100%" style="margin-top:20px">
+        <tbody>
+            <tr>
+                <td>
+                    <table border="0" width="100%" cellpadding="10" style="table-layout:fixed">
+                        <tbody>
+                            <tr>
+                                <td width="50%">
+                                    <div id="MaxOrder" style="width:100%;height:40%"></div>
+                                </td>
+                                <td width="50%">
+                                    <div id="PRevoke" style="width:100%;height:40%"></div>
+                                </td>
+                                
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

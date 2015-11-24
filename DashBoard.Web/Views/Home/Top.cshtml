@@ -1,0 +1,94 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta charset="utf-8" />
+    <link href="~/Content/sharestyle.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript">
+       //控制Left视图中菜单模块的显示
+        function showLeftList(divId) {
+            self.parent.frames["leftFrame"].showDivMenu(divId);
+        }
+        ////菜单点击高亮显示
+        //$(function () {
+        //    $(".nav_list ul li a").click(function () {
+        //        //$(".nav_list ul li a").css("color", "#ceebff");
+        //        //$(this).css("color", "yellow");
+        //        $(".nav_list ul li a").css("background-color", "");
+        //        $(".nav_list ul li a").css("color", "#ceebff");
+        //        $(this).css("background-color", "#66d354");
+        //        $(this).css("color", "white");
+        //    });
+        //});
+    </script>
+
+    <style type="text/css">
+        .hightCss {
+            color: yellow;
+        }
+
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="index_header">
+        <div class="index_headertop">
+            <div class="index_logo">
+                <a href="#">
+                    <img src="~/Images/index_logo.png">
+                </a>
+            </div>
+            @*<div class="lgstatus">
+                欢迎您，@ViewBag.UserName<i><em>20</em></i>可用余额：<span>￥@ViewBag.AvailableBalance</span>&nbsp;&nbsp;&nbsp;
+                <input type="submit" value="在线充值" class="btsty2">
+            </div>*@
+        </div>
+        <div class="clear"></div>
+        @*<div class="index_headerbot">
+            <div class="nav_list">
+                <ul>
+                    <li>
+                        <a href="#">业务管理</a>
+                        <div class="nav_out" style="display: none;">
+                            <i></i>
+                            <p><a href="#">订单管理</a></p>
+                            <p><a href="#">提单管理</a></p>
+                            <p><a href="#">身份证管理</a></p>
+                        </div>
+                    </li>
+                    <li class="slctd">
+                        <a href="#">财务管理</a>
+                        <div class="nav_out" style="display: none;">
+                            <i></i>
+                            <p><a href="#">财务流水</a></p>
+                            <p><a href="#">提单对账</a></p>
+                            <p><a href="#">运单对账</a></p>
+                            <p><a href="#">异常费用对账</a></p>
+                            <p><a href="#">充值记录</a></p>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#">系统管理</a>
+                        <div class="nav_out" style="display: none;">
+                            <i></i>
+                            <p><a href="#">基本信息管理</a></p>
+                            <p><a href="#">认证管理</a></p>
+                            <p><a href="#">修改密码</a></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="fucnbx"><span><a href="#"><i class="ilChannel"></i>运单打印客户端下载</a></span> <span><a href="#"><i class="i2"></i>API文档</a></span> <span><a href="#"><i class="i3"></i>退出</a></span> </div>
+        </div>*@
+    </div>
+</body>
+</html>

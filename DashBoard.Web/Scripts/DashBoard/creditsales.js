@@ -9,31 +9,33 @@
         //分钟级交易量
         var TradeAmount = [];
         //获取服务器日期
-        var Date = result[0].TradeDate;
+        //var Date = result[0].TradeDate;
         
         //单位
         var unit = "";
-        //获取当日第十名交易量
-        var minresult = result[0].MatchQty;
-        for (var i = 0; i < result.length; i++) {
-            if (minresult > result[i].MatchQty) {
-                minresult = Number(result[i].MatchQty);
-            }
-        }
-        //实时曲线数据转换
-        if (result[0].StockName != null && minresult / 1000000 >= 1) {
+        if (result.length > 0) {
+            //获取当日第十名交易量
+            var minresult = result[0].MatchQty;
             for (var i = 0; i < result.length; i++) {
-                StockName.push(result[i].StockName);
-                TradeAmount.push(Number(result[i].MatchQty) / 1000000);
+                if (minresult > result[i].MatchQty) {
+                    minresult = Number(result[i].MatchQty);
+                }
             }
-            unit = "百万股";
-        }
-        else {
-            for (var i = 0; i < result.length; i++) {
-                StockName.push(result[i].StockName);
-                TradeAmount.push(Number(result[i].MatchQty));
+            //实时曲线数据转换
+            if (result[0].StockName != null && minresult / 1000000 >= 1) {
+                for (var i = 0; i < result.length; i++) {
+                    StockName.push(result[i].StockName);
+                    TradeAmount.push(Number(result[i].MatchQty) / 1000000);
+                }
+                unit = "百万股";
             }
-            unit = "股";
+            else {
+                for (var i = 0; i < result.length; i++) {
+                    StockName.push(result[i].StockName);
+                    TradeAmount.push(Number(result[i].MatchQty));
+                }
+                unit = "股";
+            }
         }
         $(function () {
             $(document).ready(function () {
@@ -65,16 +67,18 @@
                                             var rStockName = [];
                                             //分钟级交易量
                                             var rTradeAmount = [];
-                                            //实时曲线数据转换
-                                            if (data[0].StockName != null) {
-                                                for (var i = 0; i < data.length; i++) {
-                                                    rStockName[i] = data[i].StockName;
-                                                    rTradeAmount[i] = data[i].MatchQty;
+                                            if (data.length > 0) {
+                                                //实时曲线数据转换
+                                                if (data[0].StockName != null) {
+                                                    for (var i = 0; i < data.length; i++) {
+                                                        rStockName[i] = data[i].StockName;
+                                                        rTradeAmount[i] = data[i].MatchQty;
+                                                    }
                                                 }
+
+                                                xAxis.setCategories(rStockName);
+                                                series.setData(rTradeAmount);
                                             }
-                                            
-                                            xAxis.setCategories(rStockName);
-                                            series.setData(rTradeAmount);
                                         }
                                     });
 
@@ -83,7 +87,7 @@
                         }
                     },
                     title: {
-                        text: '融券卖出交易标的前10<br>(' + Date + ')'
+                        text: '融券卖出交易标的前10'
                     },
                     xAxis: {
                         categories: StockName

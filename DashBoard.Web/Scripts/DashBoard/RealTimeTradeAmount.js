@@ -9,10 +9,12 @@
         //分钟级交易量
         var MinuteTrade = [];
         //实时曲线数据转换
-        if (result[0].Minute != null) {
-            for (var i = 0; i < result.length; i++) {
-                Realtime.push(result[i].Minute);
-                MinuteTrade.push(result[i].TradeAmount);
+        if (result.length > 0) {
+            if (result[0].Minute != null) {
+                for (var i = 0; i < result.length; i++) {
+                    Realtime.push(result[i].Minute);
+                    MinuteTrade.push(result[i].TradeAmount);
+                }
             }
         }
 $(function () {
@@ -26,7 +28,7 @@ $(function () {
         var chart;
         $('#realtimeTrade').highcharts({
             chart: {
-                type: 'spline',
+                type: 'line',
                 animation: Highcharts.svg, // don't animate in old IE               
                 marginRight: 10,
                 events: {
@@ -45,24 +47,26 @@ $(function () {
                                     //分钟级交易量
                                     var rMinuteTrade = [];
                                     //实时曲线数据转换
-                                    if (data[0].Minute != null) {
-                                        for (var i = 0; i < data.length; i++) {
-                                            rRealtime[i] = data[i].Minute;
-                                            rMinuteTrade[i] = data[i].TradeAmount;
-                                        }
-                                    }
-                                    if (data[data.length-1].Minute > result[result.length-1].Minute) {
-                                        
-                                        for (j = 0 ; j < data.length ; j++) {
-                                            if (data[j].Minute > result[result.length - 1].Minute) {
-                                                var dt = rRealtime[j];
-                                                dt = dt.replace(/-/g, "/");
-                                                var x = new Date(dt).getTime(), // current time         
-                                                        y = rMinuteTrade[j];
-                                                series.addPoint([x, y], true, true);
+                                    if (data.length > 0) {
+                                        if (data[0].Minute != null) {
+                                            for (var i = 0; i < data.length; i++) {
+                                                rRealtime[i] = data[i].Minute;
+                                                rMinuteTrade[i] = data[i].TradeAmount;
                                             }
                                         }
-                                        result = data;
+                                        if (data[data.length - 1].Minute > result[result.length - 1].Minute) {
+
+                                            for (j = 0 ; j < data.length ; j++) {
+                                                if (data[j].Minute > result[result.length - 1].Minute) {
+                                                    var dt = rRealtime[j];
+                                                    dt = dt.replace(/-/g, "/");
+                                                    var x = new Date(dt).getTime(), // current time         
+                                                            y = rMinuteTrade[j];
+                                                    series.addPoint([x, y], true, true);
+                                                }
+                                            }
+                                            result = data;
+                                        }
                                     }
                                 }
                             });
@@ -121,7 +125,17 @@ $(function () {
                     }
                     return data;
                 })()
-            }]
+            }],
+            lang: {
+                noData: "Nichts zu anzeigen"
+            },
+            noData: {
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '15px',
+                    color: '#303030'
+                }
+            }
         });
     });
 

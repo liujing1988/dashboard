@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <link href="~/Content/sharestyle.css" rel="stylesheet" />
+    <link href="~/Content/main.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript">
+    //显示菜单下面的选项
+    function ShowMenuList(id) {
+        var objectobj = document.getElementById(id);
+        var dtObj = document.getElementById("dt_" + id);
+        if (objectobj.style.display == "none") {
+            objectobj.style.display = "";
+            dtObj.setAttribute("class", "head2");
+            //其它菜单折叠
+            $(dtObj).parent().parent().find("dt").not(dtObj).attr("class", "head1"); //折叠
+            $(objectobj).parent().parent().find("ul").not(objectobj).css("display", "none"); //隐藏菜单子项
+        }
+        else {
+            objectobj.style.display = "none";
+            dtObj.setAttribute("class", "head1");
+        }
+    }
+    //控制菜单模块的显示和隐藏
+    function showDivMenu(divId) {
+        $("#" + divId).css("visibility", "visible");
+        $("#" + divId).siblings("div").css("visibility", "hidden");
+    }
+    $(function () {
+        $(".box_n li a").click(function () {
+            $(".box_n li a").removeClass("nav_sub");
+            $(this).addClass("nav_sub");
+        });
+    });
+    function goNewPage(url, name) {
+        self.parent.frames["mainFrame"].addTab(url, name);
+    }
+    </script>
+
+    <style type="text/css">
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="leftbar" id="divSysManage"></div>
+    <div class="leftbar" id="divFinancial">
+        <dl>
+            <dt id="dt_ulNew" class="head2" onclick='ShowMenuList("ulNew")'>最新情况</dt>
+            <ul class="box_n" id="ulNew">
+                @*<li><a href="#" onclick="goNewPage('a.html','渠道分类');">渠道分类</a></li>*@
+                <li><a target="mainFrame" id="New" onclick="goNewPage('/dashboard/Home/HomePage/', '最新情况');">最新情况</a></li>
+            </ul>
+        </dl>
+
+        <dl>
+            <dt id="dt_ulTrade" class="head1" onclick='ShowMenuList("ulTrade")'>策略明细</dt>
+            <ul class="box_n" id="ulTrade" style="display: none;">
+                @*<li><a href="#" onclick="goNewPage('a.html','渠道分类');">渠道分类</a></li>*@
+                <li><a target="mainFrame" id="TradeData" onclick="goNewPage('/dashboard/TradeData/TradeData/Index', '交易情况');">交易情况</a></li>
+            </ul>
+        </dl>
+        <dl>
+            <dt id="dt_ulCustomer" class="head1" onclick='ShowMenuList("ulCustomer")'>用户明细</dt>
+            <ul class="box_n" id="ulCustomer" style="display: none;">
+                <li><a target="mainFrame" id="Customer" onclick="goNewPage('/dashboard/CustomerData/Customer/Index', '用户情况');">用户情况</a></li>
+            </ul>
+        </dl>
+        <dl>
+            <dt id="dt_ulComprehensive" class="head1" onclick='ShowMenuList("ulComprehensive")'>综合查询</dt>
+            <ul class="box_n" id="ulComprehensive" style="display: none;">
+                <li><a target="mainFrame" id="CustomerIncrease" onclick="goNewPage('/dashboard/ComprehensiveSearch/ComprehensiveSearch/CustomerIncrease', '客户增长情况');">客户增长情况</a></li>
+                <li><a target="mainFrame" id="UseModules" onclick="goNewPage('/dashboard/ComprehensiveSearch/ComprehensiveSearch/UseModules', '系统功能使用情况');">系统功能使用情况</a></li>
+                <li><a target="mainFrame" id="RealTimeTrade" onclick="goNewPage('/dashboard/ComprehensiveSearch/ComprehensiveSearch/RealTimeTrade', '实时交易情况');">实时交易情况</a></li>
+                <li><a target="mainFrame" id="MonthTrade" onclick="goNewPage('/dashboard/ComprehensiveSearch/ComprehensiveSearch/MonthTrade', '月交易情况');">月交易情况</a></li>
+                <li><a target="mainFrame" id="TradeDetails" onclick="goNewPage('/dashboard/ComprehensiveSearch/ComprehensiveSearch/TradeDetails', '客户交易记录');">客户交易记录</a></li>
+            </ul>
+        </dl>
+
+        <dl>
+            <dt id="dt_ulHealthIndex" class="head1" onclick='ShowMenuList("ulHealthIndex")'>平台健康指数</dt>
+            <ul class="box_n" id="ulHealthIndex" style="display: none;">
+                <li><a target="mainFrame" id="MaxTrade" onclick="goNewPage('/dashboard/HealthIndex/MaxTrade/Index', '交易峰值');">交易峰值</a></li>
+            </ul>
+        </dl>
+    </div>
+</body>
+</html>

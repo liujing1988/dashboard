@@ -13,7 +13,7 @@ $(document).ready(function ($) {
     $(function () {
         table = $('#myDataTable').DataTable({
             "bServerSide": true,
-            "sAjaxSource": "Customer/AjaxHandler",
+            "sAjaxSource": "/dashboard/Customer/AjaxHandler",
             "fnServerParams": function ( aoData ) {
                 aoData.push({ "name": "extra_search", "value": $('#reportrange span').html() },
                     { "name": "columnIndex", "value": searchtitle }, { "name": "searchColumns", "value": searchtext });
@@ -70,7 +70,7 @@ $(document).ready(function ($) {
 
         table.columns().every(function () {
             var that = this;
-            $('input', this.footer()).on('keyup change', function () {
+            $('input', this.footer()).on('blur change', function () {
                 if (that.search() !== this.value) {
                     var stitle = $(this).attr("data");
                     var stext = $.fn.dataTable.util.escapeRegex($(this).val());

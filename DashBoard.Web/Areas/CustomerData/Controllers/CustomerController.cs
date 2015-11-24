@@ -22,126 +22,168 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
         {
             TradeDetails da = new TradeDetails();
             //for(int i =0;i<param.columnsearch.Count(); i++)
-            
+
             if (param.extra_search == null)
             {
                 DateTime dt = DateTime.Now;
                 da.begindate = dt.AddMonths(-1).ToString("yyyy-MM-dd");
                 da.enddate = dt.ToString("yyyy-MM-dd");
             }
-             
+
             else
             {
                 da.begindate = param.extra_search.Substring(0, 10);
                 da.enddate = param.extra_search.Substring(param.extra_search.LastIndexOf('-', 22) + 2, 10);
             }
 
+            string ssql = "";
+            if (!string.IsNullOrEmpty(param.searchColumns))
+            {
+                string[] columnIndexs = param.columnIndex.Split(',');
+                string[] searchTexts = param.searchColumns.Split(',');
+                for (int i = 0; i < 6; i++)
+                {
+                    if (param.columnIndex.Contains("客户ID"))
+                    {
+                        for (int j = 0; j < columnIndexs.Length; j++)
+                        {
+                            if (columnIndexs[j] == "客户ID")
+                            {
+                                ssql = searchTexts[j];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ssql = "";
+                    }
+                    if (param.columnIndex.Contains("交易日期"))
+                    {
+                        for (int j = 0; j < columnIndexs.Length; j++)
+                        {
+                            if (columnIndexs[j] == "交易日期")
+                            {
+                                ssql = ssql + ',' + searchTexts[j];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ssql = ssql + ',' + "";
+                    }
+                    if (param.columnIndex.Contains("股票代码"))
+                    {
+                        for (int j = 0; j < columnIndexs.Length; j++)
+                        {
+                            if (columnIndexs[j] == "股票代码")
+                            {
+                                ssql = ssql + ',' + searchTexts[j];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ssql = ssql + ',' + "";
+                    }
+                    if (param.columnIndex.Contains("交易量"))
+                    {
+                        for (int j = 0; j < columnIndexs.Length; j++)
+                        {
+                            if (columnIndexs[j] == "交易量")
+                            {
+                                ssql = ssql + ',' + searchTexts[j];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ssql = ssql + ',' + "";
+                    }
+                    if (param.columnIndex.Contains("交易价格"))
+                    {
+                        for (int j = 0; j < columnIndexs.Length; j++)
+                        {
+                            if (columnIndexs[j] == "交易价格")
+                            {
+                                ssql = ssql + ',' + searchTexts[j];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ssql = ssql + ',' + "";
+                    }
+                    if (param.columnIndex.Contains("交易方向"))
+                    {
+                        for (int j = 0; j < columnIndexs.Length; j++)
+                        {
+                            if (columnIndexs[j] == "交易方向")
+                            {
+                                ssql = ssql + ',' + searchTexts[j] + ',';
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ssql = ssql + ',' + "" + ',';
+                    }
 
-            var allCompanies = DataServiceHelper.GetTradeDetails(da);
-            IEnumerable<TradeDetails> filteredCompanies;
-            //if (!string.IsNullOrEmpty(param.sSearch))
-            //{
-            //    filteredCompanies = DataServiceHelper.GetTradeDetails(da)
-            //             .Where(c => c.CustId.Contains(param.sSearch)
-            //                         ||
-            //              c.TradeDate.Contains(param.sSearch)
-            //                         ||
-            //                         c.StockCode.Contains(param.sSearch));
-            //}
-            //else 
-            filteredCompanies = allCompanies;
-            //    if (!string.IsNullOrEmpty(param.columnsearch))
-            //{
+                }
+            }
 
-            //    if (param.columnindex == "客户ID")
-            //    {
-            //        filteredCompanies = filteredCompanies
-            //             .Where(c => c.CustId.Contains(param.columnsearch));
-            //    }
-            //    else if (param.columnindex == "交易日期")
-            //    {
-            //        filteredCompanies = filteredCompanies
-            //             .Where(c => c.TradeDate.Contains(param.columnsearch));
-            //    }
-            //    else if (param.columnindex == "股票代码")
-            //    {
-            //        filteredCompanies = filteredCompanies
-            //             .Where(c => c.StockCode.Contains(param.columnsearch));
-            //    }
-            //    else if (param.columnindex == "交易量")
-            //    {
-            //        filteredCompanies = filteredCompanies
-            //             .Where(c => c.MatchQty.Contains(param.columnsearch));
-            //    }
-            //    else if (param.columnindex == "交易价格")
-            //    {
-            //        filteredCompanies = filteredCompanies
-            //             .Where(c => c.MatchPrice.Contains(param.columnsearch));
-            //    }
-            //    else if (param.columnindex == "交易方向")
-            //    {
-            //        filteredCompanies = filteredCompanies
-            //             .Where(c => c.BsFlag.Contains(param.columnsearch));
-            //    }
-            //    else
-            //    {
-            //        filteredCompanies = allCompanies;
-            //    }
-            //}
-            //else
-            //{
-            //    filteredCompanies = allCompanies;
-            //}
+            da.searchColumns = ssql;
 
             var sortColumnIndex = Convert.ToInt32(Request["iSortCol_0"]);
-
-            Func<TradeDetails, object> orderingFunction = null;
+            string orderfield = null;
             if (sortColumnIndex == 0)
             {
-                orderingFunction = (c => c.CustId);
+                orderfield = "custid";
             }
             if (sortColumnIndex == 1)
             {
-                orderingFunction = (c => c.TradeDate);
+                orderfield = "tradedate";
             }
             if (sortColumnIndex == 2)
             {
-                orderingFunction = (c => c.StockCode);
+                orderfield = "stkcode";
             }
             if (sortColumnIndex == 3)
             {
-                orderingFunction = (c => c.MatchQty);
+                orderfield = "matchqty";
             }
             if (sortColumnIndex == 4)
             {
-                orderingFunction = (c => c.MatchPrice);
+                orderfield = "matchprice";
             }
             if (sortColumnIndex == 5)
             {
-                orderingFunction = (c => c.BsFlag);
+                orderfield = "bsflag";
             }
+            da.OrderField = orderfield;
 
             var sortDirection = Request["sSortDir_0"]; // asc or desc
-            if (sortDirection == "asc")
-                filteredCompanies = filteredCompanies.OrderBy(orderingFunction);
-            else
-                filteredCompanies = filteredCompanies.OrderByDescending(orderingFunction);
+
+            da.sortDirection = sortDirection;
+
+            da.DisplayLength = param.iDisplayLength;
+
+            da.DisplayStart = param.iDisplayStart;
+
+            da.CurrentPage = param.iDisplayStart / param.iDisplayLength;
+
+            var result = DataServiceHelper.GetTradeDetails(da);
 
 
-            var displayedCompanies = filteredCompanies
-                        .Skip(param.iDisplayStart)
-                        .Take(param.iDisplayLength);
-
-            var result = from c in displayedCompanies
-                         select new[] { c.CustId, c.TradeDate,
+            var data = from c in result.List
+                       select new[] { c.CustId, c.TradeDate,
                           c.StockCode, c.MatchQty,c.MatchPrice,c.BsFlag };
 
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = allCompanies.Count(),
-                iTotalDisplayRecords = filteredCompanies.Count(),
-                aaData = result
+                iTotalRecords = result.TotalRecords,
+                iTotalDisplayRecords = result.TotalDisplayRecords,
+                aaData = data
             },
                         JsonRequestBehavior.AllowGet);
         }

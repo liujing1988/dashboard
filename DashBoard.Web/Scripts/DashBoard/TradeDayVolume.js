@@ -171,12 +171,9 @@
                     },
                     title: {
                         useHTML: true,
-                        text: '撤单/委托比<br><font size= 5 color = green>' + (NumRevoke/NumOrder *100).toFixed(2) + '%</font>',
-                        align: 'left'
+                        text: '今日交易操作情况'
                     },
-                    subtitle: {
-                        text: '单位时间内最大委托笔数<br><font size= 5 color = green>' + MaxNumOrder + '笔</font>'
-                    },
+                    
                     xAxis: {
                         categories: ['总委托笔数', '总成交笔数', '总撤单笔数']
                     },

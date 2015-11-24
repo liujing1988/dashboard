@@ -117,7 +117,7 @@
                         }
                     },
                     series: [{
-                        name: '使用百分比',
+                        name: '两融用户占比',
                         type:'pie',
                         data: pieArray,
                         
@@ -142,6 +142,8 @@
                         }
                     }
                 });
+
+
 
                 $('#CustomerOnline').highcharts({
                     chart: {

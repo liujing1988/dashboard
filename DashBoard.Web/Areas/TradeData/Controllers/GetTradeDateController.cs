@@ -29,6 +29,12 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         {
             return DataServiceHelper.GetRealTimeData();
         }
+
+        [HttpPost]
+        public List<RealTimeData> GetRealData(RealTimeData da)
+        {
+            return DataServiceHelper.GetRealData(da);
+        }
         [HttpPost]
         public List<TradeDayAmount> GetDayAmount()
         {
