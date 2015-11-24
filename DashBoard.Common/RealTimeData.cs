@@ -10,5 +10,7 @@ namespace Dashboard.Common
     {
         public string Minute { get; set; }
         public decimal TradeAmount { get; set; }
+        public string beginDate { get; set; }
+        public string endDate { get; set; }
     }
 }

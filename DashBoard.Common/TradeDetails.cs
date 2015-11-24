@@ -28,9 +28,14 @@ namespace Dashboard.Common
         public string begindate { get; set; }
         //查询结束时间
         public string enddate { get; set; }
-        public int startIndex { get; set; }
-        public int rowsPerPage { get; set; }
-        public string sort { get; set; }
-        public string dir { get; set; }
+        public string searchColumns { get; set; }
+        public int DisplayStart { get; set; }
+        public int DisplayLength { get; set; }
+        public string sortDirection { get; set; }
+        public int PageCount { get; set; }
+        public int CurrentPage { get; set; }
+        public int TotalRecords { get; set; }
+        public int TotalDisplayRecords { get; set; }
+        public string OrderField { get; set; }
     }
 }
