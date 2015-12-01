@@ -15,8 +15,16 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Logic
 {
+    /// <summary>
+    /// 与数据库交互，为各类图表获取数据 修改日期：2015-11-24
+    /// </summary>
     public class DataServiceHelper
     {
+        /// <summary>
+        /// 调用存储过程，获取新增客户和活跃客户信息
+        /// </summary>
+        /// <param name="da">查询条件，包括开始日期与结束日期</param>
+        /// <returns>指定时间段内的新增用户、活跃用户和总用户数</returns>
         public static List<CustomerAmount> GetCustomer(CustomerAmount da)
         {
             List<CustomerAmount> result = new List<CustomerAmount>();
@@ -41,7 +49,8 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取每月交易量
         /// </summary>
-        /// <returns></returns>
+        /// <param name="dateTime">查询条件，包括开始月份与结束月份</param>
+        /// <returns>月份、该月所有用户交易量之和</returns>
         public static List<TradeMonthAmount> GetMatchAmount(GetDateTime dateTime)
         {
             int bmonth = ConvertDate(dateTime.begindate);
@@ -72,9 +81,10 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 获取每日交易量
+        /// 获取每日交易量（用于每月交易图表中的自动弹出日交易信息）
         /// </summary>
-        /// <returns></returns>
+        /// <param name="dateTime">查询日期</param>
+        /// <returns>日期、该日期所有用户交易量之和</returns>
         public static List<TradeMonthAmount> GetDateAmount(GetDateTime dateTime)
         {
             int bday = ConvertDate(dateTime.begindate);
@@ -102,72 +112,126 @@ namespace Dashboard.Logic
             }
             return result;
         }
+
         /// <summary>
-        /// 获取每分钟交易量
+        /// 获取每分钟交易量（用于首页中的交易曲线图，1分钟调用1次）
         /// </summary>
-        /// <returns></returns>
+        /// <returns>时间、该时间对应的所有用户交易量之和</returns>
+        //public static List<RealTimeData> GetRealTimeData()
+        //{
+        //    int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
+        //    List<RealTimeData> result = new List<RealTimeData>();
+        //    using (var db = new ModelDataContainer())
+        //    {
+        //        var query = (from a in db.strategytrade
+        //                     where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
+        //                     && a.strategyno != -1 && a.tradedate == tdate
+        //                     group a by (a.tradedate + (a.tradetime / 10000) / 10000.0) into b
+        //                     select new
+        //                     {
+        //                         Minute = b.Max(p => p.tradedate + (p.tradetime / 10000) / 10000.0),
+        //                         TradeAmount = b.Sum(p => p.matchamt)
+        //                     }).OrderByDescending(p => p.Minute);
+        //        foreach (var item in query.OrderBy(p => p.Minute))
+        //        {
+        //            result.Add(new RealTimeData()
+        //            {
+        //                Minute = ConvertMinute(item.Minute),
+        //                TradeAmount = item.TradeAmount,
+        //            });
+        //        }
+        //    }
+        //    return result;
+        //}
+
+        /// <summary>
+        /// 获取每分钟交易量（用于首页中的交易曲线图，1分钟调用1次）
+        /// </summary>
+        /// <returns>时间、该时间对应的所有用户交易量之和</returns>
         public static List<RealTimeData> GetRealTimeData()
         {
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             List<RealTimeData> result = new List<RealTimeData>();
             using (var db = new ModelDataContainer())
             {
-                var query = (from a in db.strategytrade
-                             where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
-                             && a.strategyno != -1 && a.tradedate == tdate
-                             group a by (a.tradedate + (a.tradetime / 10000) / 10000.0) into b
-                             select new
-                             {
-                                 Minute = b.Max(p => p.tradedate + (p.tradetime / 10000) / 10000.0),
-                                 TradeAmount = b.Sum(p => p.matchamt)
-                             }).OrderByDescending(p => p.Minute);
-                foreach (var item in query.OrderBy(p => p.Minute))
+                var list = db.sp_TradeAmt_Minute(tdate);
+                foreach (var item in list)
                 {
-                    result.Add(new RealTimeData()
+                    if (item.rminute > 0)
                     {
-                        Minute = ConvertMinute(item.Minute),
-                        TradeAmount = item.TradeAmount,
-                    });
+                        result.Add(new RealTimeData()
+                        {
+                            Minute = ConvertTime(item.rminute),
+                            TradeAmount = item.tradeamt,
+                        });
+                    }
+                    else
+                    {
+                        result.Add(new RealTimeData()
+                        {
+                            Minute = item.rminute.ToString(),
+                            TradeAmount = item.tradeamt,
+                        });
+                    }
                 }
             }
             return result;
         }
 
         /// <summary>
-        /// 获取每分钟交易量
+        /// 用于调取综合查询中交易曲线所需数据
         /// </summary>
-        /// <returns></returns>
+        /// <param name="da">日期参数，调用的起止日期</param>
+        /// <returns>分钟值、对应交易量</returns>
         public static List<RealTimeData> GetRealData(RealTimeData da)
         {
-            int bdate = ConvertDate(da.beginDate);
-            int edate = ConvertDate(da.endDate);
             List<RealTimeData> result = new List<RealTimeData>();
-            using (var db = new ModelDataContainer())
+            DateTime begindate = Convert.ToDateTime(da.beginDate);
+            DateTime enddate = Convert.ToDateTime(da.endDate);
+            for (DateTime i = begindate; i <= enddate; i = i.AddDays(1) )
             {
-                var query = (from a in db.strategytrade
-                             where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
-                             && a.strategyno != -1 && a.tradedate >= bdate && a.tradedate <= edate
-                             group a by (a.tradedate + (a.tradetime / 10000) / 10000.0) into b
-                             select new
-                             {
-                                 Minute = b.Max(p => p.tradedate + (p.tradetime / 10000) / 10000.0),
-                                 TradeAmount = b.Sum(p => p.matchamt)
-                             }).OrderByDescending(p => p.Minute);
-                foreach (var item in query.OrderBy(p => p.Minute))
+                if (i.DayOfWeek.ToString() == "Saturday" || i.DayOfWeek.ToString() == "Sunday")
                 {
-                    result.Add(new RealTimeData()
+
+                }
+                else
+                {
+                    int indexdate = ConvertDate(i.ToString("yyyy-MM-dd"));
+                    using (var db = new ModelDataContainer())
                     {
-                        Minute = ConvertMinute(item.Minute),
-                        TradeAmount = item.TradeAmount,
-                    });
+                        var list = db.sp_TradeAmt_Minute(indexdate);
+                        foreach (var item in list)
+                        {
+                            if (item.rminute > 0)
+                            {
+                                result.Add(new RealTimeData()
+                                {
+                                    Minute = ConvertTime(item.rminute),
+                                    TradeAmount = item.tradeamt,
+                                    Day = i.ToString("yyyy-MM-dd")
+                                });
+                            }
+                            else
+                            {
+                                result.Add(new RealTimeData()
+                                {
+                                    Minute = item.rminute.ToString(),
+                                    TradeAmount = item.tradeamt,
+                                    Day = i.ToString("yyyy-MM-dd")
+                                });
+                            }
+                        }
+                    }
                 }
             }
             return result;
         }
+        
         /// <summary>
-        /// 获取功能模块使用量
+        /// 调取系统功能模块使用情况
         /// </summary>
-        /// <returns></returns>
+        /// <param name="dateTime">日期参数，查询的起止时间</param>
+        /// <returns>功能模块名称、使用次数</returns>
         public static List<StrategyTypes> GetStrategyType(GetDateTime dateTime)
         {
             int bdate = ConvertDate(dateTime.begindate);
@@ -176,13 +240,13 @@ namespace Dashboard.Logic
             using (var db = new ModelDataContainer())
             {
                 var query = (from a in db.strategyorder
-                             where (a.strategytype == "0" || a.strategytype == "1"
-                             || a.strategytype == "2" || a.strategytype == "3" || a.strategytype == "4")
+                             from b in db.strategyinfo
+                             where (a.strategyno == b.strategyno)
                              where (a.orderdate >= bdate && a.orderdate <= edate)
-                             group a by a.strategytype into h
+                             group a by new { b.strategyname } into h
                              select new
                              {
-                                 strategytype = h.Max(p => p.strategytype),
+                                 strategytype = h.Key.strategyname,
                                  Nstrage = h.Count()
                              }
                     );
@@ -192,7 +256,7 @@ namespace Dashboard.Logic
                     {
                         result.Add(new StrategyTypes()
                         {
-                            StrategyType = ConvertStrategyType(item.strategytype),
+                            StrategyType = item.strategytype,
                             NumStrategyType = item.Nstrage
 
                         });
@@ -203,9 +267,9 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 获取用户日交易总量前五
+        /// 获取用户当日交易总量前五（用于首页展示）
         /// </summary>
-        /// <returns></returns>
+        /// <returns>当日用户交易总量前五名的总交易量、信用交易量</returns>
         public static List<TradeDayAmount> GetDayAmount()
         {
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
@@ -268,9 +332,9 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 获取融资卖出交易标的前十
+        /// 获取融券卖出交易标的前十
         /// </summary>
-        /// <returns></returns>
+        /// <returns>当日用户融券卖出总量前十名的总交易量、股票名称</returns>
         public static List<CreditTrade> GetCreditSalesAmount()
         {
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
@@ -301,7 +365,7 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取融资买入交易标的前十
         /// </summary>
-        /// <returns></returns>
+        /// <returns>当日用户融资买入总量前十名的总交易量、股票名称</returns>
         public static List<CreditTrade> GetCreditBuyAmount()
         {
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
@@ -332,8 +396,15 @@ namespace Dashboard.Logic
         /// <summary>
         /// 调用存储过程，获取客户交易流水
         /// </summary>
-        /// <param name="da"></param>
-        /// <returns></returns>
+        /// <param name="da.begindate">开始时间</param>
+        /// <param name="da.enddate">结束时间</param>
+        /// <param name="da.searchColumns">搜索内容</param>
+        /// <param name="da.DisplayStart">当前页第一行数据的总行号</param>
+        /// <param name="da.DisplayLength">每页显示数据行数</param>
+        /// <param name="da.CurrentPage">当前页号</param>
+        /// <param name="da.sortDirection">排序方式（正序、反序）</param>
+        /// <param name="da.OrderField">排序字段</param>
+        /// <returns>符合条件的数据集、符合条件的记录条数、总页数</returns>
         public static RecordResult<TradeDetails> GetTradeDetails(TradeDetails da)
         {
             RecordResult<TradeDetails> result = new RecordResult<TradeDetails>();
@@ -385,9 +456,9 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 获取本月策略开仓金额
+        /// 获取本月策略开仓金额前三
         /// </summary>
-        /// <returns></returns>
+        /// <returns>策略名称、开仓金额</returns>
         public static List<StrategyTypes> GetStrategyTradeAmt()
         {
             List<StrategyTypes> result = new List<StrategyTypes>();
@@ -418,9 +489,9 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 获取本月策略开仓次数
+        /// 获取本月策略开仓次数前五
         /// </summary>
-        /// <returns></returns>
+        /// <returns>策略名称、开仓次数</returns>
         public static List<StrategyTypes> GetStrategyTradeAct()
         {
             List<StrategyTypes> result = new List<StrategyTypes>();
@@ -458,7 +529,7 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取当前在线用户数和信用用户数
         /// </summary>
-        /// <returns></returns>
+        /// <returns>在线用户数、其中信用用户数</returns>
         public static CustomerOnline GetCustomerOnline()
         {
             CustomerOnline result = new CustomerOnline();
@@ -488,16 +559,17 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 获取当日委托、成交、撤单情况
+        /// 获取当日委托、成交、撤单情况(每秒更新)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>当日委托笔数、成交笔数、撤单笔数</returns>
         public static TradeDayVolume GetTradeDayVolume()
         {
             TradeDayVolume result = new TradeDayVolume();
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
-            int ttime = Int32.Parse(DateTime.Now.ToString("HHmm"));
+            int ttime = Int32.Parse(DateTime.Now.ToString("HHmmss"));
             using (var db = new ModelDataContainer())
             {
+                //当日委托笔数
                 var ordercount = from a in db.strategyorder
                                  where a.orderdate == tdate && a.cancelflag == "F"
                                  && a.orderstatus != "9"
@@ -511,6 +583,47 @@ namespace Dashboard.Logic
                     result.NumOrder = item.ordercount;
                 }
 
+                //日最大委托笔数（每分钟）
+                var miordercount = from a in db.strategyorder
+                                 where a.orderdate == tdate
+                                 && a.cancelflag == "F"
+                                 && a.orderstatus != "9"
+                                 group a by a.opertime / 10000 into b
+                                 select new
+                                 {
+                                     miordercount = b.Count()
+                                 };
+                if (miordercount.Count() > 0)
+                {
+                    result.MiNumOrder = miordercount.Max(p => p.miordercount);
+                }
+                else
+                {
+                    result.MiNumOrder = 0;
+                }
+                
+
+                //最大委托笔数（每秒）
+                var seordercount = from a in db.strategyorder
+                                   where a.orderdate == tdate
+                                   && a.cancelflag == "F"
+                                   && a.orderstatus != "9"
+                                   group a by (a.opertime / 100)  into b
+                                   select new
+                                   {
+                                       seordercount = b.Count()
+                                   };
+                if (seordercount.Count() > 0)
+                {
+                    result.SeNumOrder = seordercount.Max(p => p.seordercount);
+                }
+                else
+                {
+                    result.SeNumOrder = 0;
+                }
+                
+
+                //当日交易量
                 var volumecount = from a in db.strategyorder
                                   where a.orderdate == tdate && a.cancelflag == "F"
                                   && a.orderstatus != "9" && a.matchqty > 0
@@ -524,6 +637,7 @@ namespace Dashboard.Logic
                     result.NumVolum = item.volumecount;
                 }
 
+                //当日撤单笔数
                 var cancelcount = from a in db.strategyorder
                                   where a.orderdate == tdate && a.cancelflag == "T"
                                   && a.orderstatus != "9" && a.matchqty > 0
@@ -537,6 +651,7 @@ namespace Dashboard.Logic
                     result.NumRevoke = item.cancelcount;
                 }
 
+                //当日成交金额
                 var volumeamt = from a in db.strategyorder
                                 where a.orderdate == tdate && a.cancelflag == "F"
                                 && a.orderstatus != "9" && a.matchqty > 0
@@ -550,6 +665,7 @@ namespace Dashboard.Logic
                     result.VolumAmt = item.volumeamt.ToString();
                 }
 
+                //当日逆回购金额
                 var rrpamt = from a in db.strategyorder
                              where a.orderdate == tdate && a.cancelflag == "F"
                              && a.orderstatus != "9" && a.matchqty > 0
@@ -563,6 +679,8 @@ namespace Dashboard.Logic
                 {
                     result.RRPAmt = item.rrpamt.ToString();
                 }
+
+                //当日买入金额
                 var buyamt = from a in db.strategyorder
                              where a.orderdate == tdate && a.cancelflag == "F"
                              && a.orderstatus != "9" && a.matchqty > 0
@@ -576,6 +694,8 @@ namespace Dashboard.Logic
                 {
                     result.BuyAmt = item.buyamt.ToString();
                 }
+
+                //当日卖出金额
                 var salesamt = from a in db.strategyorder
                                where a.orderdate == tdate && a.cancelflag == "F"
                                && a.orderstatus != "9" && a.matchqty > 0
@@ -598,8 +718,8 @@ namespace Dashboard.Logic
         /// <summary>
         /// 交易类型转换
         /// </summary>
-        /// <param name="strategytype"></param>
-        /// <returns></returns>
+        /// <param name="strategytype">交易类型代码</param>
+        /// <returns>交易类型名称</returns>
         public static string ConvertStrategyType(string strategytype)
         {
             string result = null;
@@ -629,7 +749,7 @@ namespace Dashboard.Logic
         /// 实时数据json时间格式转换
         /// </summary>
         /// <param name="Minute">传入时间，格式为yyyyMMdd.HHmiss或者yyyyMMdd</param>
-        /// <returns></returns>
+        /// <returns>传出时间，格式为yyyy-MM-dd</returns>
         public static string ConvertMinute(double Minute)
         {
             string result;
@@ -656,12 +776,12 @@ namespace Dashboard.Logic
 
             return result;
         }
-
+                
         /// <summary>
-        /// 前台页面传递过来的时间转换
+        /// string类型的时间转为int类型
         /// </summary>
-        /// <param name="datetime"></param>
-        /// <returns></returns>
+        /// <param name="datetime">时间格式yyyy-MM-dd</param>
+        /// <returns>整型，格式yyyyMMdd</returns>
         public static int ConvertDate(string datetime)
         {
             int date = -1;
@@ -682,10 +802,30 @@ namespace Dashboard.Logic
             }
             return date;
         }
+
+        /// <summary>
+        /// 分钟数据格式转换
+        /// </summary>
+        /// <param name="datetime">时间格式Mss</param>
+        /// <returns>字符串，格式MMdd</returns>
+        public static string ConvertTime(int datetime)
+        {
+            string time = null;
+            if(datetime > 0 && datetime / 1000 <= 0)
+            {
+                time = "0" + datetime.ToString().Substring(0,1) + ":" + datetime.ToString().Substring(1,2);
+            }
+            else
+            {
+                time = datetime.ToString().Substring(0, 2) + ":" + datetime.ToString().Substring(2, 2);
+            }
+            return time;
+        }
+
         /// <summary>
         /// 交易方向转换
         /// </summary>
-        /// <param name="BSFlag"></param>
+        /// <param name="BSFlag">交易方向标识</param>
         /// <returns></returns>
         public static string ConvertFlag(string BSFlag)
         {
@@ -701,20 +841,5 @@ namespace Dashboard.Logic
 
             return result;
         }
-
-        /// <summary>
-        /// 将字符串型数组转换为整形数组
-        /// </summary>
-        /// <param name="arr"></param>
-        /// <returns></returns>
-        //public static int[] ConvertArray(params string[] arr)
-        //{
-        //    int[] result = null;
-        //    for (int i = 0;i < arr.Length;i++)
-        //    {
-        //        result[i] = Convert.ToInt32(arr[i]);
-        //    }
-        //    return result;
-        //}
     }
 }
