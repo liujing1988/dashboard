@@ -1,30 +1,35 @@
-﻿
-var table;
-var searchtitle;
-var searchtext;
-$(document).ready(function ($) {
+﻿///获取客户交易流水
+///作者：刘静
+///修改时间：2015-11-25
+var table; //定义全局变量表格
+var searchtitle; //搜索列名
+var searchtext;  //搜索内容
+$(document).ready(function ($) {  //加载页面
 
+    //重写表格的tfoot，将其变成输入框
     $('#myDataTable tfoot th').each(function () {
         var title = $(this).text();
         $(this).html('<input type="text" data=' + title + '  placeholder="搜索 ' + title + '" />');
     });
 
-
+    //加载客户交易表的内容，并将其汉化
     $(function () {
         table = $('#myDataTable').DataTable({
-            "bServerSide": true,
-            "sAjaxSource": "/dashboard/Customer/AjaxHandler",
-            "fnServerParams": function ( aoData ) {
-                aoData.push({ "name": "extra_search", "value": $('#reportrange span').html() },
-                    { "name": "columnIndex", "value": searchtitle }, { "name": "searchColumns", "value": searchtext });
+            "bServerSide": true,  //是否链接服务器端
+            "sAjaxSource": "/dashboard/Customer/AjaxHandler",  //json访问，调取数据
+            //传递条件参数至后台
+            "fnServerParams": function (aoData) {
+                aoData.push({ "name": "extra_search", "value": $('#reportrange span').html() },  //时间参数
+                    { "name": "columnIndex", "value": searchtitle }, //搜索列
+                    { "name": "searchColumns", "value": searchtext });  //搜索内容
             },
             "bProcessing": true,
-            "aoColumns": [
+            "aoColumns": [  //初始化列名
                             {
-                                "sName": "custid",
-                                "bSearchable": true,
-                                "bSortable": true,
-                                "fnRender": function (oObj) {
+                                "sName": "custid", //第一列列名
+                                "bSearchable": true, //是否启动搜索
+                                "bSortable": true,  //是否启用排序
+                                "fnRender": function (oObj) {  //数据填充
                                     return '<a href=\"Details/' +
                                     oObj.aData[0] + '\">View</a>';
                                 }
@@ -35,7 +40,7 @@ $(document).ready(function ($) {
                             { "sName": "matchprice" },
                             { "sName": "bsflag" }
             ],
-            "language": {
+            "language": { //汉化
                 "sProcessing": "处理中...",
                 "sLengthMenu": "显示 _MENU_ 项结果",
                 "sZeroRecords": "没有匹配结果",
@@ -59,28 +64,27 @@ $(document).ready(function ($) {
                     "sSortDescending": ": 以降序排列此列"
                 }
             },
-            "dom":
+            "dom":  //调整控件布局，添加#mytoolbox时间选择控件
                     "<'row'<'col-xs-7'l<'#mytoolbox'>><'col-xs-5'>r>" +
                     "t" +
                     "<'row'<'col-xs-6'i><'col-xs-6'p>>",
-            initComplete: initComplete
+            initComplete: initComplete  //回调函数，表格加载完之后调用
 
         });
-        
 
-        table.columns().every(function () {
+        //多条件搜索
+        table.columns().every(function () {  //列初始化
             var that = this;
-            $('input', this.footer()).on('blur change', function () {
+            $('input', this.footer()).on('blur change', function () {  //单元格失去焦点时触发该函数
                 if (that.search() !== this.value) {
-                    var stitle = $(this).attr("data");
-                    var stext = $.fn.dataTable.util.escapeRegex($(this).val());
-                    var re = new RegExp(stitle);
-                    if (searchtitle == null)
-                    {
+                    var stitle = $(this).attr("data");  //获取列名
+                    var stext = $.fn.dataTable.util.escapeRegex($(this).val());  //获取搜索内容
+                    var re = new RegExp(stitle);  //判断搜索列名是否有重复的初始化
+                    if (searchtitle == null) {
                         searchtitle = stitle;
                         searchtext = stext;
                     }
-                    else if (searchtitle.search(re) != -1) {
+                    else if (searchtitle.search(re) != -1) {  //判断搜索列名是否重复，如有重复，更新相应的搜索内容
                         var st = searchtitle.split(',');
                         var sx = searchtext.split(',');
                         for (var i = 0; i < st.length; i++) {
@@ -101,7 +105,7 @@ $(document).ready(function ($) {
                         searchtitle += ',' + stitle;
                         searchtext += ',' + stext;
                     }
-                    table.ajax.reload();
+                    table.ajax.reload();  //重新加载数据
                     that
                         .search(this.value)
                         .draw();
@@ -109,7 +113,7 @@ $(document).ready(function ($) {
             });
         });
     });//enddatatable
-        
+
 })
 
 /**
@@ -117,20 +121,21 @@ $(document).ready(function ($) {
     * @param data
     */
 function initComplete(data) {
-
+    //拼接时间插件的html语句
     var dataPlugin =
             '<div id="reportrange" class="pull-left dateRange" style="margin-left: 10px"> ' +
             '日期：<i class="glyphicon glyphicon-calendar fa fa-calendar"></i> ' +
             '<span id="searchDateRange"></span>  ' +
             '<b class="caret"></b></div> ';
-    $('#mytoolbox').append(dataPlugin);
+    $('#mytoolbox').append(dataPlugin);  //将其加载至表格控件中
 
     //时间插件
     $('#reportrange span').html(moment().subtract('months', 1).format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
-    
+
+    //时间插件初始化
     $('#reportrange').daterangepicker(
             {
-                
+
                 //startDate: moment().startOf('day'),
                 //endDate: moment(),
                 //minDate: '01/01/2012',    //最小时间
@@ -143,8 +148,8 @@ function initComplete(data) {
                 timePicker: true, //是否显示小时和分钟
                 timePickerIncrement: 60, //时间的增量，单位为分钟
                 timePicker12Hour: false, //是否使用12小时制来显示时间
-                ranges: {
-                    '最近1小时': [moment().subtract('hours',1), moment()],
+                ranges: {  //时间快速选择下拉框
+                    '最近1小时': [moment().subtract('hours', 1), moment()],
                     '今日': [moment().startOf('day'), moment()],
                     '昨日': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],
                     '最近7日': [moment().subtract('days', 6), moment()],

@@ -164,6 +164,7 @@
     <Compile Include="Areas\CustomerData\CustomerDataAreaRegistration.cs" />
     <Compile Include="Areas\HealthIndex\Controllers\MaxTradeController.cs" />
     <Compile Include="Areas\HealthIndex\HealthIndexAreaRegistration.cs" />
+    <Compile Include="Areas\HealthIndex\Models\IndexManagers.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserAuthorizeAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\SignService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -308,6 +310,8 @@
     <Content Include="Areas\ComprehensiveSearch\Views\ComprehensiveSearch\MonthTrade.cshtml" />
     <Content Include="Areas\ComprehensiveSearch\Views\ComprehensiveSearch\TradeDetails.cshtml" />
     <Content Include="Areas\HealthIndex\Views\MaxTrade\Index.cshtml" />
+    <Content Include="Areas\HealthIndex\Views\IndexManager.config" />
+    <Content Include="Areas\HealthIndex\Views\MaxTrade\IndexManager.cshtml" />
     <None Include="Properties\PublishProfiles\DashBoard.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Images\closeico2.png" />
@@ -432,6 +436,7 @@
     <Content Include="Scripts\DashBoard\creditsales.js" />
     <Content Include="Scripts\DashBoard\Customer.js" />
     <Content Include="Scripts\DashBoard\CustomerOnline.js" />
+    <Content Include="Scripts\DashBoard\healthindexconfig.js" />
     <Content Include="Scripts\DashBoard\jquery-1.11.3.min.js" />
     <Content Include="Scripts\DashBoard\jquery.dataTables.min.js" />
     <Content Include="Scripts\DashBoard\jquery.tablesorter.js" />
@@ -472,11 +477,13 @@
     <Content Include="Scripts\DashBoard\StrategyTradeAct.js" />
     <None Include="Service References\SignService\configuration91.svcinfo" />
     <None Include="Service References\SignService\configuration.svcinfo" />
+    <Content Include="Service References\SignService\DashBoard.Web.SignService.ServiceResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
     <None Include="Service References\SignService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <Content Include="Views\Home\sidebar-on.gif" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -507,22 +514,21 @@
     <Content Include="Views\Home\HomePage.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <None Include="Service References\SignService\SignService.wsdl" />
     <Content Include="Views\Home\Top.cshtml" />
     <Content Include="Views\Home\Left.cshtml" />
     <Content Include="Views\Home\Right.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <None Include="Service References\SignService\SignService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\ComprehensiveSearch\Models\" />
     <Folder Include="Areas\ComprehensiveSearch\Views\Shared\" />
     <Folder Include="Areas\CustomerData\Models\" />
     <Folder Include="Areas\CustomerData\Views\Shared\" />
-    <Folder Include="Areas\HealthIndex\Models\" />
     <Folder Include="Areas\HealthIndex\Views\Shared\" />
     <Folder Include="Areas\TradeData\Models\" />
     <Folder Include="Areas\TradeData\Views\Shared\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

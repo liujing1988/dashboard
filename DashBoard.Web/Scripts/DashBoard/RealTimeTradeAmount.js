@@ -1,4 +1,7 @@
-﻿$.ajax(
+﻿///获取首页实时曲线
+///作者：刘静
+///修改日期：2015-11-25
+$.ajax(
 {
     url: "/DashBoard/api/GetTradeDate/GetRealTimeData", //表示提交给的action 
     type: "post",   //提交方法 
@@ -12,13 +15,20 @@
         if (result.length > 0) {
             if (result[0].Minute != null) {
                 for (var i = 0; i < result.length; i++) {
-                    Realtime.push(result[i].Minute);
+                    if (result[i].Minute == "13:00")
+                    {
+                        Realtime.push("11:30/13:00");
+                    }
+                    else
+                    {
+                        Realtime.push(result[i].Minute);
+                    }
                     MinuteTrade.push(result[i].TradeAmount);
                 }
             }
         }
 $(function () {
-    $(document).ready(function () {
+    $(document).ready(function () {  //页面加载
         Highcharts.setOptions({
             global: {
                 useUTC: false
@@ -26,9 +36,9 @@ $(function () {
         });
 
         var chart;
-        $('#realtimeTrade').highcharts({
+        $('#realtimeTrade').highcharts({  //在#realtimeTrade处加载图表
             chart: {
-                type: 'line',
+                type: 'column',  //图表类型为柱状图
                 animation: Highcharts.svg, // don't animate in old IE               
                 marginRight: 10,
                 events: {
@@ -50,28 +60,15 @@ $(function () {
                                     if (data.length > 0) {
                                         if (data[0].Minute != null) {
                                             for (var i = 0; i < data.length; i++) {
-                                                rRealtime[i] = data[i].Minute;
                                                 rMinuteTrade[i] = data[i].TradeAmount;
                                             }
                                         }
-                                        if (data[data.length - 1].Minute > result[result.length - 1].Minute) {
-
-                                            for (j = 0 ; j < data.length ; j++) {
-                                                if (data[j].Minute > result[result.length - 1].Minute) {
-                                                    var dt = rRealtime[j];
-                                                    dt = dt.replace(/-/g, "/");
-                                                    var x = new Date(dt).getTime(), // current time         
-                                                            y = rMinuteTrade[j];
-                                                    series.addPoint([x, y], true, true);
-                                                }
-                                            }
-                                            result = data;
-                                        }
+                                        series.setData(rMinuteTrade);
                                     }
                                 }
                             });
                                         
-                        }, 60000);
+                        }, 1000 * 60);
                     }
                 }
             },
@@ -79,8 +76,8 @@ $(function () {
                 text: '实时交易量'
             },
             xAxis: {
-                type: 'datetime',
-                tickPixelInterval: 150
+                tickInterval: 120,
+                categories: Realtime
             },
             scrollbar: {
                 enabled: true
@@ -98,10 +95,16 @@ $(function () {
             tooltip: {
                 formatter: function () {
                     return '<b>' + this.series.name + '</b><br/>' +
-                    Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) + '<br/>' +
+                    this.x + '<br/>' +
                     Highcharts.numberFormat(this.y, 2);
                 },
-                crosshairs: true,
+                crosshairs: [{
+                    width: 1,
+                    color: 'red'
+                }, {
+                    width: 1,
+                    color: 'red'
+                }]
             },
             legend: {
                 enabled: false
@@ -111,20 +114,7 @@ $(function () {
             },
             series: [{
                 name: '交易量',
-                data: (function () {
-                    // generate an array of random data 
-                    var data = [],
-                        i;
-                    for (i = 0; i < Realtime.length - 1; i++) {
-                        var dt = Realtime[i];
-                        dt = dt.replace(/-/g, "/");
-                        data.push({
-                            x: new Date(dt).getTime(),
-                            y: MinuteTrade[i]
-                        });
-                    }
-                    return data;
-                })()
+                data: MinuteTrade
             }],
             lang: {
                 noData: "Nichts zu anzeigen"

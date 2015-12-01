@@ -8,32 +8,33 @@
         var StrategyName = [];
         //分钟级交易量
         var TradeNum = [];
-        //获取服务器日期
-        var Date = result[0].TradeDate;
-
         //单位
         var unit = "";
-        //获取当日第五名交易数
-        var minresult = result[0].NumStrategyType;
-        for (var i = 0; i < result.length; i++) {
-            if (minresult > result[i].NumStrategyType) {
-                minresult = Number(result[i].NumStrategyType);
-            }
-        }
-        //实时曲线数据转换
-        if (result[0].StrategyType != null && minresult / 10000 >= 1) {
+        if (result.length > 0) {
+            //获取服务器日期
+            var Date = result[0].TradeDate;
+            //获取当日第五名交易数
+            var minresult = result[0].NumStrategyType;
             for (var i = 0; i < result.length; i++) {
-                StrategyName.push(result[i].StrategyType);
-                TradeNum.push(Number(result[i].NumStrategyType) / 10000);
+                if (minresult > result[i].NumStrategyType) {
+                    minresult = Number(result[i].NumStrategyType);
+                }
             }
-            unit = "万人次";
-        }
-        else {
-            for (var i = 0; i < result.length; i++) {
-                StrategyName.push(result[i].StrategyType);
-                TradeNum.push(Number(result[i].NumStrategyType));
+            //实时曲线数据转换
+            if (result[0].StrategyType != null && minresult / 10000 >= 1) {
+                for (var i = 0; i < result.length; i++) {
+                    StrategyName.push(result[i].StrategyType);
+                    TradeNum.push(Number(result[i].NumStrategyType) / 10000);
+                }
+                unit = "万人次";
             }
-            unit = "人次";
+            else {
+                for (var i = 0; i < result.length; i++) {
+                    StrategyName.push(result[i].StrategyType);
+                    TradeNum.push(Number(result[i].NumStrategyType));
+                }
+                unit = "人次";
+            }
         }
         $(function () {
             $(document).ready(function () {
@@ -65,15 +66,17 @@
                                             var rStrategyType = [];
                                             //分钟级交易量
                                             var rTradeNum = [];
-                                            //实时曲线数据转换
-                                            if (data[0].StrategyType != null) {
-                                                for (var i = 0; i < data.length; i++) {
-                                                    rStrategyType[i] = data[i].StrategyType;
-                                                    rTradeNum[i] = data[i].NumStrategyType;
+                                            if (data.length > 0) {
+                                                //实时曲线数据转换
+                                                if (data[0].StrategyType != null) {
+                                                    for (var i = 0; i < data.length; i++) {
+                                                        rStrategyType[i] = data[i].StrategyType;
+                                                        rTradeNum[i] = data[i].NumStrategyType;
+                                                    }
                                                 }
+                                                xAxis.setCategories(rStrategyType);
+                                                series.setData(rTradeNum);
                                             }
-                                            xAxis.setCategories(rStrategyType);
-                                            series.setData(rTradeNum);
                                         }
                                     });
 

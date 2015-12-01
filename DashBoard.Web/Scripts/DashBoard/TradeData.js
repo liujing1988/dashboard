@@ -115,7 +115,10 @@ function GetRealTime(begindate, enddate) {
         if (result.length > 0) {
             if (result[0].Minute != null) {
                 for (var i = 0; i < result.length; i++) {
-                    Realtime.push(result[i].Minute);
+                    if (result[i].Minute == "13:00") {
+                        Realtime.push(result[i].Day + ' ' + "11:30/13:00");
+                    }
+                    Realtime.push(result[i].Day + ' '+ result[i].Minute);
                     MinuteTrade.push(result[i].TradeAmount);
                 }
             }
@@ -131,7 +134,7 @@ function GetRealTime(begindate, enddate) {
                 var chart;
                 $('#tradeData').highcharts({
                     chart: {
-                        type: 'line',
+                        type: 'column',
                         animation: Highcharts.svg, // don't animate in old IE               
                         marginRight: 10,
                         events: {
@@ -154,28 +157,15 @@ function GetRealTime(begindate, enddate) {
                                             if (data.length > 0) {
                                                 if (data[0].Minute != null) {
                                                     for (var i = 0; i < data.length; i++) {
-                                                        rRealtime[i] = data[i].Minute;
                                                         rMinuteTrade[i] = data[i].TradeAmount;
                                                     }
                                                 }
-                                                if (data[data.length - 1].Minute > result[result.length - 1].Minute) {
-
-                                                    for (j = 0 ; j < data.length ; j++) {
-                                                        if (data[j].Minute > result[result.length - 1].Minute) {
-                                                            var dt = rRealtime[j];
-                                                            dt = dt.replace(/-/g, "/");
-                                                            var x = new Date(dt).getTime(), // current time         
-                                                                    y = rMinuteTrade[j];
-                                                            series.addPoint([x, y], true, true);
-                                                        }
-                                                    }
-                                                    result = data;
-                                                }
+                                                rMinuteTrade[i] = data[i].TradeAmount;
                                             }
                                         }
                                     });
 
-                                }, 60000);
+                                }, 1000 * 60);
                             }
                         }
                     },
@@ -183,8 +173,8 @@ function GetRealTime(begindate, enddate) {
                         text: '实时交易量'
                     },
                     xAxis: {
-                        type: 'datetime',
-                        tickPixelInterval: 150
+                        tickInterval: 120,
+                        categories: Realtime
                     },
                     scrollbar: {
                         enabled: true
@@ -202,10 +192,16 @@ function GetRealTime(begindate, enddate) {
                     tooltip: {
                         formatter: function () {
                             return '<b>' + this.series.name + '</b><br/>' +
-                            Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) + '<br/>' +
+                            this.x + '<br/>' +
                             Highcharts.numberFormat(this.y, 2);
                         },
-                        crosshairs: true,
+                        crosshairs: [{
+                            width: 1,
+                            color: 'red'
+                        }, {
+                            width: 1,
+                            color: 'red'
+                        }]
                     },
                     legend: {
                         enabled: false
@@ -215,20 +211,7 @@ function GetRealTime(begindate, enddate) {
                     },
                     series: [{
                         name: '交易量',
-                        data: (function () {
-                            // generate an array of random data 
-                            var data = [],
-                                i;
-                            for (i = 0; i < Realtime.length - 1; i++) {
-                                var dt = Realtime[i];
-                                dt = dt.replace(/-/g, "/");
-                                data.push({
-                                    x: new Date(dt).getTime(),
-                                    y: MinuteTrade[i]
-                                });
-                            }
-                            return data;
-                        })()
+                        data: MinuteTrade
                     }],
                     lang: {
                         noData: "Nichts zu anzeigen"

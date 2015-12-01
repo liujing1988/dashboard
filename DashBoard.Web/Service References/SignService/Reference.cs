@@ -9,7 +9,69 @@
 //------------------------------------------------------------------------------
 
 namespace DashBoard.Web.SignService {
+    using System.Runtime.Serialization;
+    using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ServiceResult", Namespace="http://tempuri.org/")]
+    [System.SerializableAttribute()]
+    public partial class ServiceResult : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private int CodeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MessageField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
+        public int Code {
+            get {
+                return this.CodeField;
+            }
+            set {
+                if ((this.CodeField.Equals(value) != true)) {
+                    this.CodeField = value;
+                    this.RaisePropertyChanged("Code");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
+        public string Message {
+            get {
+                return this.MessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MessageField, value) != true)) {
+                    this.MessageField = value;
+                    this.RaisePropertyChanged("Message");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="SignService.SignServiceSoap")]
@@ -77,13 +139,13 @@ namespace DashBoard.Web.SignService {
     [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
     public partial class CanAccessDashboardResponseBody {
         
-        [System.Runtime.Serialization.DataMemberAttribute(Order=0)]
-        public int CanAccessDashboardResult;
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public DashBoard.Web.SignService.ServiceResult CanAccessDashboardResult;
         
         public CanAccessDashboardResponseBody() {
         }
         
-        public CanAccessDashboardResponseBody(int CanAccessDashboardResult) {
+        public CanAccessDashboardResponseBody(DashBoard.Web.SignService.ServiceResult CanAccessDashboardResult) {
             this.CanAccessDashboardResult = CanAccessDashboardResult;
         }
     }
@@ -120,7 +182,7 @@ namespace DashBoard.Web.SignService {
             return base.Channel.CanAccessDashboard(request);
         }
         
-        public int CanAccessDashboard(string token) {
+        public DashBoard.Web.SignService.ServiceResult CanAccessDashboard(string token) {
             DashBoard.Web.SignService.CanAccessDashboardRequest inValue = new DashBoard.Web.SignService.CanAccessDashboardRequest();
             inValue.Body = new DashBoard.Web.SignService.CanAccessDashboardRequestBody();
             inValue.Body.token = token;

@@ -17,10 +17,11 @@
             //获取当日第十名交易量
             var minresult = result[0].MatchQty;
             for (var i = 0; i < result.length; i++) {
-                if (minresult > result[i].MatchQty) {
+                if (Number(minresult) > Number(result[i].MatchQty)) {
                     minresult = Number(result[i].MatchQty);
                 }
             }
+            
             //实时曲线数据转换
             if (result[0].StockName != null && minresult / 1000000 >= 1) {
                 for (var i = 0; i < result.length; i++) {

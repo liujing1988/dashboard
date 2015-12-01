@@ -8,32 +8,33 @@
         var StrategyName = [];
         //交易金额
         var TradeAmount = [];
-        //获取服务器日期
-        var Date = result[0].TradeDate;
-
         //单位
         var unit = "";
-        //获取当日第三名交易量
-        var minresult = result[0].StrategyTradeAmt;
-        for (var i = 0; i < result.length; i++) {
-            if (minresult > result[i].StrategyTradeAmt) {
-                minresult = Number(result[i].StrategyTradeAmt);
-            }
-        }
-        //实时曲线数据转换
-        if (result[0].StrategyType != null && minresult / 1000000 >= 1) {
+        if (result.length > 0) {
+            //获取服务器日期
+            var Date = result[0].TradeDate;
+            //获取当日第三名交易量
+            var minresult = result[0].StrategyTradeAmt;
             for (var i = 0; i < result.length; i++) {
-                StrategyName.push(result[i].StrategyType);
-                TradeAmount.push(Number(result[i].StrategyTradeAmt) / 1000000);
+                if (minresult > result[i].StrategyTradeAmt) {
+                    minresult = Number(result[i].StrategyTradeAmt);
+                }
             }
-            unit = "百万元";
-        }
-        else {
-            for (var i = 0; i < result.length; i++) {
-                StrategyName.push(result[i].StrategyType);
-                TradeAmount.push(Number(result[i].StrategyTradeAmt));
+            //实时曲线数据转换
+            if (result[0].StrategyType != null && minresult / 1000000 >= 1) {
+                for (var i = 0; i < result.length; i++) {
+                    StrategyName.push(result[i].StrategyType);
+                    TradeAmount.push(Number(result[i].StrategyTradeAmt) / 1000000);
+                }
+                unit = "百万元";
             }
-            unit = "元";
+            else {
+                for (var i = 0; i < result.length; i++) {
+                    StrategyName.push(result[i].StrategyType);
+                    TradeAmount.push(Number(result[i].StrategyTradeAmt));
+                }
+                unit = "元";
+            }
         }
         $(function () {
             $(document).ready(function () {
@@ -65,32 +66,34 @@
                                             var rStrategyType = [];
                                             //分钟级交易量
                                             var rTradeAmount = [];
-                                            //实时曲线数据转换
-                                            if (data[0].StrategyType != null) {
-                                                //获取当日第三名交易量
-                                                var rminresult = data[0].StrategyTradeAmt;
-                                                for (var i = 0; i < result.length; i++) {
-                                                    if (rminresult > result[i].StrategyTradeAmt) {
-                                                        rminresult = Number(result[i].StrategyTradeAmt);
+                                            if (data.length > 0) {
+                                                //实时曲线数据转换
+                                                if (data[0].StrategyType != null) {
+                                                    //获取当日第三名交易量
+                                                    var rminresult = data[0].StrategyTradeAmt;
+                                                    for (var i = 0; i < result.length; i++) {
+                                                        if (rminresult > result[i].StrategyTradeAmt) {
+                                                            rminresult = Number(result[i].StrategyTradeAmt);
+                                                        }
                                                     }
-                                                }
-                                                if (result[0].StrategyType != null && minresult / 1000000 >= 1) {
-                                                    for (var i = 0; i < data.length; i++) {
-                                                        rStrategyType[i] = data[i].StrategyType;
-                                                        rTradeAmount[i] = data[i].StrategyTradeAmt / 1000000;
+                                                    if (result[0].StrategyType != null && minresult / 1000000 >= 1) {
+                                                        for (var i = 0; i < data.length; i++) {
+                                                            rStrategyType[i] = data[i].StrategyType;
+                                                            rTradeAmount[i] = data[i].StrategyTradeAmt / 1000000;
+                                                        }
+                                                        unit = "百万元";
                                                     }
-                                                    unit = "百万元";
-                                                }
-                                                else {
-                                                    for (var i = 0; i < data.length; i++) {
-                                                        rStrategyType[i] = data[i].StrategyType;
-                                                        rTradeAmount[i] = data[i].StrategyTradeAmt;
+                                                    else {
+                                                        for (var i = 0; i < data.length; i++) {
+                                                            rStrategyType[i] = data[i].StrategyType;
+                                                            rTradeAmount[i] = data[i].StrategyTradeAmt;
+                                                        }
                                                     }
+                                                    unit = "元";
                                                 }
-                                                unit = "元";
+                                                xAxis.setCategories(rStrategyType);
+                                                series.setData(rTradeAmount);
                                             }
-                                            xAxis.setCategories(rStrategyType);
-                                            series.setData(rTradeAmount);
                                         }
                                     });
 

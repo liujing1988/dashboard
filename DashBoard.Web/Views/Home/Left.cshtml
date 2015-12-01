@@ -58,14 +58,13 @@
             <dt id="dt_ulNew" class="head2" onclick='ShowMenuList("ulNew")'>最新情况</dt>
             <ul class="box_n" id="ulNew">
                 @*<li><a href="#" onclick="goNewPage('a.html','渠道分类');">渠道分类</a></li>*@
-                <li><a target="mainFrame" id="New" onclick="goNewPage('/dashboard/Home/HomePage/', '最新情况');">最新情况</a></li>
+                <li><a target="mainFrame" id="New" onclick="goNewPage('/Home/HomePage/', '最新情况');">最新情况</a></li>
             </ul>
         </dl>
 
         <dl>
             <dt id="dt_ulTrade" class="head1" onclick='ShowMenuList("ulTrade")'>策略明细</dt>
             <ul class="box_n" id="ulTrade" style="display: none;">
-                @*<li><a href="#" onclick="goNewPage('a.html','渠道分类');">渠道分类</a></li>*@
                 <li><a target="mainFrame" id="TradeData" onclick="goNewPage('/dashboard/TradeData/TradeData/Index', '交易情况');">交易情况</a></li>
             </ul>
         </dl>
@@ -90,6 +89,7 @@
             <dt id="dt_ulHealthIndex" class="head1" onclick='ShowMenuList("ulHealthIndex")'>平台健康指数</dt>
             <ul class="box_n" id="ulHealthIndex" style="display: none;">
                 <li><a target="mainFrame" id="MaxTrade" onclick="goNewPage('/dashboard/HealthIndex/MaxTrade/Index', '交易峰值');">交易峰值</a></li>
+                <li><a target="mainFrame" id="IndexManager" onclick="goNewPage('/dashboard/HealthIndex/MaxTrade/IndexManager', '阈值管理');">阈值管理</a></li>
             </ul>
         </dl>
     </div>

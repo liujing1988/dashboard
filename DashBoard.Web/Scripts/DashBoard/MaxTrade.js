@@ -4,7 +4,7 @@
     type: "post",   //提交方法 
     datatype: "json",//数据类型
     success: function (result) {
-        //委托笔数
+        //当日委托笔数
         var NumOrder;
         if (result.NumOrder > 0) {
             NumOrder = result.NumOrder;
@@ -13,7 +13,34 @@
             NumOrder = 0;
         }
 
-        //最大委托笔数
+        //日委托笔数阈值
+        ThDayNumOrder = result.ThDayNumOrder;
+
+        //分钟委托笔数
+        var MiNumOrder;
+        if (result.MiNumOrder > 0) {
+            MiNumOrder = result.MiNumOrder;
+        }
+        else {
+            MiNumOrder = 0;
+        }
+
+        //分委托笔数阈值
+        ThMiNumOrder = result.ThMiNumOrder;
+
+        //秒委托笔数
+        var SeNumOrder;
+        if (result.SeNumOrder > 0) {
+            SeNumOrder = result.SeNumOrder;
+        }
+        else {
+            SeNumOrder = 0;
+        }
+
+        //秒委托笔数阈值
+        ThSeNumOrder = result.ThSeNumOrder;
+
+        //当日最大委托笔数
         var MaxNumOrder = NumOrder;
 
         //成交笔数
@@ -35,7 +62,7 @@
         
         var PR;
         if(NumOrder > 0){
-            PR = NumRevoke / NumOrder * 100;
+            PR = (NumRevoke / NumOrder * 100);
         }
         else {
             PR = 0;
@@ -234,7 +261,7 @@
             }
         };
 
-        $('#MaxOrder').highcharts(Highcharts.merge(gaugeOptions,{
+        $('#MaxDayOrder').highcharts(Highcharts.merge(gaugeOptions, {
             chart: {
                 events: {
                     load: function () {
@@ -267,11 +294,11 @@
                 }
             },
             title: {
-                text: '今日最大委托笔数'
+                text: '今日委托笔数'
             },
             yAxis: {
                 min: 0,
-                max:500,
+                max: ThDayNumOrder,
                 title: {
                     text: null
                 }
@@ -288,7 +315,148 @@
                     valueSuffix: ' 笔'
                 }
             }],
+            lang: {
+                noData: "Nichts zu anzeigen"
+            },
+            noData: {
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '15px',
+                    color: '#303030'
+                }
+            }
             
+        }));
+
+        $('#MaxMiOrder').highcharts(Highcharts.merge(gaugeOptions, {
+            chart: {
+                events: {
+                    load: function () {
+
+                        // set up the updating of the chart each second             
+                        var points = this.series[0].points[0];
+                        setInterval(function () {
+                            $.ajax({
+                                type: "post",
+                                url: "/DashBoard/api/GetTradeDate/GetTradeDayVolume",
+                                dataType: "json",
+                                success: function (data) {
+                                    //委托笔数
+                                    var rMiNumOrder;
+                                    if (data.MiNumOrder > 0) {
+                                        rMiNumOrder = data.MiNumOrder;
+                                    }
+                                    else {
+                                        rMiNumOrder = 0;
+                                    }
+
+                                    //最大委托笔数
+                                    points.update(rMiNumOrder);
+                                }
+                            });
+
+                        }, 1000 * 60);
+                    }
+                }
+            },
+            title: {
+                text: '今日每分钟最大委托笔数'
+            },
+            yAxis: {
+                min: 0,
+                max: ThMiNumOrder,
+                title: {
+                    text: null
+                }
+            },
+            series: [{
+                name: '委托数',
+                data: [MiNumOrder],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                           '<span style="font-size:12px;color:silver">笔</span></div>'
+                },
+                tooltip: {
+                    valueSuffix: ' 笔'
+                }
+            }],
+            lang: {
+                noData: "Nichts zu anzeigen"
+            },
+            noData: {
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '15px',
+                    color: '#303030'
+                }
+            }
+        }));
+
+        $('#MaxSeOrder').highcharts(Highcharts.merge(gaugeOptions, {
+            chart: {
+                events: {
+                    load: function () {
+
+                        // set up the updating of the chart each second             
+                        var points = this.series[0].points[0];
+                        setInterval(function () {
+                            $.ajax({
+                                type: "post",
+                                url: "/DashBoard/api/GetTradeDate/GetTradeDayVolume",
+                                dataType: "json",
+                                success: function (data) {
+                                    //委托笔数
+                                    var rSeNumOrder;
+                                    if (data.SeNumOrder > 0) {
+                                        rSeNumOrder = data.SeNumOrder;
+                                    }
+                                    else {
+                                        rSeNumOrder = 0;
+                                    }
+
+                                    //最大委托笔数
+
+                                    points.update(rSeNumOrder);
+                                }
+                            });
+
+                        }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: '今日每秒最大委托笔数'
+            },
+            yAxis: {
+                min: 0,
+                max: ThSeNumOrder,
+                title: {
+                    text: null
+                }
+            },
+            series: [{
+                name: '委托数',
+                data: [SeNumOrder],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                           '<span style="font-size:12px;color:silver">笔</span></div>'
+                },
+                tooltip: {
+                    valueSuffix: ' 笔'
+                }
+            }],
+            lang: {
+                noData: "Nichts zu anzeigen"
+            },
+            noData: {
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '15px',
+                    color: '#303030'
+                }
+            }
         }));
     }
 
