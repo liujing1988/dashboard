@@ -52,6 +52,7 @@
     <Compile Include="Data\DbFactory.cs" />
     <Compile Include="Data\DbHelper.cs" />
     <Compile Include="GetDateTime.cs" />
+    <Compile Include="HealthManagers.cs" />
     <Compile Include="jQueryDataTableParamModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealTimeData.cs" />
