@@ -87,6 +87,9 @@
     <Compile Include="strategytrade.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>
+    <Compile Include="TradeAmt_Minute.cs">
+      <DependentUpon>ModelData.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="ModelData.edmx">

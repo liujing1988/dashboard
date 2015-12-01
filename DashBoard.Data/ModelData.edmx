@@ -131,17 +131,20 @@
           <Parameter Name="Enddate" Type="int" Mode="In" />
         </Function>
         <Function Name="sp_GetCustomerTradeDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="Begindate" Type="int" Mode="In" />
-          <Parameter Name="Enddate" Type="int" Mode="In" />
-          <Parameter Name="searchColumns" Type="nvarchar" Mode="In" />
+          <Parameter Name="BeginDate" Type="int" Mode="In" />
+          <Parameter Name="EndDate" Type="int" Mode="In" />
+          <Parameter Name="SearchColumns" Type="nvarchar" Mode="In" />
           <Parameter Name="DisplayStart" Type="int" Mode="In" />
           <Parameter Name="DisplayLength" Type="int" Mode="In" />
-          <Parameter Name="sortDirection" Type="nvarchar" Mode="In" />
-          <Parameter Name="PageCount" Type="int" Mode="InOut" />
+          <Parameter Name="SortDirection" Type="nvarchar" Mode="In" />
           <Parameter Name="CurrentPage" Type="int" Mode="In" />
+          <Parameter Name="OrderField" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageCount" Type="int" Mode="InOut" />
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
           <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
-          <Parameter Name="OrderField" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_TradeAmt_Minute" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="date" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="ModelDataStoreContainer">
           <EntitySet Name="custacctinfo" EntityType="Self.custacctinfo" Schema="dbo" store:Type="Tables" />
@@ -165,17 +168,20 @@
           <EntitySet Name="strategyinfo" EntityType="ModelData.strategyinfo" />
           <EntitySet Name="custacctinfo" EntityType="ModelData.custacctinfo" />
           <FunctionImport Name="sp_GetCustomerTradeDetail" ReturnType="Collection(ModelData.GetCustomerTradeDetail)">
-            <Parameter Name="Begindate" Mode="In" Type="Int32" />
-            <Parameter Name="Enddate" Mode="In" Type="Int32" />
-            <Parameter Name="searchColumns" Mode="In" Type="String" />
+            <Parameter Name="BeginDate" Mode="In" Type="Int32" />
+            <Parameter Name="EndDate" Mode="In" Type="Int32" />
+            <Parameter Name="SearchColumns" Mode="In" Type="String" />
             <Parameter Name="DisplayStart" Mode="In" Type="Int32" />
             <Parameter Name="DisplayLength" Mode="In" Type="Int32" />
-            <Parameter Name="sortDirection" Mode="In" Type="String" />
-            <Parameter Name="PageCount" Mode="InOut" Type="Int32" />
+            <Parameter Name="SortDirection" Mode="In" Type="String" />
             <Parameter Name="CurrentPage" Mode="In" Type="Int32" />
+            <Parameter Name="OrderField" Mode="In" Type="String" />
+            <Parameter Name="PageCount" Mode="InOut" Type="Int32" />
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
             <Parameter Name="TotalDisplayRecords" Mode="InOut" Type="Int32" />
-            <Parameter Name="OrderField" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_TradeAmt_Minute" ReturnType="Collection(ModelData.TradeAmt_Minute)">
+          <Parameter Name="date" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="strategyorder">
@@ -311,6 +317,11 @@
           <Property Type="Int32" Name="matchqty" Nullable="false" />
           <Property Type="Decimal" Name="matchprice" Nullable="false" />
           <Property Type="String" Name="bsflag" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="TradeAmt_Minute" >
+          <Property Type="Int32" Name="rdate" Nullable="false" />
+          <Property Type="Int32" Name="rminute" Nullable="false" />
+          <Property Type="Int32" Name="tradeamt" Nullable="false" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -453,6 +464,15 @@
                 <ScalarProperty Name="matchqty" ColumnName="matchqty" />
                 <ScalarProperty Name="matchprice" ColumnName="matchprice" />
                 <ScalarProperty Name="bsflag" ColumnName="bsflag" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_TradeAmt_Minute" FunctionName="ModelData.Store.sp_TradeAmt_Minute" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ModelData.TradeAmt_Minute">
+                <ScalarProperty Name="rdate" ColumnName="rdate" />
+                <ScalarProperty Name="rminute" ColumnName="rminute" />
+                <ScalarProperty Name="tradeamt" ColumnName="tradeamt" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

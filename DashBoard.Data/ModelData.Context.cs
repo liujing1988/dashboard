@@ -14,10 +14,6 @@ namespace DashBoard.Data
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
     using System.Linq;
-    using System.Data.Common;
-    using Dashboard.Common;
-    using DashBoard.Common;
-    using System.Collections.Generic;
     
     public partial class ModelDataContainer : DbContext
     {
@@ -49,20 +45,20 @@ namespace DashBoard.Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustomer>("sp_GetCustomer", begindateParameter, enddateParameter);
         }
-
-        public virtual ObjectResult<GetCustomerTradeDetail> sp_GetCustomerTradeDetail(Nullable<int> begindate, Nullable<int> enddate, string searchColumns, Nullable<int> displayStart, Nullable<int> displayLength, string sortDirection, Nullable<int> currentPage, out int pageCount, out int totalRecords, out int totalDisplayRecords, string orderField)
-        {
-            var begindateParameter = begindate.HasValue ?
-                new ObjectParameter("Begindate", begindate) :
-                new ObjectParameter("Begindate", typeof(int));
     
-            var enddateParameter = enddate.HasValue ?
-                new ObjectParameter("Enddate", enddate) :
-                new ObjectParameter("Enddate", typeof(int));
+        public virtual ObjectResult<GetCustomerTradeDetail> sp_GetCustomerTradeDetail(Nullable<int> beginDate, Nullable<int> endDate, string searchColumns, Nullable<int> displayStart, Nullable<int> displayLength, string sortDirection, Nullable<int> currentPage, string orderField, ObjectParameter pageCount, ObjectParameter totalRecords, ObjectParameter totalDisplayRecords)
+        {
+            var beginDateParameter = beginDate.HasValue ?
+                new ObjectParameter("BeginDate", beginDate) :
+                new ObjectParameter("BeginDate", typeof(int));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(int));
     
             var searchColumnsParameter = searchColumns != null ?
-                new ObjectParameter("searchColumns", searchColumns) :
-                new ObjectParameter("searchColumns", typeof(string));
+                new ObjectParameter("SearchColumns", searchColumns) :
+                new ObjectParameter("SearchColumns", typeof(string));
     
             var displayStartParameter = displayStart.HasValue ?
                 new ObjectParameter("DisplayStart", displayStart) :
@@ -71,27 +67,29 @@ namespace DashBoard.Data
             var displayLengthParameter = displayLength.HasValue ?
                 new ObjectParameter("DisplayLength", displayLength) :
                 new ObjectParameter("DisplayLength", typeof(int));
-
-            var sortDirectionParameter = new ObjectParameter("sortDirection", sortDirection);
-                
+    
+            var sortDirectionParameter = sortDirection != null ?
+                new ObjectParameter("SortDirection", sortDirection) :
+                new ObjectParameter("SortDirection", typeof(string));
     
             var currentPageParameter = currentPage.HasValue ?
                 new ObjectParameter("CurrentPage", currentPage) :
                 new ObjectParameter("CurrentPage", typeof(int));
-
-            pageCount = 0;
-            totalRecords = 0;
-            totalDisplayRecords = 0;
-            var orderFieldParameter = new ObjectParameter("OrderField", orderField);
-            var pageCountParameter = new ObjectParameter("PageCount", pageCount);
-            var totalRecordsParameter = new ObjectParameter("TotalRecords", totalRecords);
-            var totalDisplayRecordsParameter = new ObjectParameter("TotalDisplayRecords", totalDisplayRecords);
-
-            ObjectResult<GetCustomerTradeDetail> result = ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustomerTradeDetail>("sp_GetCustomerTradeDetail", begindateParameter, enddateParameter, searchColumnsParameter, displayStartParameter, displayLengthParameter, sortDirectionParameter, currentPageParameter, pageCountParameter, totalRecordsParameter, totalDisplayRecordsParameter, orderFieldParameter);
-            pageCount = Convert.ToInt32(pageCountParameter.Value);
-            totalRecords = Convert.ToInt32(totalRecordsParameter.Value);
-            totalDisplayRecords = Convert.ToInt32(totalDisplayRecordsParameter.Value);
-            return result;
+    
+            var orderFieldParameter = orderField != null ?
+                new ObjectParameter("OrderField", orderField) :
+                new ObjectParameter("OrderField", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustomerTradeDetail>("sp_GetCustomerTradeDetail", beginDateParameter, endDateParameter, searchColumnsParameter, displayStartParameter, displayLengthParameter, sortDirectionParameter, currentPageParameter, orderFieldParameter, pageCount, totalRecords, totalDisplayRecords);
+        }
+    
+        public virtual ObjectResult<TradeAmt_Minute> sp_TradeAmt_Minute(Nullable<int> date)
+        {
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("date", date) :
+                new ObjectParameter("date", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<TradeAmt_Minute>("sp_TradeAmt_Minute", dateParameter);
         }
     }
 }
