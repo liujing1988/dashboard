@@ -59,9 +59,6 @@
     <Compile Include="GetCustomer.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>
-    <Compile Include="GetCustomerTradeDetail.cs">
-      <DependentUpon>ModelData.tt</DependentUpon>
-    </Compile>
     <Compile Include="ModelData.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -78,6 +75,9 @@
       <DependentUpon>ModelData.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sp_GetRevokePercent_Result.cs">
+      <DependentUpon>ModelData.tt</DependentUpon>
+    </Compile>
     <Compile Include="strategyinfo.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>

@@ -58,7 +58,7 @@
             <dt id="dt_ulNew" class="head2" onclick='ShowMenuList("ulNew")'>最新情况</dt>
             <ul class="box_n" id="ulNew">
                 @*<li><a href="#" onclick="goNewPage('a.html','渠道分类');">渠道分类</a></li>*@
-                <li><a target="mainFrame" id="New" onclick="goNewPage('/Home/HomePage/', '最新情况');">最新情况</a></li>
+                <li><a target="mainFrame" id="New" onclick="goNewPage('/dashboard/Home/HomePage/', '最新情况');">最新情况</a></li>
             </ul>
         </dl>
 
@@ -72,6 +72,7 @@
             <dt id="dt_ulCustomer" class="head1" onclick='ShowMenuList("ulCustomer")'>用户明细</dt>
             <ul class="box_n" id="ulCustomer" style="display: none;">
                 <li><a target="mainFrame" id="Customer" onclick="goNewPage('/dashboard/CustomerData/Customer/Index', '用户情况');">用户情况</a></li>
+                <li><a target="mainFrame" id="Revoke" onclick="goNewPage('/dashboard/CustomerData/Customer/RevokeDetail', '撤单比超60%的用户');">撤单比超60%的用户</a></li>
             </ul>
         </dl>
         <dl>

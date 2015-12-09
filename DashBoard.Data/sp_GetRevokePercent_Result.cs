@@ -11,13 +11,12 @@ namespace DashBoard.Data
 {
     using System;
     
-    public partial class GetCustomerTradeDetail
+    public partial class sp_GetRevokePercent_Result
     {
         public int custid { get; set; }
-        public int tradedate { get; set; }
-        public string stkcode { get; set; }
-        public int matchqty { get; set; }
-        public decimal matchprice { get; set; }
-        public string bsflag { get; set; }
+        public int orderdate { get; set; }
+        public Nullable<decimal> percentrevoke { get; set; }
+        public Nullable<int> numrevoke { get; set; }
+        public Nullable<int> numorder { get; set; }
     }
 }

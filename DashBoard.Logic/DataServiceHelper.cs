@@ -53,8 +53,8 @@ namespace Dashboard.Logic
         /// <returns>月份、该月所有用户交易量之和</returns>
         public static List<TradeMonthAmount> GetMatchAmount(GetDateTime dateTime)
         {
-            int bmonth = ConvertDate(dateTime.begindate);
-            int emonth = ConvertDate(dateTime.enddate);
+            int bmonth = TranslateHelper.ConvertDate(dateTime.begindate);
+            int emonth = TranslateHelper.ConvertDate(dateTime.enddate);
             List<TradeMonthAmount> result = new List<TradeMonthAmount>();
             using (var db = new ModelDataContainer())
             {
@@ -87,7 +87,7 @@ namespace Dashboard.Logic
         /// <returns>日期、该日期所有用户交易量之和</returns>
         public static List<TradeMonthAmount> GetDateAmount(GetDateTime dateTime)
         {
-            int bday = ConvertDate(dateTime.begindate);
+            int bday = TranslateHelper.ConvertDate(dateTime.begindate);
             List<TradeMonthAmount> result = new List<TradeMonthAmount>();
             using (var db = new ModelDataContainer())
             {
@@ -161,7 +161,7 @@ namespace Dashboard.Logic
                     {
                         result.Add(new RealTimeData()
                         {
-                            Minute = ConvertTime(item.rminute),
+                            Minute = TranslateHelper.ConvertTime(item.rminute),
                             TradeAmount = item.tradeamt,
                         });
                     }
@@ -196,7 +196,7 @@ namespace Dashboard.Logic
                 }
                 else
                 {
-                    int indexdate = ConvertDate(i.ToString("yyyy-MM-dd"));
+                    int indexdate = TranslateHelper.ConvertDate(i.ToString("yyyy-MM-dd"));
                     using (var db = new ModelDataContainer())
                     {
                         var list = db.sp_TradeAmt_Minute(indexdate);
@@ -206,7 +206,7 @@ namespace Dashboard.Logic
                             {
                                 result.Add(new RealTimeData()
                                 {
-                                    Minute = ConvertTime(item.rminute),
+                                    Minute = TranslateHelper.ConvertTime(item.rminute),
                                     TradeAmount = item.tradeamt,
                                     Day = i.ToString("yyyy-MM-dd")
                                 });
@@ -234,8 +234,8 @@ namespace Dashboard.Logic
         /// <returns>功能模块名称、使用次数</returns>
         public static List<StrategyTypes> GetStrategyType(GetDateTime dateTime)
         {
-            int bdate = ConvertDate(dateTime.begindate);
-            int edate = ConvertDate(dateTime.enddate);
+            int bdate = TranslateHelper.ConvertDate(dateTime.begindate);
+            int edate = TranslateHelper.ConvertDate(dateTime.enddate);
             List<StrategyTypes> result = new List<StrategyTypes>();
             using (var db = new ModelDataContainer())
             {
@@ -267,9 +267,9 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 获取用户当日交易总量前五（用于首页展示）
+        /// 获取用户当日交易总金额前五（用于首页展示）
         /// </summary>
-        /// <returns>当日用户交易总量前五名的总交易量、信用交易量</returns>
+        /// <returns>当日用户交易总量前五名的总交易金额、信用交易金额</returns>
         public static List<TradeDayAmount> GetDayAmount()
         {
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
@@ -411,8 +411,8 @@ namespace Dashboard.Logic
             var db = DbFactory.Create();
             
                 List<DbParameter> dbParameters = new List<DbParameter>();
-                int begindate = ConvertDate(da.begindate);
-                int enddate = ConvertDate(da.enddate);
+                int begindate = TranslateHelper.ConvertDate(da.begindate);
+                int enddate = TranslateHelper.ConvertDate(da.enddate);
 
                 dbParameters.Add(db.NewParameter("BeginDate", begindate, DbType.Int32));
                 dbParameters.Add(db.NewParameter("EndDate", enddate, DbType.Int32));
@@ -445,13 +445,139 @@ namespace Dashboard.Logic
                         StockCode = reader.GetString("stkcode"),
                         MatchQty = reader.GetString("matchqty"),
                         MatchPrice = reader.GetString("matchprice"),
-                        BsFlag = reader.GetString("bsflag")
+                        BsFlag = TranslateHelper.ConvertBSFlag(reader.GetString("bsflag"))
                     };
                     result.List.Add(detail);
                 }
                 result.TotalPages = DataConvert.ToInt32(pageCount.Value);
                 result.TotalRecords = DataConvert.ToInt32(totalRecords.Value);
                 result.TotalDisplayRecords = DataConvert.ToInt32(totalDisplayRecords.Value);
+            return result;
+        }
+
+        /// <summary>
+        /// 调用存储过程，获取撤单客户的交易概览
+        /// </summary>
+        /// <param name="da.begindate">开始时间</param>
+        /// <param name="da.enddate">结束时间</param>
+        /// <param name="da.searchColumns">搜索内容</param>
+        /// <param name="da.DisplayStart">当前页第一行数据的总行号</param>
+        /// <param name="da.DisplayLength">每页显示数据行数</param>
+        /// <param name="da.CurrentPage">当前页号</param>
+        /// <param name="da.sortDirection">排序方式（正序、反序）</param>
+        /// <param name="da.OrderField">排序字段</param>
+        /// <returns>符合条件的数据集、符合条件的记录条数、总页数</returns>
+        public static RecordResult<TradeDetails> GetRevokeMain(TradeDetails da)
+        {
+            RecordResult<TradeDetails> result = new RecordResult<TradeDetails>();
+            var db = DbFactory.Create();
+
+            List<DbParameter> dbParameters = new List<DbParameter>();
+            int begindate = TranslateHelper.ConvertDate(da.begindate);
+            int enddate = TranslateHelper.ConvertDate(da.enddate);
+
+            dbParameters.Add(db.NewParameter("BeginDate", begindate, DbType.Int32));
+            dbParameters.Add(db.NewParameter("EndDate", enddate, DbType.Int32));
+            dbParameters.Add(db.NewParameter("SearchColumns", da.searchColumns, DbType.String));
+            dbParameters.Add(db.NewParameter("DisplayStart", da.DisplayStart, DbType.Int32));
+            dbParameters.Add(db.NewParameter("DisplayLength", da.DisplayLength, DbType.Int32));
+            dbParameters.Add(db.NewParameter("CurrentPage", da.CurrentPage, DbType.Int32));
+            dbParameters.Add(db.NewParameter("SortDirection", da.sortDirection, DbType.String));
+            dbParameters.Add(db.NewParameter("OrderField", da.OrderField, DbType.String));
+            dbParameters.Add(db.NewParameter("LimitNumOrder", da.LimitMinOrder, DbType.Int32));
+            var pageCount = db.NewParameter("PageCount", 0, DbType.Int32);
+            pageCount.Direction = ParameterDirection.Output;
+            var totalRecords = db.NewParameter("TotalRecords", 0, DbType.Int32);
+            totalRecords.Direction = ParameterDirection.Output;
+            var totalDisplayRecords = db.NewParameter("TotalDisplayRecords", 0, DbType.Int32);
+            totalDisplayRecords.Direction = ParameterDirection.Output;
+            dbParameters.Add(pageCount);
+            dbParameters.Add(totalRecords);
+            dbParameters.Add(totalDisplayRecords);
+            DataTable dt = db.GetDataTable("[sp_GetRevokePercent]", dbParameters);
+
+            result.List = new List<TradeDetails>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                DataRowReader reader = new DataRowReader(dt.Rows[i]);
+                TradeDetails detail = new TradeDetails()
+                {
+                    CustId = reader.GetString("custid"),
+                    OrderDate = reader.GetString("orderdate"),
+                    PercentRevoke = reader.GetDecimal("percentrevoke").ToString("f2"),
+                    NumRevoke = reader.GetString("numrevoke"),
+                    NumOrder = reader.GetString("numorder"),
+                    MiNumOrder = reader.GetString("maxminuteorder"),
+                    SeNumOrder = reader.GetString("maxsecondorder")
+                };
+                result.List.Add(detail);
+            }
+            result.TotalPages = DataConvert.ToInt32(pageCount.Value);
+            result.TotalRecords = DataConvert.ToInt32(totalRecords.Value);
+            result.TotalDisplayRecords = DataConvert.ToInt32(totalDisplayRecords.Value);
+            return result;
+        }
+
+        /// <summary>
+        /// 调用存储过程，获取撤单客户的交易流水
+        /// </summary>
+        /// <param name="da.begindate">开始时间</param>
+        /// <param name="da.enddate">结束时间</param>
+        /// <param name="da.searchColumns">搜索内容</param>
+        /// <param name="da.DisplayStart">当前页第一行数据的总行号</param>
+        /// <param name="da.DisplayLength">每页显示数据行数</param>
+        /// <param name="da.CurrentPage">当前页号</param>
+        /// <param name="da.sortDirection">排序方式（正序、反序）</param>
+        /// <param name="da.OrderField">排序字段</param>
+        /// <returns>符合条件的数据集、符合条件的记录条数、总页数</returns>
+        public static RecordResult<TradeDetails> GetRevokeDetails(TradeDetails da)
+        {
+            RecordResult<TradeDetails> result = new RecordResult<TradeDetails>();
+            var db = DbFactory.Create();
+
+            List<DbParameter> dbParameters = new List<DbParameter>();
+            int begindate = TranslateHelper.ConvertDate(da.begindate);
+            int enddate = TranslateHelper.ConvertDate(da.enddate);
+
+            dbParameters.Add(db.NewParameter("BeginDate", begindate, DbType.Int32));
+            dbParameters.Add(db.NewParameter("EndDate", enddate, DbType.Int32));
+            dbParameters.Add(db.NewParameter("SearchColumns", da.searchColumns, DbType.String));
+            dbParameters.Add(db.NewParameter("DisplayStart", da.DisplayStart, DbType.Int32));
+            dbParameters.Add(db.NewParameter("DisplayLength", da.DisplayLength, DbType.Int32));
+            dbParameters.Add(db.NewParameter("CurrentPage", da.CurrentPage, DbType.Int32));
+            dbParameters.Add(db.NewParameter("SortDirection", da.sortDirection, DbType.String));
+            dbParameters.Add(db.NewParameter("OrderField", da.OrderField, DbType.String));
+
+            var pageCount = db.NewParameter("PageCount", 0, DbType.Int32);
+            pageCount.Direction = ParameterDirection.Output;
+            var totalRecords = db.NewParameter("TotalRecords", 0, DbType.Int32);
+            totalRecords.Direction = ParameterDirection.Output;
+            var totalDisplayRecords = db.NewParameter("TotalDisplayRecords", 0, DbType.Int32);
+            totalDisplayRecords.Direction = ParameterDirection.Output;
+            dbParameters.Add(pageCount);
+            dbParameters.Add(totalRecords);
+            dbParameters.Add(totalDisplayRecords);
+            DataTable dt = db.GetDataTable("sp_RevokeTradeDetail", dbParameters);
+
+            result.List = new List<TradeDetails>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                DataRowReader reader = new DataRowReader(dt.Rows[i]);
+                TradeDetails detail = new TradeDetails()
+                {
+                    CustId = reader.GetString("custid"),
+                    OrderDate = reader.GetString("orderdate"),
+                    OperTime = reader.GetString("opertime"),
+                    StockCode = TranslateHelper.ConvertMarket(reader.GetString("market")) +" "+ reader.GetString("stkcode"),
+                    OrderQty = reader.GetString("orderqty"),
+                    BsFlag = TranslateHelper.ConvertBSFlag(reader.GetString("bsflag")),
+                    CancelFlag = TranslateHelper.ConvertCancelFlag(reader.GetString("cancelflag"))
+                };
+                result.List.Add(detail);
+            }
+            result.TotalPages = DataConvert.ToInt32(pageCount.Value);
+            result.TotalRecords = DataConvert.ToInt32(totalRecords.Value);
+            result.TotalDisplayRecords = DataConvert.ToInt32(totalDisplayRecords.Value);
             return result;
         }
 
@@ -639,8 +765,8 @@ namespace Dashboard.Logic
 
                 //当日撤单笔数
                 var cancelcount = from a in db.strategyorder
-                                  where a.orderdate == tdate && a.cancelflag == "T"
-                                  && a.orderstatus != "9" && a.matchqty > 0
+                                  where a.orderdate == tdate && a.cancelflag == "F"
+                                  && (a.orderstatus == "5" || a.orderstatus == "6") && a.matchqty > 0
                                   group a by a.orderdate into b
                                   select new
                                   {
@@ -714,131 +840,30 @@ namespace Dashboard.Logic
             return result;
         }
 
-
         /// <summary>
-        /// 交易类型转换
+        /// 获取撤单委托比超过阈值的客户情况
         /// </summary>
-        /// <param name="strategytype">交易类型代码</param>
-        /// <returns>交易类型名称</returns>
-        public static string ConvertStrategyType(string strategytype)
+        /// <returns>撤单/委托比</returns>
+        public static List<TradeDayVolume> GetRevoke(GetDateTime da)
         {
-            string result = null;
-
-            switch (strategytype)
-            {
-                case "0":
-                    result = "普通";
-                    break;
-                case "1":
-                    result = "TWAP";
-                    break;
-                case "2":
-                    result = "时序";
-                    break;
-                case "3":
-                    result = "盘口";
-                    break;
-                case "4":
-                    result = "ETF";
-                    break;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// 实时数据json时间格式转换
-        /// </summary>
-        /// <param name="Minute">传入时间，格式为yyyyMMdd.HHmiss或者yyyyMMdd</param>
-        /// <returns>传出时间，格式为yyyy-MM-dd</returns>
-        public static string ConvertMinute(double Minute)
-        {
-            string result;
-            string[] date = null;
-            if (Minute.ToString().Contains('.'))
-            {
-                date = Minute.ToString().Split('.');
-
-                while (date[1].Length < 6)
-                {
-                    date[1] = date[1] + "0";
-                }
-                string datetime = date[0].Substring(0, 4) + "-" + date[0].Substring(4, 2) +
-                    "-" + date[0].Substring(6, 2) + " " + date[1].Substring(0, 2) + ":" +
-                    date[1].Substring(2, 2) + ":" + date[1].Substring(4, 2);
-                result = datetime;
-            }
-            else
-            {
-                string sdate = Minute.ToString().Substring(0, 4) + "-" + Minute.ToString().Substring(4, 2) +
-                         "-" + Minute.ToString().Substring(6, 2);
-                result = sdate;
-            }
-
-            return result;
-        }
-                
-        /// <summary>
-        /// string类型的时间转为int类型
-        /// </summary>
-        /// <param name="datetime">时间格式yyyy-MM-dd</param>
-        /// <returns>整型，格式yyyyMMdd</returns>
-        public static int ConvertDate(string datetime)
-        {
-            int date = -1;
-            if (datetime != null)
-            {
-                string[] DT = datetime.Split('-');
-                string dt = null;
-                for (int i = 0; i < DT.Length; i++)
-                {
-                    if (DT[i].Length < 2)
+            List<TradeDayVolume> result = new List<TradeDayVolume>();
+            int begindate = TranslateHelper.ConvertDate(da.begindate);
+            int enddate = TranslateHelper.ConvertDate(da.enddate);
+            int limitnumorder = Convert.ToInt32(da.LimitMinOrder);
+                    using (var db = new ModelDataContainer())
                     {
-                        DT[i] = "0" + DT[i];
+                        var list = db.sp_GetRevokePercent(begindate, enddate ,limitnumorder);
+
+                        foreach (var item in list)
+                        {
+                            result.Add(new TradeDayVolume()
+                            {
+                                CustId = item.custid,
+                                OrderDate = item.orderdate,
+                                PerRevoke = (Convert.ToDecimal(item.numrevoke) * 100 / Convert.ToDecimal(item.numorder))
+                            });
+                        }
                     }
-                    dt += DT[i];
-                }
-
-                date = Int32.Parse(dt);
-            }
-            return date;
-        }
-
-        /// <summary>
-        /// 分钟数据格式转换
-        /// </summary>
-        /// <param name="datetime">时间格式Mss</param>
-        /// <returns>字符串，格式MMdd</returns>
-        public static string ConvertTime(int datetime)
-        {
-            string time = null;
-            if(datetime > 0 && datetime / 1000 <= 0)
-            {
-                time = "0" + datetime.ToString().Substring(0,1) + ":" + datetime.ToString().Substring(1,2);
-            }
-            else
-            {
-                time = datetime.ToString().Substring(0, 2) + ":" + datetime.ToString().Substring(2, 2);
-            }
-            return time;
-        }
-
-        /// <summary>
-        /// 交易方向转换
-        /// </summary>
-        /// <param name="BSFlag">交易方向标识</param>
-        /// <returns></returns>
-        public static string ConvertFlag(string BSFlag)
-        {
-            string result = null;
-            if (BSFlag == "S")
-            {
-                result = "卖出";
-            }
-            else if (BSFlag == "B")
-            {
-                result = "买入";
-            }
-
             return result;
         }
     }

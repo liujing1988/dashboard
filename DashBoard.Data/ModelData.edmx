@@ -143,6 +143,11 @@
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
           <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
         </Function>
+        <Function Name="sp_GetRevokePercent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="begindate" Type="int" Mode="In" />
+          <Parameter Name="enddate" Type="int" Mode="In" />
+          <Parameter Name="limitnumorder" Type="int" Mode="In" />
+        </Function>
         <Function Name="sp_TradeAmt_Minute" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="date" Type="int" Mode="In" />
         </Function>
@@ -167,7 +172,15 @@
           </FunctionImport>
           <EntitySet Name="strategyinfo" EntityType="ModelData.strategyinfo" />
           <EntitySet Name="custacctinfo" EntityType="ModelData.custacctinfo" />
-          <FunctionImport Name="sp_GetCustomerTradeDetail" ReturnType="Collection(ModelData.GetCustomerTradeDetail)">
+          <FunctionImport Name="sp_TradeAmt_Minute" ReturnType="Collection(ModelData.TradeAmt_Minute)">
+          <Parameter Name="date" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetRevokePercent" ReturnType="Collection(ModelData.sp_GetRevokePercent_Result)">
+            <Parameter Name="begindate" Mode="In" Type="Int32" />
+            <Parameter Name="enddate" Mode="In" Type="Int32" />
+            <Parameter Name="limitnumorder" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetCustomerTradeDetail">
             <Parameter Name="BeginDate" Mode="In" Type="Int32" />
             <Parameter Name="EndDate" Mode="In" Type="Int32" />
             <Parameter Name="SearchColumns" Mode="In" Type="String" />
@@ -179,9 +192,6 @@
             <Parameter Name="PageCount" Mode="InOut" Type="Int32" />
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
             <Parameter Name="TotalDisplayRecords" Mode="InOut" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_TradeAmt_Minute" ReturnType="Collection(ModelData.TradeAmt_Minute)">
-          <Parameter Name="date" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="strategyorder">
@@ -310,18 +320,17 @@
           <Property Name="isdelete" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="ownerid" Type="Int32" Nullable="false" />
         </EntityType>
-        <ComplexType Name="GetCustomerTradeDetail" >
-          <Property Type="Int32" Name="custid" Nullable="false" />
-          <Property Type="Int32" Name="tradedate" Nullable="false" />
-          <Property Type="String" Name="stkcode" Nullable="false" />
-          <Property Type="Int32" Name="matchqty" Nullable="false" />
-          <Property Type="Decimal" Name="matchprice" Nullable="false" />
-          <Property Type="String" Name="bsflag" Nullable="false" />
-        </ComplexType>
         <ComplexType Name="TradeAmt_Minute" >
           <Property Type="Int32" Name="rdate" Nullable="false" />
           <Property Type="Int32" Name="rminute" Nullable="false" />
           <Property Type="Int32" Name="tradeamt" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="sp_GetRevokePercent_Result">
+          <Property Type="Int32" Name="custid" Nullable="false" />
+          <Property Type="Int32" Name="orderdate" Nullable="false" />
+          <Property Type="Decimal" Name="percentrevoke" Nullable="true" Precision="28" Scale="14" />
+          <Property Type="Int32" Name="numrevoke" Nullable="true" />
+          <Property Type="Int32" Name="numorder" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -455,18 +464,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="sp_GetCustomerTradeDetail" FunctionName="ModelData.Store.sp_GetCustomerTradeDetail" >
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ModelData.GetCustomerTradeDetail">
-                <ScalarProperty Name="custid" ColumnName="custid" />
-                <ScalarProperty Name="tradedate" ColumnName="tradedate" />
-                <ScalarProperty Name="stkcode" ColumnName="stkcode" />
-                <ScalarProperty Name="matchqty" ColumnName="matchqty" />
-                <ScalarProperty Name="matchprice" ColumnName="matchprice" />
-                <ScalarProperty Name="bsflag" ColumnName="bsflag" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_TradeAmt_Minute" FunctionName="ModelData.Store.sp_TradeAmt_Minute" >
             <ResultMapping>
               <ComplexTypeMapping TypeName="ModelData.TradeAmt_Minute">
@@ -476,6 +473,18 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetRevokePercent" FunctionName="ModelData.Store.sp_GetRevokePercent">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ModelData.sp_GetRevokePercent_Result">
+                <ScalarProperty Name="custid" ColumnName="custid" />
+                <ScalarProperty Name="orderdate" ColumnName="orderdate" />
+                <ScalarProperty Name="percentrevoke" ColumnName="percentrevoke" />
+                <ScalarProperty Name="numrevoke" ColumnName="numrevoke" />
+                <ScalarProperty Name="numorder" ColumnName="numorder" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetCustomerTradeDetail" FunctionName="ModelData.Store.sp_GetCustomerTradeDetail" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

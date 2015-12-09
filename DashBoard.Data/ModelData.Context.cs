@@ -46,7 +46,33 @@ namespace DashBoard.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustomer>("sp_GetCustomer", begindateParameter, enddateParameter);
         }
     
-        public virtual ObjectResult<GetCustomerTradeDetail> sp_GetCustomerTradeDetail(Nullable<int> beginDate, Nullable<int> endDate, string searchColumns, Nullable<int> displayStart, Nullable<int> displayLength, string sortDirection, Nullable<int> currentPage, string orderField, ObjectParameter pageCount, ObjectParameter totalRecords, ObjectParameter totalDisplayRecords)
+        public virtual ObjectResult<TradeAmt_Minute> sp_TradeAmt_Minute(Nullable<int> date)
+        {
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("date", date) :
+                new ObjectParameter("date", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<TradeAmt_Minute>("sp_TradeAmt_Minute", dateParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetRevokePercent_Result> sp_GetRevokePercent(Nullable<int> begindate, Nullable<int> enddate, Nullable<int> limitnumorder)
+        {
+            var begindateParameter = begindate.HasValue ?
+                new ObjectParameter("begindate", begindate) :
+                new ObjectParameter("begindate", typeof(int));
+    
+            var enddateParameter = enddate.HasValue ?
+                new ObjectParameter("enddate", enddate) :
+                new ObjectParameter("enddate", typeof(int));
+    
+            var limitnumorderParameter = limitnumorder.HasValue ?
+                new ObjectParameter("limitnumorder", limitnumorder) :
+                new ObjectParameter("limitnumorder", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetRevokePercent_Result>("sp_GetRevokePercent", begindateParameter, enddateParameter, limitnumorderParameter);
+        }
+    
+        public virtual int sp_GetCustomerTradeDetail(Nullable<int> beginDate, Nullable<int> endDate, string searchColumns, Nullable<int> displayStart, Nullable<int> displayLength, string sortDirection, Nullable<int> currentPage, string orderField, ObjectParameter pageCount, ObjectParameter totalRecords, ObjectParameter totalDisplayRecords)
         {
             var beginDateParameter = beginDate.HasValue ?
                 new ObjectParameter("BeginDate", beginDate) :
@@ -80,16 +106,7 @@ namespace DashBoard.Data
                 new ObjectParameter("OrderField", orderField) :
                 new ObjectParameter("OrderField", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustomerTradeDetail>("sp_GetCustomerTradeDetail", beginDateParameter, endDateParameter, searchColumnsParameter, displayStartParameter, displayLengthParameter, sortDirectionParameter, currentPageParameter, orderFieldParameter, pageCount, totalRecords, totalDisplayRecords);
-        }
-    
-        public virtual ObjectResult<TradeAmt_Minute> sp_TradeAmt_Minute(Nullable<int> date)
-        {
-            var dateParameter = date.HasValue ?
-                new ObjectParameter("date", date) :
-                new ObjectParameter("date", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<TradeAmt_Minute>("sp_TradeAmt_Minute", dateParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_GetCustomerTradeDetail", beginDateParameter, endDateParameter, searchColumnsParameter, displayStartParameter, displayLengthParameter, sortDirectionParameter, currentPageParameter, orderFieldParameter, pageCount, totalRecords, totalDisplayRecords);
         }
     }
 }

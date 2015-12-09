@@ -10,6 +10,8 @@ namespace DashBoard.Web.Areas.HealthIndex.Models
 {
     /// <summary>
     /// 平台健康指数阈值设置配置文件
+    /// 刘静
+    /// 2015-12-02
     /// </summary>
     public class IndexManagers
     {
@@ -22,6 +24,7 @@ namespace DashBoard.Web.Areas.HealthIndex.Models
             result.MaxDayOrder = ConfigurationManager.AppSettings.Get("MaxDay");
             result.MaxMinuteOrder = ConfigurationManager.AppSettings.Get("MaxMinute");
             result.MaxSecondOrder = ConfigurationManager.AppSettings.Get("MaxSecond");
+            result.LimitMinOrder = ConfigurationManager.AppSettings.Get("LimitMinOrder");
             return result;
         }
 
@@ -29,12 +32,13 @@ namespace DashBoard.Web.Areas.HealthIndex.Models
         /// 修改，保存配置文件
         /// </summary>
         /// <param name="ConnenctionString"></param>
-        public static void SaveConfig(string MaxDay, string MaxMinute, string MaxSecond)
+        public static void SaveConfig(string MaxDay, string MaxMinute, string MaxSecond, string LimitMinOrder)
         {
             Configuration config = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
             config.AppSettings.Settings["MaxDay"].Value = MaxDay;
             config.AppSettings.Settings["MaxMinute"].Value = MaxMinute;
             config.AppSettings.Settings["MaxSecond"].Value = MaxSecond;
+            config.AppSettings.Settings["LimitMinOrder"].Value = LimitMinOrder;
             config.Save();
         }
 

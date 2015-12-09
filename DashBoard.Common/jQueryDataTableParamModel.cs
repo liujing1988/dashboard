@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Common
 {
+    /// <summary>
+    /// 用户交易明细表格参数传递实体
+    /// 刘静
+    /// 2015-12-02
+    /// </summary>
+    //序列化
     [Serializable]
     public class jQueryDataTableParamModel
     {
@@ -17,7 +23,7 @@ namespace Dashboard.Common
         public string sEcho { get; set; }
 
         /// <summary>
-        /// Text used for filtering
+        /// 模糊搜索内容
         /// </summary>
         public string sSearch { get; set; }
 
@@ -37,7 +43,7 @@ namespace Dashboard.Common
         public int iColumns { get; set; }
 
         /// <summary>
-        /// Number of columns that are used in sorting
+        /// 被排序列
         /// </summary>
         public int iSortingCols { get; set; }
 
@@ -45,12 +51,20 @@ namespace Dashboard.Common
         /// Comma separated list of column names
         /// </summary>
         public string sColumns { get; set; }
+
+        /// <summary>
+        /// 时间参数
+        /// </summary>
         public string extra_search { get; set; }
 
         /// <summary>
-        /// json数据：[{"name": "", "value": ""}]
+        /// 搜索内容（每列下方）
         /// </summary>
         public string searchColumns { get; set; }
+
+        /// <summary>
+        /// 搜索列名
+        /// </summary>
         public string columnIndex { get; set; }
     }
 }

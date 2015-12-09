@@ -115,14 +115,14 @@
                         }
                     },
                     title: {
-                        text: '今日客户交易量排名'
+                        text: '今日客户交易金额排名'
                     },
                     xAxis: {
                         categories: CustId
                     },
                     yAxis: {
                         title: {
-                            text: '交易量'
+                            text: '交易金额'
                         },
                         plotLines: [{
                             value: 0,
@@ -148,7 +148,7 @@
                         }
                     },
                     series: [{
-                        name: '信用交易量',
+                        name: '信用交易',
                         data: CreditTrade,
                         dataLabels: {
                             enabled: true,
@@ -164,7 +164,7 @@
                             }
                         }
                     }, {
-                        name: '普通交易量',
+                        name: '普通交易',
                         data: NormalTrade,
                         color: '#f7a35c',
                         dataLabels: {

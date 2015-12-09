@@ -42,5 +42,14 @@ namespace DashBoard.Common
 
         //卖出金额
         public string SalesAmt { get; set; }
+
+        //撤单比值
+        public decimal PerRevoke { get; set; }
+
+        //交易日期
+        public decimal OrderDate { get; set; }
+
+        //客户ID
+        public int CustId { get; set; }
     }
 }

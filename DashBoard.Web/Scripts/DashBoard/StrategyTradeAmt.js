@@ -76,7 +76,8 @@
                                                             rminresult = Number(result[i].StrategyTradeAmt);
                                                         }
                                                     }
-                                                    if (result[0].StrategyType != null && minresult / 1000000 >= 1) {
+                                                    
+                                                    if (minresult / 1000000 >= 1) {
                                                         for (var i = 0; i < data.length; i++) {
                                                             rStrategyType[i] = data[i].StrategyType;
                                                             rTradeAmount[i] = data[i].StrategyTradeAmt / 1000000;
@@ -88,16 +89,31 @@
                                                             rStrategyType[i] = data[i].StrategyType;
                                                             rTradeAmount[i] = data[i].StrategyTradeAmt;
                                                         }
+                                                        unit = "元";
                                                     }
-                                                    unit = "元";
                                                 }
                                                 xAxis.setCategories(rStrategyType);
-                                                series.setData(rTradeAmount);
+                                                series.update({
+                                                    data: rTradeAmount,
+                                                    dataLabels: {
+                                                        enabled: true,
+                                                        color: '#000000',
+                                                        align: 'right',
+                                                        style: {
+                                                            fontSize: '13px',
+                                                            fontFamily: 'Verdana, sans-serif',
+                                                            textShadow: '0 0 0 black'
+                                                        },
+                                                        formatter: function () {
+                                                            return Highcharts.numberFormat(this.y, 2, '.') + unit
+                                                        }
+                                                    }
+                                                });
                                             }
                                         }
                                     });
 
-                                }, 60000);
+                                }, 1000 * 60);
                             }
                         }
                     },
