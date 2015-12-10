@@ -123,6 +123,9 @@
                     xAxis: {
                         categories: StrategyName
                     },
+                    credits: {
+                        enabled: false
+                    },
                     yAxis: {
                         title: {
                             text: '交易量'

@@ -173,7 +173,9 @@
                         useHTML: true,
                         text: '今日交易操作情况'
                     },
-                    
+                    credits: {
+                        enabled: false
+                    },
                     xAxis: {
                         categories: ['总委托笔数', '总成交笔数', '总撤单笔数']
                     },
@@ -315,6 +317,9 @@
                         title: {
                             text: null
                         }
+                    },
+                    credits: {
+                        enabled: false
                     },
                     plotOptions: {
                         column: {

@@ -161,6 +161,7 @@ namespace Dashboard.Logic
                     {
                         result.Add(new RealTimeData()
                         {
+                            Day = DateTime.Now.ToString("yyyy-MM-dd"),
                             Minute = TranslateHelper.ConvertTime(item.rminute),
                             TradeAmount = item.tradeamt,
                         });
@@ -169,6 +170,7 @@ namespace Dashboard.Logic
                     {
                         result.Add(new RealTimeData()
                         {
+                            Day = DateTime.Now.ToString("yyyy-MM-dd"),
                             Minute = item.rminute.ToString(),
                             TradeAmount = item.tradeamt,
                         });
@@ -840,31 +842,31 @@ namespace Dashboard.Logic
             return result;
         }
 
-        /// <summary>
-        /// 获取撤单委托比超过阈值的客户情况
-        /// </summary>
-        /// <returns>撤单/委托比</returns>
-        public static List<TradeDayVolume> GetRevoke(GetDateTime da)
-        {
-            List<TradeDayVolume> result = new List<TradeDayVolume>();
-            int begindate = TranslateHelper.ConvertDate(da.begindate);
-            int enddate = TranslateHelper.ConvertDate(da.enddate);
-            int limitnumorder = Convert.ToInt32(da.LimitMinOrder);
-                    using (var db = new ModelDataContainer())
-                    {
-                        var list = db.sp_GetRevokePercent(begindate, enddate ,limitnumorder);
+        ///// <summary>
+        ///// 获取撤单委托比超过阈值的客户情况
+        ///// </summary>
+        ///// <returns>撤单/委托比</returns>
+        //public static List<TradeDayVolume> GetRevoke(GetDateTime da)
+        //{
+        //    List<TradeDayVolume> result = new List<TradeDayVolume>();
+        //    int begindate = TranslateHelper.ConvertDate(da.begindate);
+        //    int enddate = TranslateHelper.ConvertDate(da.enddate);
+        //    int limitnumorder = Convert.ToInt32(da.LimitMinOrder);
+        //            using (var db = new ModelDataContainer())
+        //            {
+        //                var list = db.sp_GetRevokePercent(begindate, enddate ,limitnumorder);
 
-                        foreach (var item in list)
-                        {
-                            result.Add(new TradeDayVolume()
-                            {
-                                CustId = item.custid,
-                                OrderDate = item.orderdate,
-                                PerRevoke = (Convert.ToDecimal(item.numrevoke) * 100 / Convert.ToDecimal(item.numorder))
-                            });
-                        }
-                    }
-            return result;
-        }
+        //                foreach (var item in list)
+        //                {
+        //                    result.Add(new TradeDayVolume()
+        //                    {
+        //                        CustId = item.custid,
+        //                        OrderDate = item.orderdate,
+        //                        PerRevoke = (Convert.ToDecimal(item.numrevoke) * 100 / Convert.ToDecimal(item.numorder))
+        //                    });
+        //                }
+        //            }
+        //    return result;
+        //}
     }
 }

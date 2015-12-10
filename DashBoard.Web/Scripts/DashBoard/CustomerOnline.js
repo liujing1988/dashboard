@@ -104,6 +104,9 @@
                         text: '其中两融用户<br><font size= 5 color=green>' + CreditCustomer + '</font>',
                         align:'left'
                     },
+                    credits: {
+                        enabled: false
+                    },
                     plotOptions: {
                         pie: {
                             allowPointSelect: true,
@@ -206,6 +209,9 @@
                         useHTML:true,
                         text: ServerDate + '<br>在线用户数<br><font size= 5 color = green>' + NumCustomer + '</font>',
                         align: 'left'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         categories: ['在线用户']

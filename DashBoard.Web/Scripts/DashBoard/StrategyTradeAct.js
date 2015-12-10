@@ -106,6 +106,9 @@
                                this.series.name + ': ' + Highcharts.numberFormat(this.y, 0, '.') + unit;
                         }
                     },
+                    credits: {
+                        enabled: false
+                    },
                     legend: {
                         enabled: false
                     },

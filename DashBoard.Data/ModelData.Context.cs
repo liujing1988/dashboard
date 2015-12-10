@@ -55,21 +55,45 @@ namespace DashBoard.Data
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<TradeAmt_Minute>("sp_TradeAmt_Minute", dateParameter);
         }
     
-        public virtual ObjectResult<sp_GetRevokePercent_Result> sp_GetRevokePercent(Nullable<int> begindate, Nullable<int> enddate, Nullable<int> limitnumorder)
+        public virtual ObjectResult<sp_GetRevokePercent_Result> sp_GetRevokePercent(Nullable<int> beginDate, Nullable<int> endDate, string searchColumns, Nullable<int> displayStart, Nullable<int> displayLength, string sortDirection, Nullable<int> currentPage, string orderField, Nullable<int> limitNumOrder, ObjectParameter pageCount, ObjectParameter totalRecords, ObjectParameter totalDisplayRecords)
         {
-            var begindateParameter = begindate.HasValue ?
-                new ObjectParameter("begindate", begindate) :
-                new ObjectParameter("begindate", typeof(int));
+            var beginDateParameter = beginDate.HasValue ?
+                new ObjectParameter("BeginDate", beginDate) :
+                new ObjectParameter("BeginDate", typeof(int));
     
-            var enddateParameter = enddate.HasValue ?
-                new ObjectParameter("enddate", enddate) :
-                new ObjectParameter("enddate", typeof(int));
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(int));
     
-            var limitnumorderParameter = limitnumorder.HasValue ?
-                new ObjectParameter("limitnumorder", limitnumorder) :
-                new ObjectParameter("limitnumorder", typeof(int));
+            var searchColumnsParameter = searchColumns != null ?
+                new ObjectParameter("SearchColumns", searchColumns) :
+                new ObjectParameter("SearchColumns", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetRevokePercent_Result>("sp_GetRevokePercent", begindateParameter, enddateParameter, limitnumorderParameter);
+            var displayStartParameter = displayStart.HasValue ?
+                new ObjectParameter("DisplayStart", displayStart) :
+                new ObjectParameter("DisplayStart", typeof(int));
+    
+            var displayLengthParameter = displayLength.HasValue ?
+                new ObjectParameter("DisplayLength", displayLength) :
+                new ObjectParameter("DisplayLength", typeof(int));
+    
+            var sortDirectionParameter = sortDirection != null ?
+                new ObjectParameter("SortDirection", sortDirection) :
+                new ObjectParameter("SortDirection", typeof(string));
+    
+            var currentPageParameter = currentPage.HasValue ?
+                new ObjectParameter("CurrentPage", currentPage) :
+                new ObjectParameter("CurrentPage", typeof(int));
+    
+            var orderFieldParameter = orderField != null ?
+                new ObjectParameter("OrderField", orderField) :
+                new ObjectParameter("OrderField", typeof(string));
+    
+            var limitNumOrderParameter = limitNumOrder.HasValue ?
+                new ObjectParameter("LimitNumOrder", limitNumOrder) :
+                new ObjectParameter("LimitNumOrder", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetRevokePercent_Result>("sp_GetRevokePercent", beginDateParameter, endDateParameter, searchColumnsParameter, displayStartParameter, displayLengthParameter, sortDirectionParameter, currentPageParameter, orderFieldParameter, limitNumOrderParameter, pageCount, totalRecords, totalDisplayRecords);
         }
     
         public virtual int sp_GetCustomerTradeDetail(Nullable<int> beginDate, Nullable<int> endDate, string searchColumns, Nullable<int> displayStart, Nullable<int> displayLength, string sortDirection, Nullable<int> currentPage, string orderField, ObjectParameter pageCount, ObjectParameter totalRecords, ObjectParameter totalDisplayRecords)

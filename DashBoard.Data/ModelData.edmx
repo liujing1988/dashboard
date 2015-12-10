@@ -144,9 +144,18 @@
           <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
         </Function>
         <Function Name="sp_GetRevokePercent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="begindate" Type="int" Mode="In" />
-          <Parameter Name="enddate" Type="int" Mode="In" />
-          <Parameter Name="limitnumorder" Type="int" Mode="In" />
+          <Parameter Name="BeginDate" Type="int" Mode="In" />
+          <Parameter Name="EndDate" Type="int" Mode="In" />
+          <Parameter Name="SearchColumns" Type="nvarchar" Mode="In" />
+          <Parameter Name="DisplayStart" Type="int" Mode="In" />
+          <Parameter Name="DisplayLength" Type="int" Mode="In" />
+          <Parameter Name="SortDirection" Type="nvarchar" Mode="In" />
+          <Parameter Name="CurrentPage" Type="int" Mode="In" />
+          <Parameter Name="OrderField" Type="nvarchar" Mode="In" />
+          <Parameter Name="LimitNumOrder" Type="int" Mode="In" />
+          <Parameter Name="PageCount" Type="int" Mode="InOut" />
+          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
+          <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
         </Function>
         <Function Name="sp_TradeAmt_Minute" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="date" Type="int" Mode="In" />
@@ -176,9 +185,18 @@
           <Parameter Name="date" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_GetRevokePercent" ReturnType="Collection(ModelData.sp_GetRevokePercent_Result)">
-            <Parameter Name="begindate" Mode="In" Type="Int32" />
-            <Parameter Name="enddate" Mode="In" Type="Int32" />
-            <Parameter Name="limitnumorder" Mode="In" Type="Int32" />
+            <Parameter Name="BeginDate" Mode="In" Type="Int32" />
+            <Parameter Name="EndDate" Mode="In" Type="Int32" />
+            <Parameter Name="SearchColumns" Mode="In" Type="String" />
+            <Parameter Name="DisplayStart" Mode="In" Type="Int32" />
+            <Parameter Name="DisplayLength" Mode="In" Type="Int32" />
+            <Parameter Name="SortDirection" Mode="In" Type="String" />
+            <Parameter Name="CurrentPage" Mode="In" Type="Int32" />
+            <Parameter Name="OrderField" Mode="In" Type="String" />
+            <Parameter Name="LimitNumOrder" Mode="In" Type="Int32" />
+            <Parameter Name="PageCount" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotalDisplayRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_GetCustomerTradeDetail">
             <Parameter Name="BeginDate" Mode="In" Type="Int32" />

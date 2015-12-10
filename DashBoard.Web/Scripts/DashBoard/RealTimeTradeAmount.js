@@ -79,6 +79,9 @@ $(function () {
                 tickInterval: 120,
                 categories: Realtime
             },
+            credits: {
+                enabled: false
+            },
             scrollbar: {
                 enabled: true
             },

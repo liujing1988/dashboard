@@ -445,6 +445,7 @@
     <Content Include="Scripts\DashBoard\MaxTrade.js" />
     <Content Include="Scripts\DashBoard\MonthTradeAmount.js" />
     <Content Include="Scripts\DashBoard\mydashboard.js" />
+    <Content Include="Scripts\DashBoard\RealTimeTrade20151209.js" />
     <Content Include="Scripts\DashBoard\RealTimeTradeAmount.js" />
     <Content Include="Scripts\DashBoard\StrategyTradeAmt.js" />
     <Content Include="Scripts\DashBoard\StrategyType_use.js" />
@@ -459,6 +460,7 @@
     <Content Include="Scripts\highcharts\grid.js" />
     <Content Include="Scripts\highcharts\highcharts-more.js" />
     <Content Include="Scripts\highcharts\highcharts.js" />
+    <Content Include="Scripts\highcharts\highstock.js" />
     <Content Include="Scripts\highcharts\solid-gauge.js" />
     <Content Include="Scripts\jquery-1.8.3.min.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />

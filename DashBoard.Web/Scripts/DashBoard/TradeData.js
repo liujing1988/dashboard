@@ -160,7 +160,6 @@ function GetRealTime(begindate, enddate) {
                                                         rMinuteTrade[i] = data[i].TradeAmount;
                                                     }
                                                 }
-                                                rMinuteTrade[i] = data[i].TradeAmount;
                                             }
                                         }
                                     });

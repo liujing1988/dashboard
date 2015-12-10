@@ -137,6 +137,9 @@
                 text: '撤单/委托比<br><font size= 5 color = green>' + (NumRevoke / NumOrder * 100).toFixed(2) + '%</font>',
                 
             },
+            credits: {
+                enabled: false
+            },
             xAxis: {
                 categories: ['撤单/委托']
             },

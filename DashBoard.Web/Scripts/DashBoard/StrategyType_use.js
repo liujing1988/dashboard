@@ -158,6 +158,9 @@ function GetType(begindate, enddate) {
                                 showInLegend: true
                             }
                         },
+                        credits: {
+                            enabled: false
+                        },
                         series: [{
                             type: 'pie',
                             name: '使用百分比',
