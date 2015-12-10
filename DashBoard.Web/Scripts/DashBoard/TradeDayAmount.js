@@ -114,9 +114,6 @@
                             }
                         }
                     },
-                    credits: {
-                        enabled: false
-                    },
                     title: {
                         text: '今日客户交易金额排名'
                     },

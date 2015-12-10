@@ -45,15 +45,15 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
             return DataServiceHelper.GetCustomerOnline();
         }
 
-        ///// <summary>
-        ///// 获取撤单/委托比大于60%的客户id和比值
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public List<TradeDayVolume> GetRevoke(GetDateTime da)
-        //{
-        //    da.LimitMinOrder = HealthIndex.Models.IndexManagers.ReadConfig().LimitMinOrder;
-        //    return DataServiceHelper.GetRevoke(da);
-        //}
+        /// <summary>
+        /// 获取撤单/委托比大于60%的客户id和比值
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public List<TradeDayVolume> GetRevoke(GetDateTime da)
+        {
+            da.LimitMinOrder = HealthIndex.Models.IndexManagers.ReadConfig().LimitMinOrder;
+            return DataServiceHelper.GetRevoke(da);
+        }
     }
 }
