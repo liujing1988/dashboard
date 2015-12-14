@@ -1,10 +1,10 @@
 ﻿var table = null; //定义全局变量表格
-var searchtitle; //搜索列名
-var searchtext;  //搜索内容
+var searchtitle = null; //搜索列名
+var searchtext = null;  //搜索内容
 
-var tablemain; //主表格
-var searchmain; //搜索列名
-var textmain;  //搜索内容
+var tablemain = null; //主表格
+var searchmain = null; //搜索列名
+var textmain = null;  //搜索内容
 $(document).ready(function ($) {
 
     GetRevoke($('#getRevoke_Customer span').html().substr(0, 10), $('#getRevoke_Customer span').html().substr(13, 10));
@@ -87,138 +87,8 @@ $(document).ready(function ($) {
         if (table != null) {
             table.ajax.reload();
         }
-        //var starmonth = $('#getRevoke_Customer span').html().substr(0, 10);
-        //var endmonh = $('#getRevoke_Customer span').html().substr(13, 10);
-        //GetRevoke(starmonth, endmonh);
     });
 });
-//function GetRevoke(begindate, enddate) {
-//    if (begindate == "" && enddate == "") {
-//        var myDate = new Date();
-//        var month = myDate.getMonth() + 1;
-//        var date = myDate.getDate() - 1;
-//        begindate = myDate.getFullYear() + "-" + month + "-" + myDate.getDate();
-//        enddate = myDate.getFullYear() + "-" + month + "-" + myDate.getDate();
-//    }
-//    if (begindate == "") {
-//        alert("请输入起始时间");
-//    }
-//    else if (enddate == "") {
-//        alert("请输入截止时间");
-//    }
-
-//    var da = {
-//        "beginDate": begindate,
-//        "endDate": enddate
-//    }
-//    $.ajax(
-//{
-//    url: "/api/GetCustomer/GetRevoke", //表示提交给的action 
-//    type: "post",   //提交方法 
-//    data: da,
-//    datatype: "json",//数据类型
-//    success: function (result) {
-//        //客户ID
-//        var custId = [];
-//        //撤单/委托比
-//        var perRevoke = [];
-//        //交易日期
-//        var orderDate = [];
-//        //实时曲线数据转换
-//        if (result.length > 0) {
-//            for (var i = 0; i < result.length; i++) {
-//                custId.push(result[i].CustId);
-//                orderDate.push(result[i].OrderDate);
-//                perRevoke.push(result[i].PerRevoke);
-//            }
-//        }
-//        $(function () {
-//            $(document).ready(function () {
-//                var chart;
-//                $('#RevokeDetail').highcharts({
-//                    chart: {
-//                        type: 'column',
-//                        animation: Highcharts.svg, // don't animate in old IE               
-//                        marginRight: 10
-//                    },
-//                    title: {
-//                        text: '撤单率超60%客户情况'
-//                    },
-//                    xAxis: {
-//                        categories: custId
-//                    },
-//                    scrollbar: {
-//                        enabled: true
-//                    },
-//                    yAxis: {
-//                        title: {
-//                            text: '撤单/委托比'
-//                        },
-//                        plotLines: [{
-//                            value: 3,
-//                            width: 2,
-//                            color: '#808080'
-//                        }]
-//                    },
-//                    tooltip: {
-//                        formatter: function () {
-//                            return '<b>' + this.series.name + '</b><br/>' +
-//                            this.x + '<br/>' +
-//                            Highcharts.numberFormat(this.y, 2) +'%';
-//                        },
-//                        crosshairs: [{
-//                            width: 1,
-//                            color: 'red'
-//                        }, {
-//                            width: 1,
-//                            color: 'red'
-//                        }]
-//                    },
-//                    legend: {
-//                        enabled: false
-//                    },
-//                    //点击事件		
-//                    plotOptions: {
-//                        series: {
-//                            cursor: 'pointer',
-//                            events: {
-//                                click: function (e) {
-//                                    if (table != null) {
-//                                        searchtitle = '客户ID';
-//                                        searchtext = e.point.category;
-//                                        table.ajax.reload();  //重新加载数据
-//                                    }
-//                                    else {
-//                                        GetRevokeDetails(e.point.category, da.beginDate, da.endDate);
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    },
-//                    exporting: {
-//                        enabled: false
-//                    },
-//                    series: [{
-//                        name: '撤单/委托比',
-//                        data: perRevoke
-//                    }],
-//                    lang: {
-//                        noData: "Nichts zu anzeigen"
-//                    },
-//                    noData: {
-//                        style: {
-//                            fontWeight: 'bold',
-//                            fontSize: '15px',
-//                            color: '#303030'
-//                        }
-//                    }
-//                });
-//            });
-
-//        });
-//    }
-//});
-//}
 
 function GetRevokeDetails(custid, begindate, enddate) {
     //重写表格的tfoot，将其变成输入框
@@ -226,13 +96,28 @@ function GetRevokeDetails(custid, begindate, enddate) {
         var title = $(this).text();
         $(this).html('<input type="text" data=' + title + '  placeholder="搜索 ' + title + '" />');
     });
-    searchtitle = '客户ID,委托日期';
-    searchtext = custid + ',' + begindate;
     //加载客户交易表的内容，并将其汉化
     $(function () {
+        TableTools.DEFAULTS.aButtons = [{
+            "sExtends": "csv",
+            "sCharSet": "utf8",
+            "bBomInc": true
+        }, "xls"];
+        searchtitle = '客户ID,委托日期';
+        searchtext = custid + ',' + begindate;
         table = $('#revokeTable').DataTable({
             "bServerSide": true,  //是否链接服务器端
             "sAjaxSource": "/dashboard/Customer/RevokeDetails",  //json访问，调取数据
+
+            "sDom": 'T<"clear">lfrtip',
+
+            "oTableTools": {
+                "sSwfPath": "../../Content/swf/copy_csv_xls_pdf.swf"
+            },
+            "bFilter": false, //搜索框 
+
+            "bStateSave": true, //缓存 
+
             //传递条件参数至后台
             "fnServerParams": function (aoData) {
                 aoData.push({ "name": "extra_search", "value": $('#getRevoke_Customer span').html() },  //时间参数
@@ -292,13 +177,13 @@ function GetRevokeDetails(custid, begindate, enddate) {
         table.columns().every(function () {  //列初始化
             var that = this;
             $('input', this.footer()).on('blur change', function () {  //单元格失去焦点时触发该函数
-                if (that.search() !== this.value) {
+                if (that.search() !== this.value || this.value == '') {
                     var stitle = $(this).attr("data");  //获取列名
                     var stext = $.fn.dataTable.util.escapeRegex($(this).val());  //获取搜索内容
                     var re = new RegExp(stitle);  //判断搜索列名是否有重复的初始化
                     if (searchtitle == null) {
-                        searchtitle = '客户ID';
-                        searchtext = custid;
+                        searchtitle = '客户ID,委托日期';
+                        searchtext = custid + ',' + begindate;
                     }
                     else if (searchtitle.search(re) != -1) {  //判断搜索列名是否重复，如有重复，更新相应的搜索内容
                         var st = searchtitle.split(',');
@@ -333,6 +218,11 @@ function GetRevokeDetails(custid, begindate, enddate) {
 
 
 function GetRevoke(begindate, enddate) {
+    TableTools.DEFAULTS.aButtons = [{
+        "sExtends": "csv",
+        "sCharSet": "utf8",
+        "bBomInc": true
+    }, "xls"];
     //重写表格的tfoot，将其变成输入框
     $('#revokeMain tfoot th').each(function () {
         var title = $(this).text();
@@ -341,15 +231,34 @@ function GetRevoke(begindate, enddate) {
     //加载客户交易表的内容，并将其汉化
     $(function () {
         tablemain = $('#revokeMain').DataTable({
+            //"bJQueryUI": false, 
+            //'bPaginate': false, //是否分页 
+            //"bRetrieve": false, //是否允许从新生成表格  
+            //"bInfo": false, //显示表格的相关信息 
+            //"bDestroy": true, 
+            "bFilter": false, //搜索框 
+            //"bLengthChange": false, //动态指定分页后每页显示的记录数 
+            //"bSort": true, //排序 
+            //"bStateSave": true, //缓存 
+            ////            "sAjaxSource": "ajaxProduct.action", 
+
+
             "bServerSide": true,  //是否链接服务器端
             "sAjaxSource": "/dashboard/Customer/RevokeMain",  //json访问，调取数据
+
+            "sDom": 'T<"clear">lfrtip',
+
+            "oTableTools": {
+                "sSwfPath": "../../Content/swf/copy_csv_xls_pdf.swf"
+            },
+
             //传递条件参数至后台
             "fnServerParams": function (aoData) {
                 aoData.push({ "name": "extra_search", "value": $('#getRevoke_Customer span').html() },  //时间参数
                     { "name": "columnIndex", "value": searchmain }, //搜索列
                     { "name": "searchColumns", "value": textmain }); //搜索内容
             },
-            "bProcessing": true,
+            "bProcessing": true, //当处理大量数据时，显示进度，进度条等 
             "aoColumns": [  //初始化列名
                             {
                                 "sName": "custid", //第一列列名
@@ -365,7 +274,8 @@ function GetRevoke(begindate, enddate) {
                             { "sName": "numrevoke" },
                             { "sName": "numorder" },
                             { "sName": "maxminuteorder" },
-                            { "sName": "maxsecondorder" }
+                            { "sName": "maxsecondorder" },
+                            { "sName": "netbuyamt" }
             ],
             "language": { //汉化
                 "sProcessing": "处理中...",
@@ -402,9 +312,11 @@ function GetRevoke(begindate, enddate) {
         tablemain.columns().every(function () {  //列初始化
             var that = this;
             $('input', this.footer()).on('blur change', function () {  //单元格失去焦点时触发该函数
-                if (that.search() !== this.value) {
+                
+                if (that.search() !== this.value || this.value == '') {
                     var stitle = $(this).attr("data");  //获取列名
                     var stext = $.fn.dataTable.util.escapeRegex($(this).val());  //获取搜索内容
+
                     var re = new RegExp(stitle);  //判断搜索列名是否有重复的初始化
                     if (searchmain == null) {
                         searchmain = stitle;

@@ -148,10 +148,19 @@ namespace Dashboard.Common
         /// </summary>
         public string LimitMinOrder { get; set; }
 
-        //分钟委托笔数
+        /// <summary>
+        /// 分钟委托笔数
+        /// </summary>
         public string MiNumOrder { get; set; }
 
-        //秒委托笔数
+        /// <summary>
+        /// 秒委托笔数
+        /// </summary>
         public string SeNumOrder { get; set; }
+
+        /// <summary>
+        /// 净买入金额
+        /// </summary>
+        public string NetBuyAmt { get; set; }
     }
 }

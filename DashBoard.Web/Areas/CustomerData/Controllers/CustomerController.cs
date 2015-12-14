@@ -496,6 +496,20 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
                     }
                     else
                     {
+                        ssql = ssql + ',' + "";
+                    }
+                    if (param.columnIndex.Contains("净买入金额"))
+                    {
+                        for (int j = 0; j < columnIndexs.Length; j++)
+                        {
+                            if (columnIndexs[j] == "净买入金额")
+                            {
+                                ssql = ssql + ',' + searchTexts[j];
+                            }
+                        }
+                    }
+                    else
+                    {
                         ssql = ssql + ',' + "" + ',';
                     }
                 }
@@ -533,6 +547,10 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
             {
                 orderfield = "maxsecondorder";
             }
+            if (sortColumnIndex == 7)
+            {
+                orderfield = "netbuyamt";
+            }
             da.OrderField = orderfield;
             
             var sortDirection = Request["sSortDir_0"]; // asc or desc
@@ -546,7 +564,7 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
 
             var data = from c in result.List
                        select new[] { c.CustId, c.OrderDate,
-                          c.PercentRevoke, c.NumRevoke,c.NumOrder,c.MiNumOrder,c.SeNumOrder };
+                          c.PercentRevoke, c.NumRevoke,c.NumOrder,c.MiNumOrder,c.SeNumOrder,c.NetBuyAmt };
 
             return Json(new
             {

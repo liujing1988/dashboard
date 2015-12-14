@@ -508,7 +508,8 @@ namespace Dashboard.Logic
                     NumRevoke = reader.GetString("numrevoke"),
                     NumOrder = reader.GetString("numorder"),
                     MiNumOrder = reader.GetString("maxminuteorder"),
-                    SeNumOrder = reader.GetString("maxsecondorder")
+                    SeNumOrder = reader.GetString("maxsecondorder"),
+                    NetBuyAmt = reader.GetDecimal("netbuyamt").ToString("f2")
                 };
                 result.List.Add(detail);
             }

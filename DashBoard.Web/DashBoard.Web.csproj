@@ -199,6 +199,7 @@
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\dataTables.tableTools.css" />
     <Content Include="Content\DataTablesExt.js" />
     <Content Include="Content\daterangepicker-1.3.7.css" />
     <Content Include="Content\daterangepicker-bs3.css" />
@@ -226,6 +227,7 @@
     <Content Include="Content\razorflow.min.css" />
     <Content Include="Content\sharestyle.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\swf\copy_csv_xls_pdf.swf" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -437,6 +439,7 @@
     <Content Include="Scripts\DashBoard\creditsales.js" />
     <Content Include="Scripts\DashBoard\Customer.js" />
     <Content Include="Scripts\DashBoard\CustomerOnline.js" />
+    <Content Include="Scripts\DashBoard\dataTables.tableTools.js" />
     <Content Include="Scripts\DashBoard\healthindexconfig.js" />
     <Content Include="Scripts\DashBoard\jquery-1.11.3.min.js" />
     <Content Include="Scripts\DashBoard\jquery.dataTables.min.js" />
