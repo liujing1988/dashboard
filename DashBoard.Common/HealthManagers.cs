@@ -31,5 +31,10 @@ namespace DashBoard.Common
         /// 每日撤单委托比大于60%用户的最小委托笔数
         /// </summary>
         public string LimitMinOrder { get; set; }
+
+        /// <summary>
+        /// 首页刷新频率
+        /// </summary>
+        public string IndexRefreshRate { get; set; }
     }
 }

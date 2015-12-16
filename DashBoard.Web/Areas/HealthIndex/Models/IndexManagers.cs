@@ -25,6 +25,7 @@ namespace DashBoard.Web.Areas.HealthIndex.Models
             result.MaxMinuteOrder = ConfigurationManager.AppSettings.Get("MaxMinute");
             result.MaxSecondOrder = ConfigurationManager.AppSettings.Get("MaxSecond");
             result.LimitMinOrder = ConfigurationManager.AppSettings.Get("LimitMinOrder");
+            result.IndexRefreshRate = ConfigurationManager.AppSettings.Get("IndexRefreshRate");
             return result;
         }
 
@@ -32,13 +33,14 @@ namespace DashBoard.Web.Areas.HealthIndex.Models
         /// 修改，保存配置文件
         /// </summary>
         /// <param name="ConnenctionString"></param>
-        public static void SaveConfig(string MaxDay, string MaxMinute, string MaxSecond, string LimitMinOrder)
+        public static void SaveConfig(string MaxDay, string MaxMinute, string MaxSecond, string LimitMinOrder, string IndexRefreshRate)
         {
             Configuration config = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
             config.AppSettings.Settings["MaxDay"].Value = MaxDay;
             config.AppSettings.Settings["MaxMinute"].Value = MaxMinute;
             config.AppSettings.Settings["MaxSecond"].Value = MaxSecond;
             config.AppSettings.Settings["LimitMinOrder"].Value = LimitMinOrder;
+            config.AppSettings.Settings["IndexRefreshRate"].Value = IndexRefreshRate;
             config.Save();
         }
 

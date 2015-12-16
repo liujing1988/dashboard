@@ -35,6 +35,120 @@
           <Property Name="ownerid" Type="int" Nullable="false" />
           <Property Name="createdate" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="positionbasicinfotable">
+          <Key>
+            <PropertyRef Name="custid" />
+            <PropertyRef Name="fundid" />
+            <PropertyRef Name="sttradeno" />
+          </Key>
+          <Property Name="custid" Type="int" Nullable="false" />
+          <Property Name="fundid" Type="numeric" Precision="16" Scale="0" Nullable="false" />
+          <Property Name="sttradeno" Type="int" Nullable="false" />
+          <Property Name="substrategyno" Type="int" Nullable="false" />
+          <Property Name="strategyno" Type="int" Nullable="false" />
+          <Property Name="stparamid" Type="int" Nullable="false" />
+          <Property Name="createdate" Type="int" Nullable="false" />
+          <Property Name="createtime" Type="int" Nullable="false" />
+          <Property Name="bsflag" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="currentstatus" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="finishprocess" Type="numeric" Precision="16" Scale="2" Nullable="false" />
+          <Property Name="openamount" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+          <Property Name="closeamount" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+          <Property Name="openavg" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+          <Property Name="floatincome" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+          <Property Name="incomerate" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+          <Property Name="isdelete" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="positionvolume" Type="numeric" Precision="16" Scale="0" Nullable="false" />
+          <Property Name="strategytype" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="positiontype" Type="int" />
+          <Property Name="begintime" Type="int" />
+          <Property Name="endtime" Type="int" />
+          <Property Name="entrustfrequency" Type="int" />
+          <Property Name="reentrustfrequency" Type="int" />
+          <Property Name="entrusttimes" Type="int" />
+          <Property Name="canceltimes" Type="int" />
+          <Property Name="subordervalidperiod" Type="int" />
+          <Property Name="ordertype" Type="char" MaxLength="1" />
+          <Property Name="isorderqty" Type="numeric" Precision="16" Scale="0" />
+          <Property Name="orderqty" Type="numeric" Precision="16" Scale="0" />
+          <Property Name="isorderamount" Type="numeric" Precision="16" Scale="3" />
+          <Property Name="orderamount" Type="numeric" Precision="16" Scale="3" />
+          <Property Name="startmode" Type="int" />
+          <Property Name="executetime" Type="int" />
+          <Property Name="market" Type="char" MaxLength="1" />
+          <Property Name="operatetype" Type="char" MaxLength="1" />
+          <Property Name="code" Type="varchar" MaxLength="32" />
+          <Property Name="name" Type="varchar" MaxLength="128" />
+          <Property Name="ordernum" Type="int" />
+          <Property Name="targetidentify" Type="int" />
+          <Property Name="orderpricetype" Type="char" MaxLength="1" />
+          <Property Name="orderpricelevel" Type="int" />
+          <Property Name="floatpoint" Type="int" />
+          <Property Name="orderlimitpricetype" Type="int" />
+          <Property Name="ordermaxprice" Type="numeric" Precision="16" Scale="4" />
+          <Property Name="orderminprice" Type="numeric" Precision="16" Scale="4" />
+          <Property Name="ordernumlimittype" Type="int" />
+          <Property Name="subordermaxqty" Type="int" />
+          <Property Name="orderlimitprice" Type="numeric" Precision="16" Scale="8" />
+          <Property Name="fixnum" Type="int" />
+          <Property Name="marketdeep" Type="int" />
+          <Property Name="markettraderatio" Type="numeric" Precision="16" Scale="4" />
+          <Property Name="fatherposition" Type="varchar" MaxLength="128" />
+          <Property Name="int1" Type="int" />
+          <Property Name="int2" Type="int" />
+          <Property Name="int3" Type="int" />
+          <Property Name="int4" Type="int" />
+          <Property Name="int5" Type="int" />
+          <Property Name="int6" Type="int" />
+          <Property Name="int7" Type="int" />
+          <Property Name="int8" Type="int" />
+          <Property Name="int9" Type="int" />
+          <Property Name="int10" Type="int" />
+          <Property Name="double1" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double2" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double3" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double4" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double5" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double6" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double7" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double8" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double9" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="double10" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="char1" Type="char" MaxLength="1" />
+          <Property Name="char2" Type="char" MaxLength="1" />
+          <Property Name="char3" Type="char" MaxLength="1" />
+          <Property Name="char4" Type="char" MaxLength="1" />
+          <Property Name="char5" Type="char" MaxLength="1" />
+          <Property Name="char6" Type="char" MaxLength="1" />
+          <Property Name="char7" Type="char" MaxLength="1" />
+          <Property Name="char8" Type="char" MaxLength="1" />
+          <Property Name="char9" Type="char" MaxLength="1" />
+          <Property Name="char10" Type="char" MaxLength="1" />
+          <Property Name="varchar1" Type="varchar" MaxLength="128" />
+          <Property Name="varchar2" Type="varchar" MaxLength="128" />
+          <Property Name="varchar3" Type="varchar" MaxLength="128" />
+          <Property Name="varchar4" Type="varchar" MaxLength="128" />
+          <Property Name="varchar5" Type="varchar" MaxLength="128" />
+          <Property Name="varchar6" Type="varchar" MaxLength="128" />
+          <Property Name="varchar7" Type="varchar" MaxLength="128" />
+          <Property Name="varchar8" Type="varchar" MaxLength="128" />
+          <Property Name="varchar9" Type="varchar" MaxLength="128" />
+          <Property Name="varchar10" Type="varchar" MaxLength="128" />
+          <Property Name="isorderqtyclose" Type="numeric" Precision="16" Scale="0" />
+          <Property Name="isorderamountclose" Type="numeric" Precision="16" Scale="8" />
+          <Property Name="orderqtyclose" Type="numeric" Precision="16" Scale="0" />
+          <Property Name="orderqtyadjustment" Type="numeric" Precision="16" Scale="0" />
+          <Property Name="isorderqtyadjustment" Type="numeric" Precision="16" Scale="0" />
+          <Property Name="orderamountclose" Type="numeric" Precision="16" Scale="3" />
+          <Property Name="orderamountadjustment" Type="numeric" Precision="16" Scale="3" />
+          <Property Name="isorderamountadjustment" Type="numeric" Precision="16" Scale="3" />
+          <Property Name="longfloatincome" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="shortfloatincome" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="positiondirect" Type="int" />
+          <Property Name="rongzicost" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+          <Property Name="rongquancost" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+          <Property Name="costprice" Type="numeric" Precision="20" Scale="6" Nullable="false" />
+        </EntityType>
         <EntityType Name="strategyinfo">
           <Key>
             <PropertyRef Name="strategyno" />
@@ -144,9 +258,18 @@
           <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
         </Function>
         <Function Name="sp_GetRevokePercent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="begindate" Type="int" Mode="In" />
-          <Parameter Name="enddate" Type="int" Mode="In" />
-          <Parameter Name="limitnumorder" Type="int" Mode="In" />
+          <Parameter Name="BeginDate" Type="int" Mode="In" />
+          <Parameter Name="EndDate" Type="int" Mode="In" />
+          <Parameter Name="SearchColumns" Type="nvarchar" Mode="In" />
+          <Parameter Name="DisplayStart" Type="int" Mode="In" />
+          <Parameter Name="DisplayLength" Type="int" Mode="In" />
+          <Parameter Name="SortDirection" Type="nvarchar" Mode="In" />
+          <Parameter Name="CurrentPage" Type="int" Mode="In" />
+          <Parameter Name="OrderField" Type="nvarchar" Mode="In" />
+          <Parameter Name="LimitNumOrder" Type="int" Mode="In" />
+          <Parameter Name="PageCount" Type="int" Mode="InOut" />
+          <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
+          <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
         </Function>
         <Function Name="sp_TradeAmt_Minute" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="date" Type="int" Mode="In" />
@@ -154,6 +277,7 @@
         <EntityContainer Name="ModelDataStoreContainer">
           <EntitySet Name="custacctinfo" EntityType="Self.custacctinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="positionbasicinfotable" EntityType="Self.positionbasicinfotable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategyinfo" EntityType="Self.strategyinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategyorder" EntityType="Self.strategyorder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategytrade" EntityType="Self.strategytrade" Schema="dbo" store:Type="Tables" />
@@ -176,9 +300,18 @@
           <Parameter Name="date" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_GetRevokePercent" ReturnType="Collection(ModelData.sp_GetRevokePercent_Result)">
-            <Parameter Name="begindate" Mode="In" Type="Int32" />
-            <Parameter Name="enddate" Mode="In" Type="Int32" />
-            <Parameter Name="limitnumorder" Mode="In" Type="Int32" />
+            <Parameter Name="BeginDate" Mode="In" Type="Int32" />
+            <Parameter Name="EndDate" Mode="In" Type="Int32" />
+            <Parameter Name="SearchColumns" Mode="In" Type="String" />
+            <Parameter Name="DisplayStart" Mode="In" Type="Int32" />
+            <Parameter Name="DisplayLength" Mode="In" Type="Int32" />
+            <Parameter Name="SortDirection" Mode="In" Type="String" />
+            <Parameter Name="CurrentPage" Mode="In" Type="Int32" />
+            <Parameter Name="OrderField" Mode="In" Type="String" />
+            <Parameter Name="LimitNumOrder" Mode="In" Type="Int32" />
+            <Parameter Name="PageCount" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotalDisplayRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_GetCustomerTradeDetail">
             <Parameter Name="BeginDate" Mode="In" Type="Int32" />
@@ -193,6 +326,7 @@
             <Parameter Name="TotalRecords" Mode="InOut" Type="Int32" />
             <Parameter Name="TotalDisplayRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="positionbasicinfotable" EntityType="ModelData.positionbasicinfotable" />
         </EntityContainer>
         <EntityType Name="strategyorder">
           <Key>
@@ -332,6 +466,120 @@
           <Property Type="Int32" Name="numrevoke" Nullable="true" />
           <Property Type="Int32" Name="numorder" Nullable="true" />
         </ComplexType>
+        <EntityType Name="positionbasicinfotable">
+          <Key>
+            <PropertyRef Name="custid" />
+            <PropertyRef Name="fundid" />
+            <PropertyRef Name="sttradeno" />
+          </Key>
+          <Property Name="custid" Type="Int32" Nullable="false" />
+          <Property Name="fundid" Type="Decimal" Nullable="false" Precision="16" Scale="0" />
+          <Property Name="sttradeno" Type="Int32" Nullable="false" />
+          <Property Name="substrategyno" Type="Int32" Nullable="false" />
+          <Property Name="strategyno" Type="Int32" Nullable="false" />
+          <Property Name="stparamid" Type="Int32" Nullable="false" />
+          <Property Name="createdate" Type="Int32" Nullable="false" />
+          <Property Name="createtime" Type="Int32" Nullable="false" />
+          <Property Name="bsflag" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="currentstatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="finishprocess" Type="Decimal" Nullable="false" Precision="16" Scale="2" />
+          <Property Name="openamount" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+          <Property Name="closeamount" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+          <Property Name="openavg" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+          <Property Name="floatincome" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+          <Property Name="incomerate" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+          <Property Name="isdelete" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="positionvolume" Type="Decimal" Nullable="false" Precision="16" Scale="0" />
+          <Property Name="strategytype" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="positiontype" Type="Int32" />
+          <Property Name="begintime" Type="Int32" />
+          <Property Name="endtime" Type="Int32" />
+          <Property Name="entrustfrequency" Type="Int32" />
+          <Property Name="reentrustfrequency" Type="Int32" />
+          <Property Name="entrusttimes" Type="Int32" />
+          <Property Name="canceltimes" Type="Int32" />
+          <Property Name="subordervalidperiod" Type="Int32" />
+          <Property Name="ordertype" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="isorderqty" Type="Decimal" Precision="16" Scale="0" />
+          <Property Name="orderqty" Type="Decimal" Precision="16" Scale="0" />
+          <Property Name="isorderamount" Type="Decimal" Precision="16" Scale="3" />
+          <Property Name="orderamount" Type="Decimal" Precision="16" Scale="3" />
+          <Property Name="startmode" Type="Int32" />
+          <Property Name="executetime" Type="Int32" />
+          <Property Name="market" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="operatetype" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="code" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="ordernum" Type="Int32" />
+          <Property Name="targetidentify" Type="Int32" />
+          <Property Name="orderpricetype" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="orderpricelevel" Type="Int32" />
+          <Property Name="floatpoint" Type="Int32" />
+          <Property Name="orderlimitpricetype" Type="Int32" />
+          <Property Name="ordermaxprice" Type="Decimal" Precision="16" Scale="4" />
+          <Property Name="orderminprice" Type="Decimal" Precision="16" Scale="4" />
+          <Property Name="ordernumlimittype" Type="Int32" />
+          <Property Name="subordermaxqty" Type="Int32" />
+          <Property Name="orderlimitprice" Type="Decimal" Precision="16" Scale="8" />
+          <Property Name="fixnum" Type="Int32" />
+          <Property Name="marketdeep" Type="Int32" />
+          <Property Name="markettraderatio" Type="Decimal" Precision="16" Scale="4" />
+          <Property Name="fatherposition" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="int1" Type="Int32" />
+          <Property Name="int2" Type="Int32" />
+          <Property Name="int3" Type="Int32" />
+          <Property Name="int4" Type="Int32" />
+          <Property Name="int5" Type="Int32" />
+          <Property Name="int6" Type="Int32" />
+          <Property Name="int7" Type="Int32" />
+          <Property Name="int8" Type="Int32" />
+          <Property Name="int9" Type="Int32" />
+          <Property Name="int10" Type="Int32" />
+          <Property Name="double1" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double2" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double3" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double4" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double5" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double6" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double7" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double8" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double9" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="double10" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="char1" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char2" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char3" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char4" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char5" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char6" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char7" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char8" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char9" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="char10" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="varchar1" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar2" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar3" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar4" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar5" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar6" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar7" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar8" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar9" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="varchar10" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="isorderqtyclose" Type="Decimal" Precision="16" Scale="0" />
+          <Property Name="isorderamountclose" Type="Decimal" Precision="16" Scale="8" />
+          <Property Name="orderqtyclose" Type="Decimal" Precision="16" Scale="0" />
+          <Property Name="orderqtyadjustment" Type="Decimal" Precision="16" Scale="0" />
+          <Property Name="isorderqtyadjustment" Type="Decimal" Precision="16" Scale="0" />
+          <Property Name="orderamountclose" Type="Decimal" Precision="16" Scale="3" />
+          <Property Name="orderamountadjustment" Type="Decimal" Precision="16" Scale="3" />
+          <Property Name="isorderamountadjustment" Type="Decimal" Precision="16" Scale="3" />
+          <Property Name="longfloatincome" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="shortfloatincome" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="positiondirect" Type="Int32" />
+          <Property Name="rongzicost" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+          <Property Name="rongquancost" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+          <Property Name="costprice" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -485,6 +733,119 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_GetCustomerTradeDetail" FunctionName="ModelData.Store.sp_GetCustomerTradeDetail" />
+          <EntitySetMapping Name="positionbasicinfotable">
+            <EntityTypeMapping TypeName="ModelData.positionbasicinfotable">
+              <MappingFragment StoreEntitySet="positionbasicinfotable">
+                <ScalarProperty Name="costprice" ColumnName="costprice" />
+                <ScalarProperty Name="rongquancost" ColumnName="rongquancost" />
+                <ScalarProperty Name="rongzicost" ColumnName="rongzicost" />
+                <ScalarProperty Name="positiondirect" ColumnName="positiondirect" />
+                <ScalarProperty Name="shortfloatincome" ColumnName="shortfloatincome" />
+                <ScalarProperty Name="longfloatincome" ColumnName="longfloatincome" />
+                <ScalarProperty Name="isorderamountadjustment" ColumnName="isorderamountadjustment" />
+                <ScalarProperty Name="orderamountadjustment" ColumnName="orderamountadjustment" />
+                <ScalarProperty Name="orderamountclose" ColumnName="orderamountclose" />
+                <ScalarProperty Name="isorderqtyadjustment" ColumnName="isorderqtyadjustment" />
+                <ScalarProperty Name="orderqtyadjustment" ColumnName="orderqtyadjustment" />
+                <ScalarProperty Name="orderqtyclose" ColumnName="orderqtyclose" />
+                <ScalarProperty Name="isorderamountclose" ColumnName="isorderamountclose" />
+                <ScalarProperty Name="isorderqtyclose" ColumnName="isorderqtyclose" />
+                <ScalarProperty Name="varchar10" ColumnName="varchar10" />
+                <ScalarProperty Name="varchar9" ColumnName="varchar9" />
+                <ScalarProperty Name="varchar8" ColumnName="varchar8" />
+                <ScalarProperty Name="varchar7" ColumnName="varchar7" />
+                <ScalarProperty Name="varchar6" ColumnName="varchar6" />
+                <ScalarProperty Name="varchar5" ColumnName="varchar5" />
+                <ScalarProperty Name="varchar4" ColumnName="varchar4" />
+                <ScalarProperty Name="varchar3" ColumnName="varchar3" />
+                <ScalarProperty Name="varchar2" ColumnName="varchar2" />
+                <ScalarProperty Name="varchar1" ColumnName="varchar1" />
+                <ScalarProperty Name="char10" ColumnName="char10" />
+                <ScalarProperty Name="char9" ColumnName="char9" />
+                <ScalarProperty Name="char8" ColumnName="char8" />
+                <ScalarProperty Name="char7" ColumnName="char7" />
+                <ScalarProperty Name="char6" ColumnName="char6" />
+                <ScalarProperty Name="char5" ColumnName="char5" />
+                <ScalarProperty Name="char4" ColumnName="char4" />
+                <ScalarProperty Name="char3" ColumnName="char3" />
+                <ScalarProperty Name="char2" ColumnName="char2" />
+                <ScalarProperty Name="char1" ColumnName="char1" />
+                <ScalarProperty Name="double10" ColumnName="double10" />
+                <ScalarProperty Name="double9" ColumnName="double9" />
+                <ScalarProperty Name="double8" ColumnName="double8" />
+                <ScalarProperty Name="double7" ColumnName="double7" />
+                <ScalarProperty Name="double6" ColumnName="double6" />
+                <ScalarProperty Name="double5" ColumnName="double5" />
+                <ScalarProperty Name="double4" ColumnName="double4" />
+                <ScalarProperty Name="double3" ColumnName="double3" />
+                <ScalarProperty Name="double2" ColumnName="double2" />
+                <ScalarProperty Name="double1" ColumnName="double1" />
+                <ScalarProperty Name="int10" ColumnName="int10" />
+                <ScalarProperty Name="int9" ColumnName="int9" />
+                <ScalarProperty Name="int8" ColumnName="int8" />
+                <ScalarProperty Name="int7" ColumnName="int7" />
+                <ScalarProperty Name="int6" ColumnName="int6" />
+                <ScalarProperty Name="int5" ColumnName="int5" />
+                <ScalarProperty Name="int4" ColumnName="int4" />
+                <ScalarProperty Name="int3" ColumnName="int3" />
+                <ScalarProperty Name="int2" ColumnName="int2" />
+                <ScalarProperty Name="int1" ColumnName="int1" />
+                <ScalarProperty Name="fatherposition" ColumnName="fatherposition" />
+                <ScalarProperty Name="markettraderatio" ColumnName="markettraderatio" />
+                <ScalarProperty Name="marketdeep" ColumnName="marketdeep" />
+                <ScalarProperty Name="fixnum" ColumnName="fixnum" />
+                <ScalarProperty Name="orderlimitprice" ColumnName="orderlimitprice" />
+                <ScalarProperty Name="subordermaxqty" ColumnName="subordermaxqty" />
+                <ScalarProperty Name="ordernumlimittype" ColumnName="ordernumlimittype" />
+                <ScalarProperty Name="orderminprice" ColumnName="orderminprice" />
+                <ScalarProperty Name="ordermaxprice" ColumnName="ordermaxprice" />
+                <ScalarProperty Name="orderlimitpricetype" ColumnName="orderlimitpricetype" />
+                <ScalarProperty Name="floatpoint" ColumnName="floatpoint" />
+                <ScalarProperty Name="orderpricelevel" ColumnName="orderpricelevel" />
+                <ScalarProperty Name="orderpricetype" ColumnName="orderpricetype" />
+                <ScalarProperty Name="targetidentify" ColumnName="targetidentify" />
+                <ScalarProperty Name="ordernum" ColumnName="ordernum" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="operatetype" ColumnName="operatetype" />
+                <ScalarProperty Name="market" ColumnName="market" />
+                <ScalarProperty Name="executetime" ColumnName="executetime" />
+                <ScalarProperty Name="startmode" ColumnName="startmode" />
+                <ScalarProperty Name="orderamount" ColumnName="orderamount" />
+                <ScalarProperty Name="isorderamount" ColumnName="isorderamount" />
+                <ScalarProperty Name="orderqty" ColumnName="orderqty" />
+                <ScalarProperty Name="isorderqty" ColumnName="isorderqty" />
+                <ScalarProperty Name="ordertype" ColumnName="ordertype" />
+                <ScalarProperty Name="subordervalidperiod" ColumnName="subordervalidperiod" />
+                <ScalarProperty Name="canceltimes" ColumnName="canceltimes" />
+                <ScalarProperty Name="entrusttimes" ColumnName="entrusttimes" />
+                <ScalarProperty Name="reentrustfrequency" ColumnName="reentrustfrequency" />
+                <ScalarProperty Name="entrustfrequency" ColumnName="entrustfrequency" />
+                <ScalarProperty Name="endtime" ColumnName="endtime" />
+                <ScalarProperty Name="begintime" ColumnName="begintime" />
+                <ScalarProperty Name="positiontype" ColumnName="positiontype" />
+                <ScalarProperty Name="strategytype" ColumnName="strategytype" />
+                <ScalarProperty Name="positionvolume" ColumnName="positionvolume" />
+                <ScalarProperty Name="isdelete" ColumnName="isdelete" />
+                <ScalarProperty Name="incomerate" ColumnName="incomerate" />
+                <ScalarProperty Name="floatincome" ColumnName="floatincome" />
+                <ScalarProperty Name="openavg" ColumnName="openavg" />
+                <ScalarProperty Name="closeamount" ColumnName="closeamount" />
+                <ScalarProperty Name="openamount" ColumnName="openamount" />
+                <ScalarProperty Name="finishprocess" ColumnName="finishprocess" />
+                <ScalarProperty Name="currentstatus" ColumnName="currentstatus" />
+                <ScalarProperty Name="bsflag" ColumnName="bsflag" />
+                <ScalarProperty Name="createtime" ColumnName="createtime" />
+                <ScalarProperty Name="createdate" ColumnName="createdate" />
+                <ScalarProperty Name="stparamid" ColumnName="stparamid" />
+                <ScalarProperty Name="strategyno" ColumnName="strategyno" />
+                <ScalarProperty Name="substrategyno" ColumnName="substrategyno" />
+                <ScalarProperty Name="sttradeno" ColumnName="sttradeno" />
+                <ScalarProperty Name="fundid" ColumnName="fundid" />
+                <ScalarProperty Name="custid" ColumnName="custid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

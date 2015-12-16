@@ -16,26 +16,26 @@
             <tbody>
                 <tr>
                     <td align="left">
-                        日交易量最大规模:
+                        日交易量最大笔数:
                     </td>
                     <td>
-                        <input id="MaxDayTrade" type="number" size="5" value="@ViewBag.MaxDay" name="MaxDay" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        每分钟交易量最大规模:
-                    </td>
-                    <td>
-                        <input id="MaxMinuteTrade" type="number" size="5" value="@ViewBag.MaxMinute" name="MaxMinute" />
+                        <input id="MaxDayTrade" type="number" size="5" value="@ViewBag.MaxDay" name="MaxDay" />笔
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        每秒交易量最大规模:
+                        每分钟交易量最大笔数:
                     </td>
                     <td>
-                        <input id="MaxSecondTrade" type="number" size="5" value="@ViewBag.MaxSecond" name="MaxSecond" />
+                        <input id="MaxMinuteTrade" type="number" size="5" value="@ViewBag.MaxMinute" name="MaxMinute" />笔
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        每秒交易量最大笔数:
+                    </td>
+                    <td>
+                        <input id="MaxSecondTrade" type="number" size="5" value="@ViewBag.MaxSecond" name="MaxSecond" />笔
                     </td>
                 </tr>
                 <tr>
@@ -43,7 +43,15 @@
                         每日撤单委托比大于60%用户的最小委托笔数:
                     </td>
                     <td>
-                        <input id="MaxSecondTrade" type="number" size="5" value="@ViewBag.LimitMinOrder" name="LimitMinOrder" />
+                        <input id="MaxSecondTrade" type="number" size="5" value="@ViewBag.LimitMinOrder" name="LimitMinOrder" />笔
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        最新情况数据刷新频率:
+                    </td>
+                    <td>
+                        <input id="RefreshRate" type="number" size="5" value="@ViewBag.RefreshRate" name="IndexRefreshRate" />秒
                     </td>
                 </tr>
                 <tr>

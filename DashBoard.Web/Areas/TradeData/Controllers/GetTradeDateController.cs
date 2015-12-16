@@ -24,7 +24,7 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         /// <param name="dateTime">起止月份</param>
         /// <returns></returns>
         [HttpPost]
-        public IEnumerable<TradeMonthAmount> GetMatchAmount(GetDateTime dateTime)
+        public IEnumerable<TradeMonthAmount> GetMatchAmount(StrategyDetail dateTime)
         {
             return DataServiceHelper.GetMatchAmount(dateTime);
         }
@@ -35,7 +35,7 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         /// <param name="dateTime">月份</param>
         /// <returns></returns>
         [HttpPost]
-        public IEnumerable<TradeMonthAmount> GetDateAmount(GetDateTime dateTime)
+        public IEnumerable<TradeMonthAmount> GetDateAmount(StrategyDetail dateTime)
         {
             return DataServiceHelper.GetDateAmount(dateTime);
         }
@@ -76,9 +76,15 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public List<CreditTrade> GetCreditSalesAmount()
+        public List<CreditTrade> GetCreditSalesAmount(RealTimeData da)
         {
-            return DataServiceHelper.GetCreditSalesAmount();
+            List<CreditTrade> result = new List<CreditTrade>();
+            result = DataServiceHelper.GetCreditSalesAmount(da);
+            if (result.Count != 0)
+            {
+                result[0].RefreshRate = Int32.Parse(IndexManagers.ReadConfig().IndexRefreshRate);
+            }
+            return result;
         }
 
         /// <summary>
@@ -86,9 +92,15 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public List<CreditTrade> GetCreditBuyAmount()
+        public List<CreditTrade> GetCreditBuyAmount(RealTimeData da)
         {
-            return DataServiceHelper.GetCreditBuyAmount();
+            List<CreditTrade> result = new List<CreditTrade>();
+            result = DataServiceHelper.GetCreditBuyAmount(da);
+            if (result.Count != 0)
+            {
+                result[0].RefreshRate = Int32.Parse(IndexManagers.ReadConfig().IndexRefreshRate);
+            }
+            return result;
         }
 
         /// <summary>

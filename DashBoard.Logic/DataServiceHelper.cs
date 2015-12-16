@@ -51,15 +51,20 @@ namespace Dashboard.Logic
         /// </summary>
         /// <param name="dateTime">查询条件，包括开始月份与结束月份</param>
         /// <returns>月份、该月所有用户交易量之和</returns>
-        public static List<TradeMonthAmount> GetMatchAmount(GetDateTime dateTime)
+        public static List<TradeMonthAmount> GetMatchAmount(StrategyDetail dateTime)
         {
-            int bmonth = TranslateHelper.ConvertDate(dateTime.begindate);
-            int emonth = TranslateHelper.ConvertDate(dateTime.enddate);
+            int bmonth = TranslateHelper.ConvertDate(dateTime.beginDate);
+            int emonth = TranslateHelper.ConvertDate(dateTime.endDate);
             List<TradeMonthAmount> result = new List<TradeMonthAmount>();
             using (var db = new ModelDataContainer())
             {
                 var query = from a in db.strategytrade
+                            from c in db.strategyinfo
+                            where a.strategyno == c.strategyno
                             where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
+                            && (dateTime.strategyName == null || c.strategyname.Contains(dateTime.strategyName))
+                            && (dateTime.stratInfo == null || c.stratinfo.Contains(dateTime.stratInfo))
+                            && (dateTime.seriesNo == null || c.seriesno.Contains(dateTime.seriesNo))
                             where a.tradedate / 100 >= bmonth && a.tradedate / 100 <= emonth
                             && a.strategyno != -1
                             group a by a.tradedate / 100 into b
@@ -85,15 +90,19 @@ namespace Dashboard.Logic
         /// </summary>
         /// <param name="dateTime">查询日期</param>
         /// <returns>日期、该日期所有用户交易量之和</returns>
-        public static List<TradeMonthAmount> GetDateAmount(GetDateTime dateTime)
+        public static List<TradeMonthAmount> GetDateAmount(StrategyDetail dateTime)
         {
-            int bday = TranslateHelper.ConvertDate(dateTime.begindate);
+            int bday = TranslateHelper.ConvertDate(dateTime.beginDate);
             List<TradeMonthAmount> result = new List<TradeMonthAmount>();
             using (var db = new ModelDataContainer())
             {
                 var query = from a in db.strategytrade
+                            from c in db.strategyinfo
                             where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
                             && a.strategyno != -1
+                            && (dateTime.strategyName == null || c.strategyname.Contains(dateTime.strategyName))
+                            && (dateTime.stratInfo == null || c.stratinfo.Contains(dateTime.stratInfo))
+                            && (dateTime.seriesNo == null || c.seriesno.Contains(dateTime.seriesNo))
                             where a.tradedate / 100 == bday
                             group a by a.tradedate into b
                             select new
@@ -145,7 +154,7 @@ namespace Dashboard.Logic
         //}
 
         /// <summary>
-        /// 获取每分钟交易量（用于首页中的交易曲线图，1分钟调用1次）
+        /// 获取每分钟交易量（用于首页中的交易量柱状图，1分钟调用1次）
         /// </summary>
         /// <returns>时间、该时间对应的所有用户交易量之和</returns>
         public static List<RealTimeData> GetRealTimeData()
@@ -179,7 +188,7 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 用于调取综合查询中交易曲线所需数据
+        /// 用于调取综合查询中成交量柱状图所需数据
         /// </summary>
         /// <param name="da">日期参数，调用的起止日期</param>
         /// <returns>分钟值、对应交易量</returns>
@@ -228,10 +237,10 @@ namespace Dashboard.Logic
         }
         
         /// <summary>
-        /// 调取系统功能模块使用情况
+        /// 调取系统功能模块交易量
         /// </summary>
         /// <param name="dateTime">日期参数，查询的起止时间</param>
-        /// <returns>功能模块名称、使用次数</returns>
+        /// <returns>功能模块名称、交易量</returns>
         public static List<StrategyTypes> GetStrategyType(GetDateTime dateTime)
         {
             int bdate = TranslateHelper.ConvertDate(dateTime.begindate);
@@ -239,10 +248,49 @@ namespace Dashboard.Logic
             List<StrategyTypes> result = new List<StrategyTypes>();
             using (var db = new ModelDataContainer())
             {
-                var query = (from a in db.strategyorder
+                var query = (from a in db.strategytrade
                              from b in db.strategyinfo
                              where (a.strategyno == b.strategyno)
-                             where (a.orderdate >= bdate && a.orderdate <= edate)
+                             where (a.tradedate >= bdate && a.tradedate <= edate)
+                             group a by new { b.strategyname } into h
+                             select new
+                             {
+                                 strategytype = h.Key.strategyname,
+                                 Nstrage = h.Sum(p=>p.matchqty)
+                             }
+                    );
+                foreach (var item in query.OrderBy(p => p.strategytype))
+                {
+                    if (item.strategytype != " ")
+                    {
+                        result.Add(new StrategyTypes()
+                        {
+                            StrategyType = item.strategytype,
+                            NumStrategyType = item.Nstrage
+
+                        });
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 调取系统功能模块开仓次数
+        /// </summary>
+        /// <param name="dateTime">日期参数，查询的起止时间</param>
+        /// <returns>功能模块名称、使用次数</returns>
+        public static List<StrategyTypes> GetStrategyOpen(GetDateTime dateTime)
+        {
+            int bdate = TranslateHelper.ConvertDate(dateTime.begindate);
+            int edate = TranslateHelper.ConvertDate(dateTime.enddate);
+            List<StrategyTypes> result = new List<StrategyTypes>();
+            using (var db = new ModelDataContainer())
+            {
+                var query = (from a in db.positionbasicinfotable
+                             from b in db.strategyinfo
+                             where (a.strategyno == b.strategyno)
+                             where (a.createdate >= bdate && a.createdate <= edate)
                              group a by new { b.strategyname } into h
                              select new
                              {
@@ -335,14 +383,26 @@ namespace Dashboard.Logic
         /// 获取融券卖出交易标的前十
         /// </summary>
         /// <returns>当日用户融券卖出总量前十名的总交易量、股票名称</returns>
-        public static List<CreditTrade> GetCreditSalesAmount()
+        public static List<CreditTrade> GetCreditSalesAmount(RealTimeData da)
         {
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
+            int mdate = Int32.Parse(DateTime.Now.AddMonths(-1).ToString("yyyyMMdd"));
+            int fdate = Int32.Parse(DateTime.Now.AddDays(-5).ToString("yyyyMMdd"));
+            int begindate = tdate;
+            int enddate = tdate;
+            if (da.Day == "30")
+            {
+                begindate = mdate;
+            }
+            if (da.Day == "5")
+            {
+                begindate = fdate;
+            }
             List<CreditTrade> result = new List<CreditTrade>();
             using (var db = new ModelDataContainer())
             {
                 var query = (from a in db.strategyorder
-                             where a.orderdate == tdate
+                             where a.orderdate >= begindate && a.orderdate <= enddate
                              && a.matchqty > 0 && a.bsflag == "S"
                              group a by (a.stkcode) into b
                              select new
@@ -366,14 +426,27 @@ namespace Dashboard.Logic
         /// 获取融资买入交易标的前十
         /// </summary>
         /// <returns>当日用户融资买入总量前十名的总交易量、股票名称</returns>
-        public static List<CreditTrade> GetCreditBuyAmount()
+        public static List<CreditTrade> GetCreditBuyAmount(RealTimeData da)
         {
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
+            int mdate = Int32.Parse(DateTime.Now.AddMonths(-1).ToString("yyyyMMdd"));
+            int fdate = Int32.Parse(DateTime.Now.AddDays(-5).ToString("yyyyMMdd"));
+            int begindate = tdate;
+            int enddate = tdate;
+            if(da.Day == "30")
+            {
+                begindate = mdate;
+            }
+            if(da.Day == "5")
+            {
+                begindate = fdate;
+            }
+            
             List<CreditTrade> result = new List<CreditTrade>();
             using (var db = new ModelDataContainer())
             {
                 var query = (from a in db.strategyorder
-                             where a.orderdate == tdate
+                             where a.orderdate >= begindate && a.orderdate <= enddate
                              && a.matchqty > 0 && a.bsflag == "B"
                              group a by (a.stkcode) into b
                              select new
@@ -841,31 +914,31 @@ namespace Dashboard.Logic
             return result;
         }
 
-        /// <summary>
-        /// 获取撤单委托比超过阈值的客户情况
-        /// </summary>
-        /// <returns>撤单/委托比</returns>
-        public static List<TradeDayVolume> GetRevoke(GetDateTime da)
-        {
-            List<TradeDayVolume> result = new List<TradeDayVolume>();
-            int begindate = TranslateHelper.ConvertDate(da.begindate);
-            int enddate = TranslateHelper.ConvertDate(da.enddate);
-            int limitnumorder = Convert.ToInt32(da.LimitMinOrder);
-                    using (var db = new ModelDataContainer())
-                    {
-                        var list = db.sp_GetRevokePercent(begindate, enddate ,limitnumorder);
+        ///// <summary>
+        ///// 获取撤单委托比超过阈值的客户情况
+        ///// </summary>
+        ///// <returns>撤单/委托比</returns>
+        //public static List<TradeDayVolume> GetRevoke(GetDateTime da)
+        //{
+        //    List<TradeDayVolume> result = new List<TradeDayVolume>();
+        //    int begindate = TranslateHelper.ConvertDate(da.begindate);
+        //    int enddate = TranslateHelper.ConvertDate(da.enddate);
+        //    int limitnumorder = Convert.ToInt32(da.LimitMinOrder);
+        //            using (var db = new ModelDataContainer())
+        //            {
+        //                var list = db.sp_GetRevokePercent(begindate, enddate ,limitnumorder);
 
-                        foreach (var item in list)
-                        {
-                            result.Add(new TradeDayVolume()
-                            {
-                                CustId = item.custid,
-                                OrderDate = item.orderdate,
-                                PerRevoke = (Convert.ToDecimal(item.numrevoke) * 100 / Convert.ToDecimal(item.numorder))
-                            });
-                        }
-                    }
-            return result;
-        }
+        //                foreach (var item in list)
+        //                {
+        //                    result.Add(new TradeDayVolume()
+        //                    {
+        //                        CustId = item.custid,
+        //                        OrderDate = item.orderdate,
+        //                        PerRevoke = (Convert.ToDecimal(item.numrevoke) * 100 / Convert.ToDecimal(item.numorder))
+        //                    });
+        //                }
+        //            }
+        //    return result;
+        //}
     }
 }

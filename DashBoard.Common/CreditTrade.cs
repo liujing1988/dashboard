@@ -26,5 +26,10 @@ namespace DashBoard.Common
         /// 交易日期
         /// </summary>
         public string TradeDate { get; set; }
+
+        /// <summary>
+        /// 刷新频率
+        /// </summary>
+        public int RefreshRate { get; set; }
     }
 }

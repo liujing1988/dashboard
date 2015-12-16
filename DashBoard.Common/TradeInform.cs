@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Common
 {
-    public class TradeData
+    public class TradeInform<T>
     {
-        public List<TradeMonthAmount> Obj { get; set; }
-        public List<RealTimeData> Data { get; set; }
+        public int RefreshRate { get; set; }
+        public List<T> Data { get; set; }
     }
 }

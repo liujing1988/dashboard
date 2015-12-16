@@ -59,9 +59,10 @@
     <Compile Include="RecordResult.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="StockItem.cs" />
+    <Compile Include="StrategyDetail.cs" />
     <Compile Include="StrategyType.cs" />
     <Compile Include="SystemInfo.cs" />
-    <Compile Include="TradeData.cs" />
+    <Compile Include="TradeInform.cs" />
     <Compile Include="TradeDayAmount.cs" />
     <Compile Include="TradeDayVolume.cs" />
     <Compile Include="TradeDetails.cs" />

@@ -37,6 +37,7 @@ namespace DashBoard.Web.Areas.HealthIndex.Controllers
             ViewBag.MaxMinute = config.MaxMinuteOrder;
             ViewBag.MaxSecond = config.MaxSecondOrder;
             ViewBag.LimitMinOrder = config.LimitMinOrder;
+            ViewBag.RefreshRate = config.IndexRefreshRate;
             return View();
         }
 
@@ -48,7 +49,8 @@ namespace DashBoard.Web.Areas.HealthIndex.Controllers
             string MaxMinute = HttpContext.Request.Form["MaxMinute"];
             string MaxSecond = HttpContext.Request.Form["MaxSecond"];
             string LimitMinOrder = HttpContext.Request.Form["LimitMinOrder"];
-            IndexManagers.SaveConfig(MaxDay, MaxMinute, MaxSecond, LimitMinOrder);
+            string IndexRefreshRate = HttpContext.Request.Form["IndexRefreshRate"];
+            IndexManagers.SaveConfig(MaxDay, MaxMinute, MaxSecond, LimitMinOrder, IndexRefreshRate);
             //...
             return new RedirectResult("/dashboard/HealthIndex/MaxTrade/IndexManager");
 

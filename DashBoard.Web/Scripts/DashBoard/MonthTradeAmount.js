@@ -1,11 +1,19 @@
 ﻿$(document).ready(function ($) {
     
-    GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val());
+    GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
     
     $("#unit").change(function () {
-        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val());
+        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
     });
-
+    $("#strategyname").on('blur', function () {
+        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+    });
+    $("#stratinfo").on('blur', function () {
+        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+    });
+    $("#seriesno").on('blur', function () {
+        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+    });
     //时间插件
     $('#getMonth_Trade span').html(moment().subtract('years', 1).format('YYYY-MM') + ' - ' + moment().format('YYYY-MM'));
 
@@ -81,10 +89,10 @@
         //当选择时间后，触发dt的重新加载数据的方法
         var starmonth = $('#getMonth_Trade span').html().substr(0, 7);
         var endmonh = $('#getMonth_Trade span').html().substr(10, 7);
-        GetMonth(starmonth, endmonh, $("#unit").val());
+        GetMonth(starmonth, endmonh, $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
     });
 });
-function GetMonth(begindate, enddate, munit) {
+function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) {
     if (begindate == "" && enddate == "")
     {
         var myDate = new Date();
@@ -102,13 +110,16 @@ function GetMonth(begindate, enddate, munit) {
         alert("请输入截止时间");
     }
     var da = {
-        "begindate": begindate,
-        "enddate": enddate
+        "beginDate": begindate,
+        "endDate": enddate,
+        "strategyName": strategyname,
+        "stratInfo": stratinfo,
+        "seriesNo": seriesno
     }
 
     $.ajax(
       {
-          url: "/DashBoard/api/GetTradeDate/GetMatchAmount", //表示提交给的action 
+          url: "/dashboard/api/GetTradeDate/GetMatchAmount", //表示提交给的action 
           type: "post",   //提交方法 
           data: da,
           datatype: "json",//数据类型
@@ -192,7 +203,7 @@ function GetMonth(begindate, enddate, munit) {
                                           var objectData = new Object();
                                           objectData.title = this.category; //将当前柱子的X轴刻度值作为副图表的标题
                                           //调用函数弹出副图表
-                                          DynamicCreateSubChart(objectData, width, height, x, y);
+                                          DynamicCreateSubChart(objectData, width, height, x, y, $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
                                       }
                                   }
                               },
@@ -232,15 +243,18 @@ function GetMonth(begindate, enddate, munit) {
 /// left:图表距左侧窗体的距离值
 /// top:图表距上侧窗体的距离值
 ///===============
-function DynamicCreateSubChart(object, width, height, left, top) {
+function DynamicCreateSubChart(object, width, height, left, top, strategyname, stratinfo, seriesno) {
     
 
     var da = {
-        "begindate": object.title
+        "beginDate": object.title,
+        "strategyName": strategyname,
+        "stratInfo": stratinfo,
+        "seriesNo": seriesno
     }
     $.ajax(
      {
-         url: "/DashBoard/api/GetTradeDate/GetDateAmount", //表示提交给的action 
+         url: "/dashboard/api/GetTradeDate/GetDateAmount", //表示提交给的action 
          type: "post",   //提交方法 
          data: da,
          datatype: "json",//数据类型

@@ -14,7 +14,7 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
     public class GetCustomerController : ApiController
     {
         /// <summary>
-        /// 获取各模块使用情况
+        /// 获取各模块使用交易量
         /// </summary>
         /// <param name="dateTime"></param>
         /// <returns></returns>
@@ -22,6 +22,17 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
         public List<StrategyTypes> GetStrategyType(GetDateTime dateTime)
         {
             return DataServiceHelper.GetStrategyType(dateTime);
+        }
+
+        /// <summary>
+        /// 获取各模块开仓次数
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public List<StrategyTypes> GetStrategyOpen(GetDateTime dateTime)
+        {
+            return DataServiceHelper.GetStrategyOpen(dateTime);
         }
 
         /// <summary>
@@ -45,15 +56,15 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
             return DataServiceHelper.GetCustomerOnline();
         }
 
-        /// <summary>
-        /// 获取撤单/委托比大于60%的客户id和比值
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public List<TradeDayVolume> GetRevoke(GetDateTime da)
-        {
-            da.LimitMinOrder = HealthIndex.Models.IndexManagers.ReadConfig().LimitMinOrder;
-            return DataServiceHelper.GetRevoke(da);
-        }
+        ///// <summary>
+        ///// 获取撤单/委托比大于60%的客户id和比值
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public List<TradeDayVolume> GetRevoke(GetDateTime da)
+        //{
+        //    da.LimitMinOrder = HealthIndex.Models.IndexManagers.ReadConfig().LimitMinOrder;
+        //    return DataServiceHelper.GetRevoke(da);
+        //}
     }
 }

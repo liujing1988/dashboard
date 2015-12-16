@@ -3,8 +3,10 @@
     var month = myDate.getMonth() + 1;
     GetType(myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate(),
         myDate.getFullYear() + "-" + month + "-" + myDate.getDate());
+    GetOpen(myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate(),
+        myDate.getFullYear() + "-" + month + "-" + myDate.getDate());
 
-   
+
     //时间插件
     $('#getDate_Type span').html(moment().subtract('months', 1).format('YYYY-MM-DD') + ' - ' + moment().format('YYYY-MM-DD'));
 
@@ -51,7 +53,7 @@
             }, function (start, end, label) {//格式化日期显示框
 
                 $('#getDate_Type span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
-            
+
             });
 
     //设置日期菜单被选项  --开始--
@@ -86,6 +88,7 @@
         var starmonth = $('#getDate_Type span').html().substr(0, 10);
         var endmonh = $('#getDate_Type span').html().substr(13, 10);
         GetType(starmonth, endmonh);
+        GetOpen(starmonth, endmonh);
     });
 });
 
@@ -112,7 +115,7 @@ function GetType(begindate, enddate) {
                 //饼图对应数据
                 var pie = new Array;
 
-                var pieArray=new Array();
+                var pieArray = new Array();
                 if (result == "") {
                     alert("找不到符合条件的数据！");
                 }
@@ -122,13 +125,14 @@ function GetType(begindate, enddate) {
                         for (var i = 0; i < result.length; i++) {
                             stratetp.push(result[i].StrategyType);
                             nustratetp.push(result[i].NumStrategyType);
-                            numorder += result[i].NumStrategyType;
+                            //numorder += result[i].NumStrategyType;
                         }
-                        for (var j = 0; j < stratetp.length; j++) {
-                            percent.push(nustratetp[j] / numorder * 100);
-                        }
+                        //for (var j = 0; j < stratetp.length; j++) {
+                        //    percent.push(nustratetp[j] / numorder * 100);
+                        //}
                         for (var h = 0; h < stratetp.length; h++) {
-                            pie[h] = [stratetp[h], percent[h]];
+                            //pie[h] = [stratetp[h], percent[h]];
+                            pie[h] = [stratetp[h], nustratetp[h]];
                         }
 
                         for (var k = 0; k < pie.length; k++)
@@ -146,7 +150,7 @@ function GetType(begindate, enddate) {
                             text: '模块使用情况统计'
                         },
                         tooltip: {
-                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                            pointFormat: '{series.name}: <b>{point.y}股</b>'
                         },
                         plotOptions: {
                             pie: {
@@ -160,12 +164,98 @@ function GetType(begindate, enddate) {
                         },
                         series: [{
                             type: 'pie',
-                            name: '使用百分比',
+                            name: '成交量',
                             data: pieArray
                         }]
                     });
                 }
             },//end success
-            error: function (err) { throw err}
+            error: function (err) { throw err }
+        });
+}
+
+function GetOpen(begindate, enddate) {
+    var da = {
+        "begindate": begindate,
+        "enddate": enddate
+    }
+    $.ajax(
+        {
+            url: "/DashBoard/api/GetCustomer/GetStrategyOpen", //表示提交给的action 
+            type: "post",   //提交方法 
+            data: da,
+            datatype: "json",//数据类型
+            success: function (result) { //返回的结果自动放在resut里面了
+                //交易类型
+                var stratetp = [];
+                //各交易类型对应开仓次数
+                var nustratetp = [];
+
+
+                var pieArray = new Array();
+                if (result == "") {
+                    alert("找不到符合条件的数据！");
+                }
+                else {
+                    //数据转换
+                    if (result[0].StrategyType != null) {
+                        for (var i = 0; i < result.length; i++) {
+                            stratetp.push(result[i].StrategyType);
+                            nustratetp.push(result[i].NumStrategyType);
+                        }
+                    }
+
+                    //添加元素
+                    //柱状图
+                    $('#NumOpen').highcharts({
+                        chart: {
+                            type: 'column',
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false
+                        },
+                        title: {
+                            text: '模块开仓次数统计'
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.y}次</b>'
+                        },
+                        xAxis: {
+                            categories: stratetp
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: '开仓次数'
+                            }
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            }
+                        },
+                        series: [{
+                            name: '开仓次数',
+                            data: nustratetp,
+                            colorByPoint: true,
+                            dataLabels: {
+                                enabled: true,
+                                rotation: -90,
+                                color: '#FFFFFF',
+                                align: 'right',
+                                x: 4,
+                                y: 10,
+                                style: {
+                                    fontSize: '13px',
+                                    fontFamily: 'Verdana, sans-serif',
+                                    textShadow: '0 0 3px black'
+                                }
+                            }
+                        }]
+                    });
+                }
+            },//end success
+            error: function (err) { throw err }
         });
 }

@@ -176,7 +176,7 @@ function GetRevokeDetails(custid, begindate, enddate) {
         //多条件搜索
         table.columns().every(function () {  //列初始化
             var that = this;
-            $('input', this.footer()).on('blur change', function () {  //单元格失去焦点时触发该函数
+            $('input', this.footer()).on('blur', function () {  //单元格失去焦点时触发该函数
                 if (that.search() !== this.value || this.value == '') {
                     var stitle = $(this).attr("data");  //获取列名
                     var stext = $.fn.dataTable.util.escapeRegex($(this).val());  //获取搜索内容
@@ -311,7 +311,7 @@ function GetRevoke(begindate, enddate) {
         //多条件搜索
         tablemain.columns().every(function () {  //列初始化
             var that = this;
-            $('input', this.footer()).on('blur change', function () {  //单元格失去焦点时触发该函数
+            $('input', this.footer()).on('blur', function () {  //单元格失去焦点时触发该函数
                 
                 if (that.search() !== this.value || this.value == '') {
                     var stitle = $(this).attr("data");  //获取列名
