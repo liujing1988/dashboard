@@ -130,7 +130,7 @@ function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) 
               var MonthAccont = [];
               //月曲线图数据转换
               var unit = "";
-              if (result[0].Month != null) {
+              if (result.length > 0) {
                   if(munit == "003")
                   {
                       for (var i = 0; i < result.length; i++) {

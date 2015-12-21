@@ -163,6 +163,9 @@
             tooltip: {
                 shared: true
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: '委托占比（100%）',
                 color: 'rgba(165,170,217,1)',

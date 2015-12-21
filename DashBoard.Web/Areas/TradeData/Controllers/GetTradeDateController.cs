@@ -48,6 +48,10 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         public List<RealTimeData> GetRealTimeData()
         {
             return DataServiceHelper.GetRealTimeData();
+            //RealTimeData da = new RealTimeData();
+            //da.beginDate = DateTime.Now.AddDays(-5).ToString("yyyy-MM-dd");
+            //da.endDate = DateTime.Now.ToString("yyyy-MM-dd");
+            //return DataServiceHelper.GetRealData(da);
         }
 
         /// <summary>

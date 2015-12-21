@@ -109,6 +109,9 @@
                     legend: {
                         enabled: false
                     },
+                    credits: {
+                        enabled: false
+                    },
                     exporting: {
                         enabled: false
                     },

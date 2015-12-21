@@ -85,6 +85,9 @@ function GetSaleData(da) {
                 title: {
                     text: '融券卖出交易标的前10'
                 },
+                credits: {
+                    enabled: false
+                },
                 xAxis: {
                     categories: StockName
                 },

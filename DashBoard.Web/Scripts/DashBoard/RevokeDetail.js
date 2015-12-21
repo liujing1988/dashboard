@@ -358,7 +358,11 @@ function GetRevoke(begindate, enddate) {
             else {
                 tablemain.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
-                if (table != null) {
+                if ($(this).find("td:eq(0)").text() == "表中数据为空")
+                {
+                    alert("请选中有效数据！");
+                }
+                else if (table != null) {
                     searchtitle = '客户ID,委托日期';
                     searchtext = $(this).find("td:eq(0)").text() + ',' + $(this).find("td:eq(1)").text();
                     table.ajax.reload();  //重新加载数据

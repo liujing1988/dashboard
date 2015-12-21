@@ -53,7 +53,7 @@
                 unit = "元";
             }
         }
-        
+
         $(function () {
             $(document).ready(function () {
                 Highcharts.setOptions({
@@ -120,6 +120,9 @@
                     xAxis: {
                         categories: CustId
                     },
+                    credits: {
+                        enabled: false
+                    },
                     yAxis: {
                         title: {
                             text: '交易金额'
@@ -170,7 +173,7 @@
                         dataLabels: {
                             enabled: true,
                             color: '#000000',
-                            align: 'right',
+                            align: 'left',
                             style: {
                                 fontSize: '13px',
                                 fontFamily: 'Verdana, sans-serif',

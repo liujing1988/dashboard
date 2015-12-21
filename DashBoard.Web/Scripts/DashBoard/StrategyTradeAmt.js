@@ -133,6 +133,9 @@
                             color: '#808080'
                         }]
                     },
+                    credits: {
+                        enabled: false
+                    },
                     tooltip: {
                         formatter: function () {
                             return '' + this.x + '<br>' +

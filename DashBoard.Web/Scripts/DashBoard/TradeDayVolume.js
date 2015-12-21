@@ -182,6 +182,9 @@
                             text: null
                         }
                     },
+                    credits: {
+                        enabled: false
+                    },
                     plotOptions: {
                         column: {
                             stacking: 'normal'
@@ -332,6 +335,9 @@
                         name: '金额',
                         data: [TradeAmt, NETBuyAmt]
                     }],
+                    credits: {
+                        enabled: false
+                    },
                     exporting: {
                         enabled: false
                     },

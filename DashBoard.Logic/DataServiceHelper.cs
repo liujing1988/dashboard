@@ -172,6 +172,7 @@ namespace Dashboard.Logic
                         {
                             Minute = TranslateHelper.ConvertTime(item.rminute),
                             TradeAmount = item.tradeamt,
+                            Day = TranslateHelper.ConvertMinute(tdate)
                         });
                     }
                     else
@@ -180,6 +181,7 @@ namespace Dashboard.Logic
                         {
                             Minute = item.rminute.ToString(),
                             TradeAmount = item.tradeamt,
+                            Day = TranslateHelper.ConvertMinute(tdate)
                         });
                     }
                 }
@@ -446,13 +448,15 @@ namespace Dashboard.Logic
             using (var db = new ModelDataContainer())
             {
                 var query = (from a in db.strategyorder
+                             from c in db.custacctinfo
+                             where a.custid == c.custid && c.tradetype == "1"
                              where a.orderdate >= begindate && a.orderdate <= enddate
-                             && a.matchqty > 0 && a.bsflag == "B"
+                             && a.matchqty > 0 
                              group a by (a.stkcode) into b
                              select new
                              {
                                  stockcode = b.Max(p => p.stkcode),
-                                 tradeamount = b.Sum(p => p.matchqty)
+                                 tradeamount = b.Where(p => p.bsflag == "B").Sum(p => p.matchqty) - b.Where(p => p.bsflag == "S").Sum(p => p.matchqty)
                              }).OrderByDescending(p => p.tradeamount).Take(10);
                 StockDicManager.LoadDict();
                 foreach (var item in query)

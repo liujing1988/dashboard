@@ -83,10 +83,13 @@ function GetBuyData(da) {
                     }
                 },
                 title: {
-                    text: '融资买入交易标的前10'
+                    text: '信用账户净买入担保标的前10'
                 },
                 xAxis: {
                     categories: StockName
+                },
+                credits: {
+                    enabled: false
                 },
                 yAxis: {
                     title: {

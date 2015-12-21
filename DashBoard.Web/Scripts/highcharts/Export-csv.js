@@ -225,6 +225,7 @@
         );
     };
 
+
     /**
      * Call this on click of 'Download XLS' button
      */

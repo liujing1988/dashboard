@@ -142,6 +142,7 @@ function GetType(begindate, enddate) {
                     //饼图
                     $('#pie').highcharts({
                         chart: {
+                            type: 'pie',
                             plotBackgroundColor: null,
                             plotBorderWidth: null,
                             plotShadow: false
@@ -163,7 +164,6 @@ function GetType(begindate, enddate) {
                             }
                         },
                         series: [{
-                            type: 'pie',
                             name: '成交量',
                             data: pieArray
                         }]
@@ -234,6 +234,9 @@ function GetOpen(begindate, enddate) {
                                 pointPadding: 0.2,
                                 borderWidth: 0
                             }
+                        },
+                        credits: {
+                            enabled: false
                         },
                         series: [{
                             name: '开仓次数',

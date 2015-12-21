@@ -82,6 +82,9 @@ $(function () {
             scrollbar: {
                 enabled: true
             },
+            credits: {
+                enabled: false
+            },
             yAxis: {
                 title: {
                     text: '交易量'
