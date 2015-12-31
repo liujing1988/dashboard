@@ -47,6 +47,7 @@
                 var chart;
                 $('#StrategyTradeAct').highcharts({
                     chart: {
+                        high: '400px',
                         type: 'bar',
                         animation: Highcharts.svg, // don't animate in old IE               
                         marginRight: 10,

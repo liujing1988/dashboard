@@ -3,6 +3,8 @@
     var month = myDate.getMonth() + 1;
     var year = myDate.getFullYear() - 1;
     GetCustomer(year + "-" + month, myDate.getFullYear() + "-" + month);
+    GetAliveCustomer(year + "-" + month, myDate.getFullYear() + "-" + month);
+    GetCreateCustomer(year + "-" + month, myDate.getFullYear() + "-" + month);
     //时间插件
     $('#getMonth_Customer span').html(moment().subtract('years', 1).format('YYYY-MM') + ' - ' + moment().format('YYYY-MM'));
     $('#getMonth_Customer').daterangepicker(
@@ -77,6 +79,8 @@
         var starmonth = $('#getMonth_Customer span').html().substr(0, 7);
         var endmonh = $('#getMonth_Customer span').html().substr(10, 7);
         GetCustomer(starmonth, endmonh);
+        GetAliveCustomer(starmonth, endmonh);
+        GetCreateCustomer(starmonth, endmonh);
     });
 });
 function GetCustomer(BeginMonth, EndMonth) {
@@ -126,13 +130,17 @@ function GetCustomer(BeginMonth, EndMonth) {
                             stacking: 'normal'
                         }
                     },
+                    credits: {
+                        enabled: false
+                    },
                     series: [{
                         name: '活跃用户数',
                         data: AliveCustomerNum,
+                        color: 'red',
                         dataLabels: {
                             enabled: true,
                             rotation: 0,
-                            color: '#FFFFFF',
+                            color: '#000000',
                             valign: 'middle',
                             align: 'center',
                             x: 4,
@@ -147,10 +155,11 @@ function GetCustomer(BeginMonth, EndMonth) {
                     }, {
                         name: '新增用户数',
                         data: CreatCustomerNum,
+                        color:'green',
                         dataLabels: {
                             enabled: true,
                             rotation: 0,
-                            color: '#FFFFFF',
+                            color: '#000000',
                             valign: 'middle',
                             align: 'center',
                             x: 4,
@@ -164,6 +173,125 @@ function GetCustomer(BeginMonth, EndMonth) {
                         stack: 'fmale'
                     }
                     ]
+                });
+            },//end success
+        });
+}
+
+
+function GetAliveCustomer(BeginMonth, EndMonth) {
+    var da = {
+        "BeginMonth": BeginMonth,
+        "EndMonth": EndMonth
+    }
+    $.ajax(
+        {
+            url: "/DashBoard/api/GetCustomer/GetAliveCustomer", //表示提交给的action 
+            type: "post",   //提交方法 
+            data: da,
+            datatype: "json",//数据类型
+            success: function (result) { //返回的结果自动放在resut里面了
+                var tnumcustomer;
+                var amonth = [];
+                var aliveorgcustomer = [];
+                var alivepersoncustomer = [];
+                    tnumcustomer = result[0].TNumCustomer;
+                    for (var i = 0; i < result.length; i++) {
+                        amonth[i] = result[i].Month;
+                        aliveorgcustomer[i] = result[i].AliveOrgCustomer / tnumcustomer * 100;
+                        alivepersoncustomer[i] = result[i].AlivePersonCustomer / tnumcustomer * 100;
+                    }
+                //活跃用户线形图
+                $('#AliveCustomer').highcharts({
+                    title: {
+                        text: '活跃用户占比'
+                    },
+                    xAxis: {
+                        categories: amonth
+                    },
+                    yAxis: {
+                        title: {
+                            text: '活跃用户占比（活跃用户/总用户数）*100%'
+                        }
+                    },
+                    tooltip: {
+                        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:.2f}%</b><br/>'
+                    },
+                    
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: '机构用户',
+                        data: aliveorgcustomer,
+                        color: 'red'
+                    }, {
+                        name: '个人用户',
+                        data: alivepersoncustomer,
+                        color: 'green'
+                    }
+                    ]
+                });
+            },//end success
+        });
+}
+
+function GetCreateCustomer(BeginMonth, EndMonth) {
+    var da = {
+        "BeginMonth": BeginMonth,
+        "EndMonth": EndMonth
+    }
+    $.ajax(
+        {
+            url: "/DashBoard/api/GetCustomer/GetCreateCustomer", //表示提交给的action 
+            type: "post",   //提交方法 
+            data: da,
+            datatype: "json",//数据类型
+            success: function (result) { //返回的结果自动放在resut里面了
+                var tcreatecustomer = [];
+                var amonth = [];
+                var createorgcustomer = [];
+                var createpersoncustomer = [];
+                if (result != null) {
+                    for (var i = 0; i < result.length; i++) {
+                        amonth[i] = result[i].Month;
+                        createorgcustomer[i] = result[i].CreatOrgCustomer;
+                        createpersoncustomer[i] = result[i].CreatPersonCustomer;
+                        tcreatecustomer[i] = result[i].CreatOrgCustomer + result[i].CreatPersonCustomer;
+                    }
+                }
+                //新增用户混合图
+                $('#CreateCustomer').highcharts({
+                    chart: {
+                    },
+                    title: {
+                        text: '新增用户情况'
+                    },
+                    xAxis: {
+                        categories: amonth
+                    },
+                    yAxis: {
+                        title: {
+                            text: '新增用户情况'
+                        }
+                    },
+                    tooltip: {
+                        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}人</b><br/>'
+                    },
+                    
+                    series: [{
+                        type: 'column',
+                        name: '新增机构用户',
+                        data: createorgcustomer
+                    }, {
+                        type: 'column',
+                        name: '新增个人用户',
+                        data: createpersoncustomer
+                    },{
+                        type: 'line',
+                        name: '新增用户数',
+                        data: tcreatecustomer
+                    }]
                 });
             },//end success
         });

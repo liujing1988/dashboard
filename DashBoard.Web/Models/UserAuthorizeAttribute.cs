@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -25,12 +26,12 @@ namespace DashBoard.Web.Models
         {
             //base.AuthorizeCore(httpContext);
             string sid = httpContext.Request["sessionid"];
-            WriteLog(sid);
+            //WriteLog(sid);
             if (!string.IsNullOrEmpty(sid))
             {
                 SignService.SignServiceSoapClient client = new SignService.SignServiceSoapClient();
                 Result = client.CanAccessDashboard(sid);
-                WriteLog(Result.Code.ToString());
+                //WriteLog(Result.Code.ToString());
                 if (Result.Code == 0)
                 {
                     return true;
@@ -48,14 +49,23 @@ namespace DashBoard.Web.Models
             //base.HandleUnauthorizedRequest(filterContext);
             string sid = filterContext.HttpContext.Request["sessionid"];
             string flogin = "未登录！";
+            string loginurl = ConfigurationManager.AppSettings.Get("LoginUrl");
             if (!string.IsNullOrEmpty(sid))
             {
-                if (Result.Code > 0)
+                if (Result.Code == 2)
                 {
                     filterContext.Result = new RedirectResult("~/Home/Error?msg=" + Result.Message);
                 }
+                else
+                {
+                    filterContext.Result = new RedirectResult(loginurl);
+                }
             }
-            filterContext.Result = new RedirectResult("~/Home/Error?msg=" + flogin);
+            else
+            {
+                filterContext.Result = new RedirectResult(loginurl);
+            }
+            
         }
 
         public void WriteLog(string s)

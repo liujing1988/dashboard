@@ -19,7 +19,7 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
     public class GetTradeDateController : ApiController
     {
         /// <summary>
-        /// 发布月交易量API
+        /// 发布月交易金额API
         /// </summary>
         /// <param name="dateTime">起止月份</param>
         /// <returns></returns>
@@ -27,6 +27,28 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         public IEnumerable<TradeMonthAmount> GetMatchAmount(StrategyDetail dateTime)
         {
             return DataServiceHelper.GetMatchAmount(dateTime);
+        }
+
+        /// <summary>
+        /// 发布月开仓次数API
+        /// </summary>
+        /// <param name="dateTime">起止月份</param>
+        /// <returns></returns>
+        [HttpPost]
+        public IEnumerable<OrderSend> GetOrderSendNum(StrategyDetail dateTime)
+        {
+            return DataServiceHelper.GetOrderSendNum(dateTime);
+        }
+
+        /// <summary>
+        /// 发布策略明细中符合条件的交易量前五客户情况API
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IEnumerable<TopMatchQty> GetTopMatchQty(StrategyDetail dateTime)
+        {
+            return DataServiceHelper.GetTopMatchQty(dateTime);
         }
 
         /// <summary>
@@ -143,6 +165,33 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
             result.ThMiNumOrder = Int32.Parse(config.MaxMinuteOrder);
             result.ThSeNumOrder = Int32.Parse(config.MaxSecondOrder);
             return result;
+        }
+
+        /// <summary>
+        /// 用户自建策略交易量情况（包括自动上传和手动上载）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public List<StrategyDetail> GetCustomerCreatedStrategy(StrategyDetail da)
+        {
+            return DataServiceHelper.GetCustomerCreatedStrategy(da);
+        }
+
+        /// <summary>
+        /// 发布用户自建策略交易量前五客户情况API
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IEnumerable<TopMatchQty> GetCustomerCreateStrategyTopMatchQty(StrategyDetail dateTime)
+        {
+            return DataServiceHelper.GetCustomerCreateStrategyTopMatchQty(dateTime);
+        }
+
+        [HttpPost]
+        public List<StrategyDetail> GetSubStrategyTradeDetail(StrategyDetail da)
+        {
+            return DataServiceHelper.GetSubStrategyTradeDetail(da);
         }
     }
 }

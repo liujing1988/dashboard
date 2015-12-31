@@ -56,15 +56,31 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
             return DataServiceHelper.GetCustomerOnline();
         }
 
-        ///// <summary>
-        ///// 获取撤单/委托比大于60%的客户id和比值
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public List<TradeDayVolume> GetRevoke(GetDateTime da)
-        //{
-        //    da.LimitMinOrder = HealthIndex.Models.IndexManagers.ReadConfig().LimitMinOrder;
-        //    return DataServiceHelper.GetRevoke(da);
-        //}
+        /// <summary>
+        /// 获取新增用户情况
+        /// </summary>
+        /// <param name="da">起止时间</param>
+        /// <returns>新增机构用户数、非机构用户数、月份</returns>
+        [HttpPost]
+        public List<CustomerAmount> GetCreateCustomer(CustomerAmount da)
+        {
+            return DataServiceHelper.GetCreateCustomer(da);
+        }
+
+        /// <summary>
+        /// 获取活跃用户情况
+        /// </summary>
+        /// <param name="da">起止时间</param>
+        /// <returns>活跃机构用户数、非机构用户数、月份</returns>
+        [HttpPost]
+        public List<CustomerAmount> GetAliveCustomer(CustomerAmount da)
+        {
+            List<CustomerAmount> result = new List<CustomerAmount>();
+            RecordResult<CustomerAmount> data = new RecordResult<CustomerAmount>();
+            data = DataServiceHelper.GetAliveCustomer(da);
+            result = data.List;
+            result[0].TNumCustomer = data.TotalRecords;
+            return result;
+        }
     }
 }

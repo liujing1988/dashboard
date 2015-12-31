@@ -54,6 +54,7 @@
     <Compile Include="GetDateTime.cs" />
     <Compile Include="HealthManagers.cs" />
     <Compile Include="jQueryDataTableParamModel.cs" />
+    <Compile Include="OrderSend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealTimeData.cs" />
     <Compile Include="RecordResult.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="StrategyDetail.cs" />
     <Compile Include="StrategyType.cs" />
     <Compile Include="SystemInfo.cs" />
+    <Compile Include="TopMatchQty.cs" />
     <Compile Include="TradeInform.cs" />
     <Compile Include="TradeDayAmount.cs" />
     <Compile Include="TradeDayVolume.cs" />

@@ -19,6 +19,28 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 活跃用户数控制器
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AliveCustomer()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 新增用户数控制器
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CreateCustomer()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 用户撤单明细
+        /// </summary>
+        /// <returns></returns>
         public ActionResult RevokeDetail()
         {
             return View();

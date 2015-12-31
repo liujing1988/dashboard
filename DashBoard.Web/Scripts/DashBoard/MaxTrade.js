@@ -71,6 +71,7 @@
         //添加图表
         $('#PRevoke').highcharts({
             chart: {
+                high:'400px',
                 type: 'column',
                 events: {
                     load: function () {
@@ -306,6 +307,9 @@
                     text: null
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: '委托数',
                 data: [MaxNumOrder],
@@ -372,6 +376,9 @@
                     text: null
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: '委托数',
                 data: [MiNumOrder],
@@ -437,6 +444,9 @@
                 title: {
                     text: null
                 }
+            },
+            credits: {
+                enabled: false
             },
             series: [{
                 name: '委托数',

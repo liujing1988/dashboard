@@ -56,6 +56,9 @@
     <Compile Include="customer.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>
+    <Compile Include="generalparam.cs">
+      <DependentUpon>ModelData.tt</DependentUpon>
+    </Compile>
     <Compile Include="GetCustomer.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>
@@ -81,7 +84,13 @@
     <Compile Include="sp_GetRevokePercent_Result.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>
+    <Compile Include="sp_GetStrategyMatchQty_Result.cs">
+      <DependentUpon>ModelData.tt</DependentUpon>
+    </Compile>
     <Compile Include="strategyinfo.cs">
+      <DependentUpon>ModelData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="strategykind.cs">
       <DependentUpon>ModelData.tt</DependentUpon>
     </Compile>
     <Compile Include="strategyorder.cs">

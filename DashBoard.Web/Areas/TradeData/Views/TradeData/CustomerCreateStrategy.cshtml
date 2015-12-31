@@ -15,10 +15,8 @@
     <script type="text/javascript" src="~/Scripts/highcharts/highcharts.js"></script>
     <script type="text/javascript" src="~/Scripts/highcharts/exporting.js"></script>
     <script type="text/javascript" src="~/Scripts/highcharts/Export-csv.js"></script>
-    <script type="text/javascript" src="~/Scripts/DashBoard/RealTimeTradeAmount.js"></script>
     <script type="text/javascript" src="~/Scripts/highcharts/grid.js"></script>
-    <script type="text/javascript" src="~/Scripts/DashBoard/MonthTradeAmount.js"></script>
-    <script type="text/javascript" src="~/Scripts/DashBoard/TradeDetails.js"></script>
+    <script type="text/javascript" src="~/Scripts/DashBoard/CustomerCreateStrategy.js"></script>
     <script type="text/javascript" src="~/Scripts/DashBoard/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/moment.js"></script>
@@ -29,76 +27,59 @@
     <table width="98%" align="center" cellpadding="1.5%">
         <tbody>
             <tr>
-                <td colspan="2">
+                <td>
                     <a name="trade" />
-                    <label><font size="4" color="black">月交易情况:</font></label>
+                    <label><font size="4" color="black">用户自建策略交易量:</font></label>
                 </td>
             </tr>
             <tr>
                 <td valign="middle">
-                    <div id="getMonth_Trade" class="pull-left dateRange" style="margin-left: 0px">
+                    <div id="getMonth_Strategy" class="pull-left dateRange" style="margin-left: 0px">
                         日期：<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                         <span id="searchDateRange"></span>
                         <b class="caret"></b>
                     </div>
                     <br>
                 </td>
+            </tr>
+            <tr>
                 <td>
-                    <div>
-                        策略名称:<input id="strategyname" type="text" />
-                        策略类型:<input id="stratkindname" type="text" />
-                        序列号:<input id="seriesno" type="text" />
-                    </div>
-                </td>
-                <td align="right">
-                    <font size="2">单位：</font>
-                    <select id="unit">
-                        <option value="001">元</option>
-                        <option value="002">万元</option>
-                        <option value="003">亿元</option>
-                    </select>
+                    <div id="CustomerCreateStrategy" style="width:100%;height:40%"></div>
                 </td>
             </tr>
             <tr>
-                <td colspan="3">
-                    <div id="MonthTrade" style="width:100%;height:40%"></div>
-                    <div id="divChart" style="position: absolute; display: -none; border: 3px solid green; z-index: 999;"></div>
+                <td height="10px">
+                    
                 </td>
             </tr>
             <tr>
-                <td colspan="2" height="10px"></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <div id="NumOrder" style="width:100%;height:40%" />
+                <td>
+                    <a name="trade" />
+                    <label><font size="4" color="black">用户自建策略交易量前五:</font></label>
                 </td>
             </tr>
+            
             <tr>
-                <td colspan="2" height="10px"></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <table id="generatedTable" class="table table-striped table-bordered" width="100%">
+                <td>
+                    <table id="CustomerCreateStrategyTopMatchQty" class="table table-striped table-bordered" width="100%">
                         <thead>
                             <tr>
-                                <th style='width:10%; align-items:center'>客户ID</th>
-                                <th style='width:80%;align-items:center'>策略名</th>
-                                <th style='width:10%;' align="center">总交易量</th>
+                                <th style='width:50%; align-items:center'>客户ID</th>
+                                <th style='width:50%;' align="center">总交易量</th>
 
                             </tr>
                         </thead>
                         <tbody>
-                            <tr id="cloneTr">
-                                <td></td>
+                            <tr id="cloneTr" style="height:1px">
                                 <td></td>
                                 <td></td>
                             </tr>
                         </tbody>
-                    </table>  
+                    </table>
                 </td>
             </tr>
         </tbody>
     </table>
-    </body>
+</body>
 </html>
 

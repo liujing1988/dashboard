@@ -1,18 +1,18 @@
 ﻿$(document).ready(function ($) {
-    
-    GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
-    
+
+    GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
+
     $("#unit").change(function () {
-        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
     });
     $("#strategyname").on('blur', function () {
-        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
     });
-    $("#stratinfo").on('blur', function () {
-        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+    $("#stratkindname").on('blur', function () {
+        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
     });
     $("#seriesno").on('blur', function () {
-        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
     });
     //时间插件
     $('#getMonth_Trade span').html(moment().subtract('years', 1).format('YYYY-MM') + ' - ' + moment().format('YYYY-MM'));
@@ -89,31 +89,28 @@
         //当选择时间后，触发dt的重新加载数据的方法
         var starmonth = $('#getMonth_Trade span').html().substr(0, 7);
         var endmonh = $('#getMonth_Trade span').html().substr(10, 7);
-        GetMonth(starmonth, endmonh, $("#unit").val(), $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+        GetMonth(starmonth, endmonh, $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
     });
 });
-function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) {
-    if (begindate == "" && enddate == "")
-    {
+function GetMonth(begindate, enddate, munit, strategyname, stratkindname, seriesno) {
+    if (begindate == "" && enddate == "") {
         var myDate = new Date();
         var year = myDate.getFullYear() - 1;
         var month = myDate.getMonth() + 1;
         begindate = year + "-" + month;
         enddate = myDate.getFullYear() + "-" + month;
     }
-    if (begindate == "")
-    {
+    if (begindate == "") {
         alert("请输入起始时间");
     }
-    else if (enddate == "")
-    {
+    else if (enddate == "") {
         alert("请输入截止时间");
     }
     var da = {
         "beginDate": begindate,
         "endDate": enddate,
         "strategyName": strategyname,
-        "stratInfo": stratinfo,
+        "stratInfo": stratkindname,
         "seriesNo": seriesno
     }
 
@@ -131,8 +128,7 @@ function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) 
               //月曲线图数据转换
               var unit = "";
               if (result.length > 0) {
-                  if(munit == "003")
-                  {
+                  if (munit == "003") {
                       for (var i = 0; i < result.length; i++) {
                           Month.push(result[i].Month);
                           MonthAccont.push(result[i].MatchAmount / 100000000);
@@ -163,7 +159,7 @@ function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) 
                           type: 'column'
                       },
                       title: {
-                          text: '月交易量统计'
+                          text: '月交易金额统计'
                       },
                       xAxis: {
                           name: '月份',
@@ -178,9 +174,9 @@ function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) 
                           }
                       },
                       yAxis: {
-                          min:0,
+                          min: 0,
                           title: {
-                              text: '交易量'
+                              text: '交易金额'
                           },
                       },
                       tooltip: {
@@ -203,7 +199,7 @@ function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) 
                                           var objectData = new Object();
                                           objectData.title = this.category; //将当前柱子的X轴刻度值作为副图表的标题
                                           //调用函数弹出副图表
-                                          DynamicCreateSubChart(objectData, width, height, x, y, $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val());
+                                          DynamicCreateSubChart(objectData, width, height, x, y, $("#strategyname").val(), $("#stratinfo").val(), $("#seriesno").val(), unit);
                                       }
                                   }
                               },
@@ -214,9 +210,18 @@ function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) 
                                       HiddenSubChart();
                                   }
                               }
+                          },
+                          column: {
+                              borderWidth: 0,
+                              dataLabels: {
+                                  enabled: true,
+                                  format: '{point.y:.1f}'+unit
+                              }
                           }
                       },
-
+                      credits: {
+                          enabled: false
+                      },
                       legend: {
                           layout: 'vertical',
                           align: 'right',
@@ -225,14 +230,16 @@ function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) 
                       },
 
                       series: [{
-                          name: '交易量',
+                          name: '交易金额',
                           data: MonthAccont
                       }]
                   });
+
               })
           }//end success
-
       });
+    GetOrderSend(begindate, enddate, strategyname, stratkindname, seriesno);
+    GetStrategyTopMatchQty(begindate, enddate, strategyname, stratkindname, seriesno);
 }
 
 
@@ -243,13 +250,13 @@ function GetMonth(begindate, enddate, munit, strategyname, stratinfo, seriesno) 
 /// left:图表距左侧窗体的距离值
 /// top:图表距上侧窗体的距离值
 ///===============
-function DynamicCreateSubChart(object, width, height, left, top, strategyname, stratinfo, seriesno) {
-    
+function DynamicCreateSubChart(object, width, height, left, top, strategyname, stratkindname, seriesno, unit) {
+
 
     var da = {
         "beginDate": object.title,
         "strategyName": strategyname,
-        "stratInfo": stratinfo,
+        "strategyKindName": stratkindname,
         "seriesNo": seriesno
     }
     $.ajax(
@@ -263,38 +270,27 @@ function DynamicCreateSubChart(object, width, height, left, top, strategyname, s
              var Date = [];
              //日成交量
              var DateAccont = [];
-             var minresult = result[0].DateAmount;
-             var unit = "";
              //日曲线图数据转换
              if (result[0].Date != null) {
-                 for (var i = 0; i < result.length; i++) {
-                     if (minresult > result[i].DateAmount) {
-                         minresult = result[i].DateAmount;
-                     }
-                 }
-                 if (minresult / 10000000 >= 1) {
+                 if (unit == "亿元") {
                      for (var i = 0; i < result.length; i++) {
                          Date.push(result[i].Date);
                          DateAccont.push(result[i].DateAmount / 100000000);
-                         unit = "亿元";
                      }
                  }
-                 else if (minresult / 10000 >= 1) {
+                 else if (unit == "万元") {
                      for (var i = 0; i < result.length; i++) {
                          Date.push(result[i].Date);
                          DateAccont.push(result[i].DateAmount / 10000);
-                         unit = "万元";
                      }
                  }
                  else {
                      for (var i = 0; i < result.length; i++) {
                          Date.push(result[i].Date);
                          DateAccont.push(result[i].DateAmount);
-                         unit = "元";
                      }
                  }
              }
-
              //动态设置副图表容器的相关属性并显示出来
              $("#divChart").css({ "left": left, "top": top, "width": width, "height": height, "display": "block" });
              ///动态给div渲染图表
@@ -307,7 +303,7 @@ function DynamicCreateSubChart(object, width, height, left, top, strategyname, s
                      text: object.title + "的详细数据"
                  },
                  title: {
-                     text: '月交易量统计'
+                     text: '月交易金额统计'
                  },
                  xAxis: {
                      name: '月份',
@@ -324,7 +320,7 @@ function DynamicCreateSubChart(object, width, height, left, top, strategyname, s
                  yAxis: {
                      min: 0,
                      title: {
-                         text: '交易量'
+                         text: '交易金额'
                      },
                  },
                  tooltip: {
@@ -340,7 +336,7 @@ function DynamicCreateSubChart(object, width, height, left, top, strategyname, s
                      enabled: false
                  },
                  series: [{
-                     name:'交易量',
+                     name: '交易金额',
                      data: DateAccont
                  }]
              });
@@ -351,4 +347,121 @@ function DynamicCreateSubChart(object, width, height, left, top, strategyname, s
 function HiddenSubChart() {
     $("#divChart").html("");
     $("#divChart").css({ "display": "none" });
+}
+
+
+//开仓次数走势图
+function GetOrderSend(begindate, enddate, strategyname, stratkindname, seriesno) {
+    var da = {
+        "beginDate": begindate,
+        "endDate": enddate,
+        "strategyName": strategyname,
+        "strategyKindName": stratkindname,
+        "seriesNo": seriesno
+    }
+
+    $.ajax({
+        url: '/dashboard/api/GetTradeDate/GetOrderSendNum',
+        type: "post",   //提交方法 
+        data: da,
+        success: function (result) {
+            //月份
+            var month = [];
+            //开仓次数
+            var numsender = [];
+            if (result.length > 0) {
+                for (var i = 0; i < result.length; i++) {
+                    month.push(result[i].Month);
+                    numsender.push(result[i].NumSend);
+                }
+            }
+            var numordersender = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'NumOrder',
+                    type: 'column'
+                },
+                title: {
+                    text: '开仓次数'
+                },
+                credits: {
+                    enabled: false
+                },
+                xAxis: {
+                    categories: month
+                },
+                yAxis: {
+                    title: {
+                        text: '开仓次数'
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.0f}次'
+                        }
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '' + this.series.name + '' +
+                           this.x + ': ' + this.y;
+                    }
+                },
+                series: [{
+                    name: '开仓次数',
+                    data: numsender
+                }]
+            })
+        }
+    });
+}
+
+//策略总交易量Top5
+function GetStrategyTopMatchQty(begindate, enddate, strategyname, stratkindname, seriesno) {
+    var da = {
+        "beginDate": begindate,
+        "endDate": enddate,
+        "strategyName": strategyname,
+        "strategyKindName": stratkindname,
+        "seriesNo": seriesno
+    }
+    $.ajax({
+        url: '/dashboard/api/GetTradeDate/GetTopMatchQty',
+        data: da,
+        type: 'post',
+        success: function (result) {
+            //1,获取上面id为cloneTr的tr元素  
+            var tr = $("#cloneTr");
+            $("#generatedTable tr:gt(0):not(:eq(0))").remove();
+            $.each(result, function (index, item) {
+                //克隆tr，每次遍历都可以产生新的tr                              
+                var clonedTr = tr.clone().attr('id','clone');
+                var _index = index;
+                //循环遍历cloneTr的每一个td元素，并赋值  
+                clonedTr.children("td").each(function (inner_index) {
+                    
+                    //根据索引为每一个td赋值  
+                    switch (inner_index) {
+                        case (0):
+                            $(this).html(item.CustId);
+                            break;
+                        case (1):
+                            $(this).html(item.StrategyName);
+                            break;
+                        case (2):
+                            $(this).html(item.MatchQty);
+                            break;
+                    }//end switch  
+                });//end children.each  
+
+                //把克隆好的tr追加原来的tr后面  
+                clonedTr.insertAfter(tr);
+            });//end $each 
+            $("#cloneTr").hide();//隐藏id=clone的tr，因为该tr中的td没有数据，不隐藏起来会在生成的table第一行显示一个空行  
+            $("#generatedTable").show();
+            $("tr#clone").show();
+        }
+    })
 }

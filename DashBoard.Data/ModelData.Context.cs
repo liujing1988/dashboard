@@ -33,6 +33,8 @@ namespace DashBoard.Data
         public virtual DbSet<strategyinfo> strategyinfo { get; set; }
         public virtual DbSet<custacctinfo> custacctinfo { get; set; }
         public virtual DbSet<positionbasicinfotable> positionbasicinfotable { get; set; }
+        public virtual DbSet<strategykind> strategykind { get; set; }
+        public virtual DbSet<generalparam> generalparam { get; set; }
     
         public virtual ObjectResult<GetCustomer> sp_GetCustomer(Nullable<int> begindate, Nullable<int> enddate)
         {
@@ -132,6 +134,31 @@ namespace DashBoard.Data
                 new ObjectParameter("OrderField", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_GetCustomerTradeDetail", beginDateParameter, endDateParameter, searchColumnsParameter, displayStartParameter, displayLengthParameter, sortDirectionParameter, currentPageParameter, orderFieldParameter, pageCount, totalRecords, totalDisplayRecords);
+        }
+    
+        public virtual ObjectResult<sp_GetStrategyMatchQty_Result> sp_GetStrategyMatchQty(Nullable<int> beginMonth, Nullable<int> endMonth, string strategyName, string kindName, string seriesNo)
+        {
+            var beginMonthParameter = beginMonth.HasValue ?
+                new ObjectParameter("BeginMonth", beginMonth) :
+                new ObjectParameter("BeginMonth", typeof(int));
+    
+            var endMonthParameter = endMonth.HasValue ?
+                new ObjectParameter("EndMonth", endMonth) :
+                new ObjectParameter("EndMonth", typeof(int));
+    
+            var strategyNameParameter = strategyName != null ?
+                new ObjectParameter("StrategyName", strategyName) :
+                new ObjectParameter("StrategyName", typeof(string));
+    
+            var kindNameParameter = kindName != null ?
+                new ObjectParameter("KindName", kindName) :
+                new ObjectParameter("KindName", typeof(string));
+    
+            var seriesNoParameter = seriesNo != null ?
+                new ObjectParameter("SeriesNo", seriesNo) :
+                new ObjectParameter("SeriesNo", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetStrategyMatchQty_Result>("sp_GetStrategyMatchQty", beginMonthParameter, endMonthParameter, strategyNameParameter, kindNameParameter, seriesNoParameter);
         }
     }
 }

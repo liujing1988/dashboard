@@ -135,8 +135,8 @@
                                 format: '<b>{point.name}</b>: {point.percentage:.1f} %',
                                 style: {
                                     fontWeight: 'bold',
-                                    color: 'white',
-                                    textShadow: '0px 1px 2px black'
+                                    color: 'black',
+                                    textShadow: '0px 0px 0px black'
                                 }
                             }
                         },
@@ -147,6 +147,9 @@
                                 format: '{point.y:.1f}%'
                             }
                         }
+                    },
+                    tooltip: {
+                        enabled:false
                     },
                     series: [{
                         name: '在线用户',

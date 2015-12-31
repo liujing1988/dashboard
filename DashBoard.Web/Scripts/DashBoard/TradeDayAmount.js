@@ -1,4 +1,7 @@
-﻿$.ajax(
+﻿
+//当日交易金额TOP10
+
+$.ajax(
 {
     url: "/DashBoard/api/GetTradeDate/GetDayAmount", //表示提交给的action 
     type: "post",   //提交方法 
@@ -65,6 +68,7 @@
                 var chart;
                 $('#TradeAmountTop').highcharts({
                     chart: {
+                        high: '400px',
                         type: 'bar',
                         animation: Highcharts.svg, // don't animate in old IE               
                         marginRight: 10,

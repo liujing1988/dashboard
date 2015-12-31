@@ -22,7 +22,7 @@ namespace DashBoard.Web.Controllers
         /// 框架页面，通过该页面进行排版
         /// </summary>
         /// <returns></returns>
-        //[UserAuthorize]
+        [UserAuthorize]
         public ActionResult Index()
         {
             string login = Request["sessionid"];
@@ -35,7 +35,7 @@ namespace DashBoard.Web.Controllers
         /// 首页
         /// </summary>
         /// <returns></returns>
-        //[UserAuthorize]
+        [UserAuthorize]
         public ActionResult HomePage()
         {
             ViewBag.Title = "国泰君安量化交易情况统计分析系统";
@@ -46,7 +46,7 @@ namespace DashBoard.Web.Controllers
         /// 页面顶部，logo等
         /// </summary>
         /// <returns></returns>
-        //[UserAuthorize]
+        [UserAuthorize]
         public ActionResult Top()
         {
             return View();
@@ -56,7 +56,7 @@ namespace DashBoard.Web.Controllers
         /// 页面左侧导航栏
         /// </summary>
         /// <returns></returns>
-        //[UserAuthorize]
+        [UserAuthorize]
         public ActionResult Left()
         {
             return View();
@@ -66,7 +66,7 @@ namespace DashBoard.Web.Controllers
         /// 主显示页面
         /// </summary>
         /// <returns></returns>
-        //[UserAuthorize]
+        [UserAuthorize]
         public ActionResult Right()
         {
             return View();

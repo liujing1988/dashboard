@@ -35,6 +35,20 @@
           <Property Name="ownerid" Type="int" Nullable="false" />
           <Property Name="createdate" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="generalparam">
+          <Key>
+            <PropertyRef Name="generalparamid" />
+            <PropertyRef Name="strategyno" />
+          </Key>
+          <Property Name="generalparamid" Type="int" Nullable="false" />
+          <Property Name="strategyno" Type="int" Nullable="false" />
+          <Property Name="paramname" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="paramtype" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="paramvalue" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ispersonality" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="substrategyno" Type="int" />
+        </EntityType>
         <EntityType Name="positionbasicinfotable">
           <Key>
             <PropertyRef Name="custid" />
@@ -173,6 +187,18 @@
           <Property Name="accounttype" Type="int" Nullable="false" />
           <Property Name="basketid" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="strategykind">
+          <Key>
+            <PropertyRef Name="kindid" />
+          </Key>
+          <Property Name="kindid" Type="int" Nullable="false" />
+          <Property Name="kindname" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="fatherid" Type="int" Nullable="false" />
+          <Property Name="templateid" Type="int" />
+          <Property Name="revs1" Type="varchar" MaxLength="32" />
+          <Property Name="isdelete" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="ownerid" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="strategyorder">
           <Key>
             <PropertyRef Name="custid" />
@@ -271,14 +297,23 @@
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
           <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
         </Function>
+        <Function Name="sp_GetStrategyMatchQty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BeginMonth" Type="int" Mode="In" />
+          <Parameter Name="EndMonth" Type="int" Mode="In" />
+          <Parameter Name="StrategyName" Type="varchar" Mode="In" />
+          <Parameter Name="KindName" Type="varchar" Mode="In" />
+          <Parameter Name="SeriesNo" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="sp_TradeAmt_Minute" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="date" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="ModelDataStoreContainer">
           <EntitySet Name="custacctinfo" EntityType="Self.custacctinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="generalparam" EntityType="Self.generalparam" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="positionbasicinfotable" EntityType="Self.positionbasicinfotable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategyinfo" EntityType="Self.strategyinfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="strategykind" EntityType="Self.strategykind" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategyorder" EntityType="Self.strategyorder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategytrade" EntityType="Self.strategytrade" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -327,6 +362,15 @@
             <Parameter Name="TotalDisplayRecords" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="positionbasicinfotable" EntityType="ModelData.positionbasicinfotable" />
+          <EntitySet Name="strategykind" EntityType="ModelData.strategykind" />
+          <FunctionImport Name="sp_GetStrategyMatchQty" ReturnType="Collection(ModelData.sp_GetStrategyMatchQty_Result)">
+            <Parameter Name="BeginMonth" Mode="In" Type="Int32" />
+            <Parameter Name="EndMonth" Mode="In" Type="Int32" />
+            <Parameter Name="StrategyName" Mode="In" Type="String" />
+            <Parameter Name="KindName" Mode="In" Type="String" />
+            <Parameter Name="SeriesNo" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="generalparam" EntityType="ModelData.generalparam" />
         </EntityContainer>
         <EntityType Name="strategyorder">
           <Key>
@@ -579,6 +623,37 @@
           <Property Name="rongzicost" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
           <Property Name="rongquancost" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
           <Property Name="costprice" Type="Decimal" Nullable="false" Precision="20" Scale="6" />
+        </EntityType>
+        <EntityType Name="strategykind">
+          <Key>
+            <PropertyRef Name="kindid" />
+          </Key>
+          <Property Name="kindid" Type="Int32" Nullable="false" />
+          <Property Name="kindname" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="fatherid" Type="Int32" Nullable="false" />
+          <Property Name="templateid" Type="Int32" />
+          <Property Name="revs1" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="isdelete" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ownerid" Type="Int32" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="sp_GetStrategyMatchQty_Result">
+          <Property Type="Int32" Name="custid" Nullable="false" />
+          <Property Type="String" Name="strategyno" Nullable="true" />
+          <Property Type="Int32" Name="tmatchqty" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="generalparam">
+          <Key>
+            <PropertyRef Name="generalparamid" />
+            <PropertyRef Name="strategyno" />
+          </Key>
+          <Property Name="generalparamid" Type="Int32" Nullable="false" />
+          <Property Name="strategyno" Type="Int32" Nullable="false" />
+          <Property Name="paramname" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="paramtype" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="paramvalue" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ispersonality" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="substrategyno" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -843,6 +918,42 @@
                 <ScalarProperty Name="sttradeno" ColumnName="sttradeno" />
                 <ScalarProperty Name="fundid" ColumnName="fundid" />
                 <ScalarProperty Name="custid" ColumnName="custid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="strategykind">
+            <EntityTypeMapping TypeName="ModelData.strategykind">
+              <MappingFragment StoreEntitySet="strategykind">
+                <ScalarProperty Name="ownerid" ColumnName="ownerid" />
+                <ScalarProperty Name="isdelete" ColumnName="isdelete" />
+                <ScalarProperty Name="revs1" ColumnName="revs1" />
+                <ScalarProperty Name="templateid" ColumnName="templateid" />
+                <ScalarProperty Name="fatherid" ColumnName="fatherid" />
+                <ScalarProperty Name="kindname" ColumnName="kindname" />
+                <ScalarProperty Name="kindid" ColumnName="kindid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetStrategyMatchQty" FunctionName="ModelData.Store.sp_GetStrategyMatchQty">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ModelData.sp_GetStrategyMatchQty_Result">
+                <ScalarProperty Name="custid" ColumnName="custid" />
+                <ScalarProperty Name="strategyno" ColumnName="strategyno" />
+                <ScalarProperty Name="tmatchqty" ColumnName="tmatchqty" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="generalparam">
+            <EntityTypeMapping TypeName="ModelData.generalparam">
+              <MappingFragment StoreEntitySet="generalparam">
+                <ScalarProperty Name="substrategyno" ColumnName="substrategyno" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="ispersonality" ColumnName="ispersonality" />
+                <ScalarProperty Name="paramvalue" ColumnName="paramvalue" />
+                <ScalarProperty Name="paramtype" ColumnName="paramtype" />
+                <ScalarProperty Name="paramname" ColumnName="paramname" />
+                <ScalarProperty Name="strategyno" ColumnName="strategyno" />
+                <ScalarProperty Name="generalparamid" ColumnName="generalparamid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

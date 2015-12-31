@@ -19,9 +19,24 @@ namespace Dashboard.Common
         public int AliveCustomer { get; set; }
 
         /// <summary>
+        /// 活跃机构用户
+        /// </summary>
+        public int AliveOrgCustomer { get; set; }
+
+        /// <summary>
+        /// 活跃个人用户
+        /// </summary>
+        public int AlivePersonCustomer { get; set; }
+
+        /// <summary>
         /// 本月总用户数
         /// </summary>
         public string AllCustomerMonth { get; set; }
+
+        /// <summary>
+        /// 总用户数
+        /// </summary>
+        public int TNumCustomer { get; set; }
 
         /// <summary>
         /// 起始月份
@@ -37,5 +52,20 @@ namespace Dashboard.Common
         /// 新增用户数
         /// </summary>
         public int CreatCustomer { get; set; }
+
+        /// <summary>
+        /// 新增机构用户数
+        /// </summary>
+        public int CreatOrgCustomer { get; set; }
+
+        /// <summary>
+        /// 新增个人用户数
+        /// </summary>
+        public int CreatPersonCustomer { get; set; }
+
+        /// <summary>
+        /// 月份
+        /// </summary>
+        public int Month { get; set; }
     }
 }

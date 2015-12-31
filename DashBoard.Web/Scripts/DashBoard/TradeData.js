@@ -208,6 +208,9 @@ function GetRealTime(begindate, enddate) {
                     exporting: {
                         enabled: false
                     },
+                    credits: {
+                        enabled: false
+                    },
                     series: [{
                         name: '交易量',
                         data: MinuteTrade
