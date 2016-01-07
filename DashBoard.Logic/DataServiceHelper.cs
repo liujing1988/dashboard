@@ -53,8 +53,8 @@ namespace Dashboard.Logic
         /// <returns>月份、该月所有用户交易量之和</returns>
         public static List<TradeMonthAmount> GetMatchAmount(StrategyDetail dateTime)
         {
-            int bmonth = TranslateHelper.ConvertDate(dateTime.beginDate);
-            int emonth = TranslateHelper.ConvertDate(dateTime.endDate);
+            int bmonth = TranslateHelper.ConvertDate(dateTime.BeginDate);
+            int emonth = TranslateHelper.ConvertDate(dateTime.EndDate);
             List<TradeMonthAmount> result = new List<TradeMonthAmount>();
             using (var db = new ModelDataContainer())
             {
@@ -63,9 +63,9 @@ namespace Dashboard.Logic
                             from d in db.strategykind
                             where a.strategyno == c.strategyno && c.kindid == d.kindid
                             where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
-                            && (dateTime.strategyName == null || c.strategyname.Contains(dateTime.strategyName))
-                            && (dateTime.strategyKindName == null || d.kindname == dateTime.strategyKindName)
-                            && (dateTime.seriesNo == null || c.seriesno == dateTime.seriesNo)
+                            && (dateTime.StrategyName == null || c.strategyname.Contains(dateTime.StrategyName))
+                            && (dateTime.StrategyKindName == null || d.kindname == dateTime.StrategyKindName)
+                            && (dateTime.SeriesNo == null || c.seriesno == dateTime.SeriesNo)
                             where a.tradedate / 100 >= bmonth && a.tradedate / 100 <= emonth
                             && a.strategyno != -1
                             group a by a.tradedate / 100 into b
@@ -93,8 +93,8 @@ namespace Dashboard.Logic
         /// <returns>符合条件的策略开仓次数之和</returns>
         public static List<OrderSend> GetOrderSendNum(StrategyDetail dateTime)
         {
-            int bmonth = TranslateHelper.ConvertDate(dateTime.beginDate);
-            int emonth = TranslateHelper.ConvertDate(dateTime.endDate);
+            int bmonth = TranslateHelper.ConvertDate(dateTime.BeginDate);
+            int emonth = TranslateHelper.ConvertDate(dateTime.EndDate);
             List<OrderSend> result = new List<OrderSend>();
             using (var db = new ModelDataContainer())
             {
@@ -104,9 +104,9 @@ namespace Dashboard.Logic
                                   from d in db.strategykind
                                   where a.strategyno == c.strategyno && c.kindid == d.kindid
                                   where a.strategyno != -1 && a.createdate / 100 >= bmonth && a.createdate / 100 <= emonth
-                                  && (dateTime.strategyName == null || c.strategyname.Contains(dateTime.strategyName))
-                                  && (dateTime.strategyKindName == null || d.kindname == dateTime.strategyKindName)
-                                  && (dateTime.seriesNo == null || c.seriesno == dateTime.seriesNo)
+                                  && (dateTime.StrategyName == null || c.strategyname.Contains(dateTime.StrategyName))
+                                  && (dateTime.StrategyKindName == null || d.kindname == dateTime.StrategyKindName)
+                                  && (dateTime.SeriesNo == null || c.seriesno == dateTime.SeriesNo)
                                   group a by new { a.custid, c.strategyname, a.createdate } into c
                                   select new
                                   {
@@ -140,12 +140,12 @@ namespace Dashboard.Logic
         /// <returns>符合条件的客户交易总量之和</returns>
         public static List<TopMatchQty> GetTopMatchQty(StrategyDetail dateTime)
         {
-            int bmonth = TranslateHelper.ConvertDate(dateTime.beginDate);
-            int emonth = TranslateHelper.ConvertDate(dateTime.endDate);
+            int bmonth = TranslateHelper.ConvertDate(dateTime.BeginDate);
+            int emonth = TranslateHelper.ConvertDate(dateTime.EndDate);
             List<TopMatchQty> result = new List<TopMatchQty>();
             using (var db = new ModelDataContainer())
             {
-                var list = db.sp_GetStrategyMatchQty(bmonth, emonth, dateTime.strategyName, dateTime.strategyKindName, dateTime.seriesNo);
+                var list = db.sp_GetStrategyMatchQty(bmonth, emonth, dateTime.StrategyName, dateTime.StrategyKindName, dateTime.SeriesNo);
 
                 foreach (var item in list)
                 {
@@ -172,7 +172,7 @@ namespace Dashboard.Logic
         /// <returns>日期、该日期所有用户交易量之和</returns>
         public static List<TradeMonthAmount> GetDateAmount(StrategyDetail dateTime)
         {
-            int bday = TranslateHelper.ConvertDate(dateTime.beginDate);
+            int bday = TranslateHelper.ConvertDate(dateTime.BeginDate);
             List<TradeMonthAmount> result = new List<TradeMonthAmount>();
             using (var db = new ModelDataContainer())
             {
@@ -182,9 +182,9 @@ namespace Dashboard.Logic
                             where a.strategyno == c.strategyno && c.kindid == d.kindid
                             && (a.matchtype == "0" || a.matchtype == "1")
                             && a.strategyno != -1
-                            && (dateTime.strategyName == null || c.strategyname.Contains(dateTime.strategyName))
-                            && (dateTime.stratInfo == null || d.kindname == dateTime.stratInfo)
-                            && (dateTime.seriesNo == null || c.seriesno == dateTime.seriesNo)
+                            && (dateTime.StrategyName == null || c.strategyname.Contains(dateTime.StrategyName))
+                            && (dateTime.StratInfo == null || d.kindname == dateTime.StratInfo)
+                            && (dateTime.SeriesNo == null || c.seriesno == dateTime.SeriesNo)
                             where a.tradedate / 100 == bday
                             group a by a.tradedate into b
                             select new
@@ -203,37 +203,6 @@ namespace Dashboard.Logic
             }
             return result;
         }
-
-        /// <summary>
-        /// 获取每分钟交易量（用于首页中的交易曲线图，1分钟调用1次）
-        /// </summary>
-        /// <returns>时间、该时间对应的所有用户交易量之和</returns>
-        //public static List<RealTimeData> GetRealTimeData()
-        //{
-        //    int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
-        //    List<RealTimeData> result = new List<RealTimeData>();
-        //    using (var db = new ModelDataContainer())
-        //    {
-        //        var query = (from a in db.strategytrade
-        //                     where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
-        //                     && a.strategyno != -1 && a.tradedate == tdate
-        //                     group a by (a.tradedate + (a.tradetime / 10000) / 10000.0) into b
-        //                     select new
-        //                     {
-        //                         Minute = b.Max(p => p.tradedate + (p.tradetime / 10000) / 10000.0),
-        //                         TradeAmount = b.Sum(p => p.matchamt)
-        //                     }).OrderByDescending(p => p.Minute);
-        //        foreach (var item in query.OrderBy(p => p.Minute))
-        //        {
-        //            result.Add(new RealTimeData()
-        //            {
-        //                Minute = ConvertMinute(item.Minute),
-        //                TradeAmount = item.TradeAmount,
-        //            });
-        //        }
-        //    }
-        //    return result;
-        //}
 
         /// <summary>
         /// 获取每分钟交易量（用于首页中的交易量柱状图，1分钟调用1次）
@@ -279,8 +248,8 @@ namespace Dashboard.Logic
         public static List<RealTimeData> GetRealData(RealTimeData da)
         {
             List<RealTimeData> result = new List<RealTimeData>();
-            DateTime begindate = Convert.ToDateTime(da.beginDate);
-            DateTime enddate = Convert.ToDateTime(da.endDate);
+            DateTime begindate = Convert.ToDateTime(da.BeginDate);
+            DateTime enddate = Convert.ToDateTime(da.EndDate);
             for (DateTime i = begindate; i <= enddate; i = i.AddDays(1))
             {
                 if (i.DayOfWeek.ToString() == "Saturday" || i.DayOfWeek.ToString() == "Sunday")
@@ -327,8 +296,8 @@ namespace Dashboard.Logic
         /// <returns>功能模块名称、交易量</returns>
         public static List<StrategyTypes> GetStrategyType(GetDateTime dateTime)
         {
-            int bdate = TranslateHelper.ConvertDate(dateTime.begindate);
-            int edate = TranslateHelper.ConvertDate(dateTime.enddate);
+            int bdate = TranslateHelper.ConvertDate(dateTime.BeginDate);
+            int edate = TranslateHelper.ConvertDate(dateTime.EndDate);
             List<StrategyTypes> result = new List<StrategyTypes>();
             using (var db = new ModelDataContainer())
             {
@@ -366,8 +335,8 @@ namespace Dashboard.Logic
         /// <returns>功能模块名称、使用次数</returns>
         public static List<StrategyTypes> GetStrategyOpen(GetDateTime dateTime)
         {
-            int bdate = TranslateHelper.ConvertDate(dateTime.begindate);
-            int edate = TranslateHelper.ConvertDate(dateTime.enddate);
+            int bdate = TranslateHelper.ConvertDate(dateTime.BeginDate);
+            int edate = TranslateHelper.ConvertDate(dateTime.EndDate);
             List<StrategyTypes> result = new List<StrategyTypes>();
             using (var db = new ModelDataContainer())
             {
@@ -436,10 +405,10 @@ namespace Dashboard.Logic
                     foreach (var item in query)
                         result.Add(new TradeDayAmount()
                         {
-                            custId = item.custid,
-                            tradeAmount = item.tradeamount,
-                            creditTrade = item.credittrade,
-                            tradeDate = DateTime.Now.ToString("yyyy-MM-dd")
+                            CustId = item.custid,
+                            TradeAmount = item.tradeamount,
+                            CreditTrade = item.credittrade,
+                            TradeDate = DateTime.Now.ToString("yyyy-MM-dd")
 
                         });
                 }
@@ -459,10 +428,10 @@ namespace Dashboard.Logic
                     foreach (var item in query)
                         result.Add(new TradeDayAmount()
                         {
-                            custId = item.custid,
-                            tradeAmount = item.tradeamount,
-                            creditTrade = item.credittrade,
-                            tradeDate = DateTime.Now.ToString("yyyy-MM-dd")
+                            CustId = item.custid,
+                            TradeAmount = item.tradeamount,
+                            CreditTrade = item.credittrade,
+                            TradeDate = DateTime.Now.ToString("yyyy-MM-dd")
 
                         });
                 }
@@ -787,21 +756,29 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取策略交易明细
         /// </summary>
+        /// <param name="parameters.BeginDate">开始时间</param>
+        /// <param name="parameters.EndDate">结束时间</param>
+        /// <param name="parameters.SearchColumns">搜索内容</param>
+        /// <param name="parameters.DisplayStart">当前页第一行数据的总行号</param>
+        /// <param name="parameters.DisplayLength">每页显示数据行数</param>
+        /// <param name="parameters.CurrentPage">当前页号</param>
+        /// <param name="parameters.SortDirection">排序方式（正序、反序）</param>
+        /// <param name="parameters.OrderField">排序字段</param>
         /// <returns>策略名、策略描述、序列号、策略组、开仓时间</returns>
         public static RecordResult<StrategyDetail> GetStrategyTradeDetail(StrategyDetail parameters)
         {
             RecordResult<StrategyDetail> result = new RecordResult<StrategyDetail>();
             List<DbParameter> dbParameters = new List<DbParameter>();
             var db = DbFactory.Create();
-            int begindate = TranslateHelper.ConvertDate(parameters.beginDate);
-            int enddate = TranslateHelper.ConvertDate(parameters.endDate);
+            int begindate = TranslateHelper.ConvertDate(parameters.BeginDate);
+            int enddate = TranslateHelper.ConvertDate(parameters.EndDate);
             dbParameters.Add(db.NewParameter("BeginDate", begindate, DbType.Int32));
             dbParameters.Add(db.NewParameter("EndDate", enddate, DbType.Int32));
-            dbParameters.Add(db.NewParameter("SearchColumns", parameters.searchColumns, DbType.String));
+            dbParameters.Add(db.NewParameter("SearchColumns", parameters.SearchColumns, DbType.String));
             dbParameters.Add(db.NewParameter("DisplayStart", parameters.DisplayStart, DbType.Int32));
             dbParameters.Add(db.NewParameter("DisplayLength", parameters.DisplayLength, DbType.Int32));
             dbParameters.Add(db.NewParameter("CurrentPage", parameters.CurrentPage, DbType.Int32));
-            dbParameters.Add(db.NewParameter("SortDirection", parameters.sortDirection, DbType.String));
+            dbParameters.Add(db.NewParameter("SortDirection", parameters.SortDirection, DbType.String));
             dbParameters.Add(db.NewParameter("OrderField", parameters.OrderField, DbType.String));
 
             var pageCount = db.NewParameter("PageCount", 0, DbType.Int32);
@@ -821,11 +798,11 @@ namespace Dashboard.Logic
                 DataRowReader reader = new DataRowReader(dt.Rows[i]);
                 StrategyDetail detail = new StrategyDetail()
                 {
-                    strategyName = reader.GetString("strategyname"),
-                    stratInfo = reader.GetString("stratinfo"),
-                    seriesNo = reader.GetString("seriesno"),
-                    strategyGroup = reader.GetString("groupname"),
-                    createDate = reader.GetString("createdate")
+                    StrategyName = reader.GetString("strategyname"),
+                    StratInfo = reader.GetString("stratinfo"),
+                    SeriesNo = reader.GetString("seriesno"),
+                    StrategyGroup = reader.GetString("groupname"),
+                    CreateDate = reader.GetString("createdate")
                 };
                 result.List.Add(detail);
             }
@@ -838,15 +815,17 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取策略交易明细子项
         /// </summary>
+        /// <param name="parameters.BeginDate">开仓日期</param>
+        /// <param name="parameters.StrategyName">策略名</param>
         /// <returns>用户ID，开仓时间、股票编号、股票名称、交易方向</returns>
         public static List<StrategyDetail> GetSubStrategyTradeDetail(StrategyDetail parameters)
         {
             List<StrategyDetail> result = new List<StrategyDetail>();
             List<DbParameter> dbParameters = new List<DbParameter>();
             var db = DbFactory.Create();
-            int begindate = TranslateHelper.ConvertDate(parameters.beginDate);
+            int begindate = TranslateHelper.ConvertDate(parameters.BeginDate);
             dbParameters.Add(db.NewParameter("CreateDate", begindate, DbType.Int32));
-            dbParameters.Add(db.NewParameter("StrategyName", parameters.strategyName, DbType.String));
+            dbParameters.Add(db.NewParameter("StrategyName", parameters.StrategyName, DbType.String));
             DataTable dt = db.GetDataTable("sp_GetSubStrategyTradeDetail", dbParameters);
 
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -1098,16 +1077,16 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取用户自建策略手动上载和自动上传策略的交易量情况
         /// </summary>
-        /// <param name="da">beginDate 开始月份</param>
-        /// <param name="da">endDate 结束月份</param>
+        /// <param name="da.BeginDate">开始月份</param>
+        /// <param name="da.EndDate">结束月份</param>
         /// <returns>月份、自动上传交易量、手动上载交易量列表</returns>
         public static List<StrategyDetail> GetCustomerCreatedStrategy(StrategyDetail da)
         {
             List<StrategyDetail> result = new List<StrategyDetail>();
             List<DbParameter> parameter = new List<DbParameter>();
             var db = DbFactory.Create();
-            int beginmonth = TranslateHelper.ConvertDate(da.beginDate);
-            int endmonth = TranslateHelper.ConvertDate(da.endDate);
+            int beginmonth = TranslateHelper.ConvertDate(da.BeginDate);
+            int endmonth = TranslateHelper.ConvertDate(da.EndDate);
             parameter.Add(db.NewParameter("Beginmonth", beginmonth, DbType.Int32));
             parameter.Add(db.NewParameter("Endmonth", endmonth, DbType.Int32));
 
@@ -1130,12 +1109,13 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取用户自建策略客户交易量TOP5
         /// </summary>
-        /// <param name="dateTime">开始月份与结束月份</param>
+        /// <param name="da.BeginDate">开始月份</param>
+        /// <param name="da.EndDate">开始月份</param>
         /// <returns>符合条件的客户交易总量之和</returns>
         public static List<TopMatchQty> GetCustomerCreateStrategyTopMatchQty(StrategyDetail da)
         {
-            int bmonth = TranslateHelper.ConvertDate(da.beginDate);
-            int emonth = TranslateHelper.ConvertDate(da.endDate);
+            int bmonth = TranslateHelper.ConvertDate(da.BeginDate);
+            int emonth = TranslateHelper.ConvertDate(da.EndDate);
             List<TopMatchQty> result = new List<TopMatchQty>();
             using (var db = new ModelDataContainer())
             {
@@ -1169,8 +1149,8 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取新增用户情况
         /// </summary>
-        /// <param name="da">beginDate 开始月份</param>
-        /// <param name="da">endDate 结束月份</param>
+        /// <param name="da.BeginMonth">开始月份</param>
+        /// <param name="da.EndMonth">结束月份</param>
         /// <returns>月份、新增机构用户数、新增个人用户数</returns>
         public static List<CustomerAmount> GetCreateCustomer(CustomerAmount da)
         {
@@ -1200,8 +1180,8 @@ namespace Dashboard.Logic
         /// <summary>
         /// 获取活跃用户情况
         /// </summary>
-        /// <param name="da">beginDate 开始月份</param>
-        /// <param name="da">endDate 结束月份</param>
+        /// <param name="da.BeginMonth">开始月份</param>
+        /// <param name="da.EndMonth">结束月份</param>
         /// <returns>月份、活跃机构用户数、活跃个人用户数、用户总数</returns>
         public static RecordResult<CustomerAmount> GetAliveCustomer(CustomerAmount da)
         {

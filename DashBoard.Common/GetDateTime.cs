@@ -16,12 +16,12 @@ namespace Dashboard.Common
         /// <summary>
         /// 开始时间
         /// </summary>
-        public string begindate { get; set; }
+        public string BeginDate { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public string enddate { get; set; }
+        public string EndDate { get; set; }
 
         /// <summary>
         /// 获取撤单/委托比大于60%的客户id和比值

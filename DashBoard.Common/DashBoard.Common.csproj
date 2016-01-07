@@ -64,7 +64,6 @@
     <Compile Include="StrategyType.cs" />
     <Compile Include="SystemInfo.cs" />
     <Compile Include="TopMatchQty.cs" />
-    <Compile Include="TradeInform.cs" />
     <Compile Include="TradeDayAmount.cs" />
     <Compile Include="TradeDayVolume.cs" />
     <Compile Include="TradeDetails.cs" />

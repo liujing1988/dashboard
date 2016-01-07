@@ -15,47 +15,47 @@ namespace DashBoard.Common
         /// <summary>
         /// 开始时间
         /// </summary>
-        public string beginDate { get; set; }
+        public string BeginDate { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public string endDate { get; set; }
+        public string EndDate { get; set; }
 
         /// <summary>
         /// 策略名
         /// </summary>
-        public string strategyName { get; set; }
+        public string StrategyName { get; set; }
 
         /// <summary>
         /// 策略类型名
         /// </summary>
-        public string strategyKindName { get; set; }
+        public string StrategyKindName { get; set; }
 
         /// <summary>
         /// 策略描述
         /// </summary>
-        public string stratInfo { get; set; }
+        public string StratInfo { get; set; }
 
         /// <summary>
         /// 系列号
         /// </summary>
-        public string seriesNo { get; set; }
+        public string SeriesNo { get; set; }
 
         /// <summary>
         ///策略组
         /// </summary>
-        public string strategyGroup { get; set; }
+        public string StrategyGroup { get; set; }
 
         /// <summary>
         ///开仓时间
         /// </summary>
-        public string createDate { get; set; }
+        public string CreateDate { get; set; }
 
         /// <summary>
         /// 搜索内容
         /// </summary>
-        public string searchColumns { get; set; }
+        public string SearchColumns { get; set; }
 
         /// <summary>
         /// 当前页第一条记录是总记录数的第几条记录
@@ -70,7 +70,7 @@ namespace DashBoard.Common
         /// <summary>
         /// 排序方式（正序、倒序）
         /// </summary>
-        public string sortDirection { get; set; }
+        public string SortDirection { get; set; }
 
         /// <summary>
         /// 总页数
@@ -117,16 +117,34 @@ namespace DashBoard.Common
         /// </summary>
         public int ManualQty { get; set; }
 
+        /// <summary>
+        /// 客户ID
+        /// </summary>
         public string CustId { get; set; }
 
+        /// <summary>
+        /// 开仓时间
+        /// </summary>
         public string CreateTime { get; set; }
 
+        /// <summary>
+        /// 股票代码
+        /// </summary>
         public string StockCode { get; set; }
 
+        /// <summary>
+        /// 股票名称
+        /// </summary>
         public string StockName { get; set; }
 
+        /// <summary>
+        /// 交易方向
+        /// </summary>
         public string BSFlag { get; set; }
 
+        /// <summary>
+        /// 委托量
+        /// </summary>
         public string OrderQty { get; set; }
     }
 }

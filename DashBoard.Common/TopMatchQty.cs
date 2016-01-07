@@ -5,6 +5,10 @@ using System.Text;
 
 namespace DashBoard.Common
 {
+    /// <summary>
+    /// 交易量
+    /// 刘静
+    /// </summary>
     public class TopMatchQty
     {
         /// <summary>

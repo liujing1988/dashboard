@@ -48,16 +48,16 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
             if (param.extra_search == null)
             {
                 DateTime dt = DateTime.Now;
-                da.beginDate = dt.AddMonths(-1).ToString("yyyy-MM-dd");
-                da.endDate = dt.ToString("yyyy-MM-dd");
+                da.BeginDate = dt.AddMonths(-1).ToString("yyyy-MM-dd");
+                da.EndDate = dt.ToString("yyyy-MM-dd");
             }
             else
             {
-                da.beginDate = param.extra_search.Substring(0, 10);
-                da.endDate = param.extra_search.Substring(param.extra_search.IndexOf('-', 10) + 2, 10);
+                da.BeginDate = param.extra_search.Substring(0, 10);
+                da.EndDate = param.extra_search.Substring(param.extra_search.IndexOf('-', 10) + 2, 10);
             }
 
-            da.searchColumns = param.searchColumns;
+            da.SearchColumns = param.searchColumns;
 
             var sortColumnIndex = Convert.ToInt32(Request["iSortCol_0"]);
             string orderfield = null;
@@ -85,14 +85,14 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
             da.OrderField = orderfield;
             if(param.sSearch != null)
             {
-                da.searchColumns = param.sSearch;
+                da.SearchColumns = param.sSearch;
             }
             else
             {
-                da.searchColumns = "";
+                da.SearchColumns = "";
             }
             var sortDirection = Request["sSortDir_0"]; // asc or desc
-            da.sortDirection = sortDirection;
+            da.SortDirection = sortDirection;
             da.DisplayLength = param.iDisplayLength;
             da.DisplayStart = param.iDisplayStart;
             da.CurrentPage = param.iDisplayStart / param.iDisplayLength;
@@ -100,8 +100,8 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
 
 
             var data = from c in result.List
-                       select new[] { "",c.strategyName, c.stratInfo,
-                          c.seriesNo, c.strategyGroup,c.createDate };
+                       select new[] { "",c.StrategyName, c.StratInfo,
+                          c.SeriesNo, c.StrategyGroup,c.CreateDate };
 
             return Json(new
             {

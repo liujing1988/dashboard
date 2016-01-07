@@ -31,11 +31,11 @@ namespace Dashboard.Common
         /// <summary>
         /// 查询开始日期
         /// </summary>
-        public string beginDate { get; set; }
+        public string BeginDate { get; set; }
 
         /// <summary>
         /// 查询结束日期
         /// </summary>
-        public string endDate { get; set; }
+        public string EndDate { get; set; }
     }
 }

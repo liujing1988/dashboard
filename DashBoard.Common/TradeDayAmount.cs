@@ -5,11 +5,29 @@ using System.Text;
 
 namespace DashBoard.Common
 {
+    /// <summary>
+    /// 日交易量
+    /// </summary>
     public class TradeDayAmount
     {
-        public string tradeDate { get; set; }
-        public decimal tradeAmount { get; set; }
-        public decimal creditTrade { get; set; }
-        public int custId { get; set; }
+        /// <summary>
+        /// 交易日期
+        /// </summary>
+        public string TradeDate { get; set; }
+
+        /// <summary>
+        /// 交易量
+        /// </summary>
+        public decimal TradeAmount { get; set; }
+
+        /// <summary>
+        /// 信用交易
+        /// </summary>
+        public decimal CreditTrade { get; set; }
+
+        /// <summary>
+        /// 客户ID
+        /// </summary>
+        public int CustId { get; set; }
     }
 }
