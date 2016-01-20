@@ -48,7 +48,8 @@ function GetBuyData(da) {
                     high: '400px',
                     type: 'bar',
                     animation: Highcharts.svg, // don't animate in old IE               
-                    marginRight: 10,
+                    marginRight: 10
+                },
                     events: {
                         load: function () {
 
@@ -81,7 +82,6 @@ function GetBuyData(da) {
                                 });
                             }, refresh * 1000);
                         }
-                    }
                 },
                 title: {
                     text: '信用账户净买入担保标的前10'
@@ -133,7 +133,7 @@ function GetBuyData(da) {
                     }
                 }],
                 lang: {
-                    noData: "Nichts zu anzeigen"
+                    noData: "无数据!"
                 },
                 noData: {
                     style: {

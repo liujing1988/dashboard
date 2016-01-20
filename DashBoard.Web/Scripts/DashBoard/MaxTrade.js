@@ -72,7 +72,8 @@
         $('#PRevoke').highcharts({
             chart: {
                 high:'400px',
-                type: 'column',
+                type: 'column'
+            },
                 events: {
                     load: function () {
 
@@ -130,7 +131,7 @@
                             });
 
                         }, 1000 * 60);
-                    }
+                    
                 }
             },
             title: {
@@ -201,7 +202,7 @@
                 yAxis: 1
             }],
             lang: {
-                noData: "Nichts zu anzeigen"
+                noData: "无数据！"
             },
             noData: {
                 style: {

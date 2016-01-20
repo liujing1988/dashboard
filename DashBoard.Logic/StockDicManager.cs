@@ -8,8 +8,8 @@ namespace DashBoard.Logic
 {
     public class StockDicManager
     {
-        //private static string _dictPath = Path.GetFullPath("App_Data\\stock.dat");
-        private static string _dictPath = "D:\\DashBoard\\DashBoard.Web\\App_Data\\stock.dat";
+        private static string _dictPath = AppDomain.CurrentDomain.BaseDirectory + "App_Data\\stock.dat";//获取物理路径.
+        //private static string _dictPath = "D:\\DashBoard\\DashBoard.Web\\App_Data\\stock.dat";
         /// <summary>
         /// 字典文件路径
         /// </summary>

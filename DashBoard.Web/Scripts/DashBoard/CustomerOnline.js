@@ -46,7 +46,6 @@
                 });
 
                 $('#CreditCustomerOnline').highcharts({
-                    char: {
                         events: {
                             load: function () {
 
@@ -101,7 +100,6 @@
                                     });
 
                                 }, 1000 * 60);
-                            }
                         }
                     },
                     title: {
@@ -165,7 +163,17 @@
                         size: 100,
                         showInLegend: false,
 
-                    }]
+                    }],
+                    lang: {
+                        noData: "无数据!"
+                    },
+                    noData: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            color: '#303030'
+                        }
+                    }
                 })
                 //var chart;
                 //$('#CreditCustomerOnline').highcharts({

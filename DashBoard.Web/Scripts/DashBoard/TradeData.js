@@ -136,7 +136,8 @@ function GetRealTime(begindate, enddate) {
                     chart: {
                         type: 'column',
                         animation: Highcharts.svg, // don't animate in old IE               
-                        marginRight: 10,
+                        marginRight: 10
+                    },
                         events: {
                             load: function () {
 
@@ -166,7 +167,7 @@ function GetRealTime(begindate, enddate) {
 
                                 }, 1000 * 60);
                             }
-                        }
+                        
                     },
                     title: {
                         text: '实时交易量'
@@ -216,7 +217,7 @@ function GetRealTime(begindate, enddate) {
                         data: MinuteTrade
                     }],
                     lang: {
-                        noData: "Nichts zu anzeigen"
+                        noData: "无数据！"
                     },
                     noData: {
                         style: {

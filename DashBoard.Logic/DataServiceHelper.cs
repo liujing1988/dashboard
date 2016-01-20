@@ -28,8 +28,8 @@ namespace Dashboard.Logic
         public static List<CustomerAmount> GetCustomer(CustomerAmount da)
         {
             List<CustomerAmount> result = new List<CustomerAmount>();
-            int begindate = Int32.Parse(da.BeginMonth.Replace("-", ""));
-            int enddate = Int32.Parse(da.EndMonth.Replace("-", ""));
+            int begindate = TranslateHelper.ConvertDate(da.BeginMonth);
+            int enddate = TranslateHelper.ConvertDate(da.EndMonth);
             using (var db = new ModelDataContainer())
             {
                 var list = db.sp_GetCustomer(begindate, enddate);
@@ -1157,8 +1157,8 @@ namespace Dashboard.Logic
             List<CustomerAmount> result = new List<CustomerAmount>();
             List<DbParameter> parameter = new List<DbParameter>();
             var db = DbFactory.Create();
-            int beginmonth = Int32.Parse(da.BeginMonth.Replace("-", ""));
-            int endmonth = Int32.Parse(da.EndMonth.Replace("-", "")); ;
+            int beginmonth = TranslateHelper.ConvertDate(da.BeginMonth);
+            int endmonth = TranslateHelper.ConvertDate(da.EndMonth); ;
             parameter.Add(db.NewParameter("Begindate", beginmonth, DbType.Int32));
             parameter.Add(db.NewParameter("Enddate", endmonth, DbType.Int32));
             DataTable dt = db.GetDataTable("sp_GetCreateCustomer", parameter);

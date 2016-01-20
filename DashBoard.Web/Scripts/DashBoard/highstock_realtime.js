@@ -172,7 +172,7 @@ $.ajax(
                     }],
                     
                     lang: {
-                        noData: "Nichts zu anzeigen"
+                        noData: "无数据！"
                     },
                     noData: {
                         style: {

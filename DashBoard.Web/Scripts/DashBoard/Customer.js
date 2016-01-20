@@ -172,9 +172,19 @@ function GetCustomer(BeginMonth, EndMonth) {
                         },
                         stack: 'fmale'
                     }
-                    ]
+                    ],
+                    lang: {
+                        noData: "无数据!"
+                    },
+                    noData: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            color: '#303030'
+                        }
+                    }
                 });
-            },//end success
+            }//end success
         });
 }
 
@@ -230,9 +240,19 @@ function GetAliveCustomer(BeginMonth, EndMonth) {
                         data: alivepersoncustomer,
                         color: 'green'
                     }
-                    ]
+                    ],
+                    lang: {
+                        noData: "无数据!"
+                    },
+                    noData: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            color: '#303030'
+                        }
+                    }
                 });
-            },//end success
+            }//end success
         });
 }
 
@@ -291,8 +311,18 @@ function GetCreateCustomer(BeginMonth, EndMonth) {
                         type: 'line',
                         name: '新增用户数',
                         data: tcreatecustomer
-                    }]
+                    }],
+                    lang: {
+                        noData: "无数据!"
+                    },
+                    noData: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            color: '#303030'
+                        }
+                    }
                 });
-            },//end success
+            }//end success
         });
 }

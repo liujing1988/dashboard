@@ -471,6 +471,8 @@
     <Content Include="Scripts\highcharts\highcharts.js" />
     <Content Include="Scripts\highcharts\highcharts4.19.js" />
     <Content Include="Scripts\highcharts\highstock.js" />
+    <Content Include="Scripts\highcharts\no-data-to-display.js" />
+    <Content Include="Scripts\highcharts\no-data-to-display.src.js" />
     <Content Include="Scripts\highcharts\solid-gauge.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery-1.8.3.min.js" />

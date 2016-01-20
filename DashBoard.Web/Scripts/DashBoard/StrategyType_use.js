@@ -117,7 +117,6 @@ function GetType(begindate, enddate) {
 
                 var pieArray = new Array();
                 if (result == "") {
-                    alert("找不到符合条件的数据！");
                 }
                 else {
                     //饼图数据转换
@@ -138,6 +137,7 @@ function GetType(begindate, enddate) {
                         for (var k = 0; k < pie.length; k++)
                             pieArray.push(pie[k]);
                     }
+                }
                     //添加元素
                     //饼图
                     $('#pie').highcharts({
@@ -166,9 +166,19 @@ function GetType(begindate, enddate) {
                         series: [{
                             name: '成交量',
                             data: pieArray
-                        }]
+                        }],
+                        lang: {
+                            noData: "无数据!"
+                        },
+                        noData: {
+                            style: {
+                                fontWeight: 'bold',
+                                fontSize: '15px',
+                                color: '#303030'
+                            }
+                        }
                     });
-                }
+                
             },//end success
             error: function (err) { throw err }
         });
@@ -194,7 +204,6 @@ function GetOpen(begindate, enddate) {
 
                 var pieArray = new Array();
                 if (result == "") {
-                    alert("找不到符合条件的数据！");
                 }
                 else {
                     //数据转换
@@ -204,6 +213,7 @@ function GetOpen(begindate, enddate) {
                             nustratetp.push(result[i].NumStrategyType);
                         }
                     }
+                }
 
                     //添加元素
                     //柱状图
@@ -255,9 +265,19 @@ function GetOpen(begindate, enddate) {
                                     textShadow: '0 0 3px black'
                                 }
                             }
-                        }]
+                        }],
+                        lang: {
+                            noData: "无数据!"
+                        },
+                        noData: {
+                            style: {
+                                fontWeight: 'bold',
+                                fontSize: '15px',
+                                color: '#303030'
+                            }
+                        }
                     });
-                }
+                
             },//end success
             error: function (err) { throw err }
         });

@@ -188,7 +188,17 @@ function GetStrategy(begindate, enddate) {
                       {
                           name:'手动上载',
                           data:ManualQty
-                      }]
+                      }],
+                      lang: {
+                          noData: "无数据!"
+                      },
+                      noData: {
+                          style: {
+                              fontWeight: 'bold',
+                              fontSize: '15px',
+                              color: '#303030'
+                          }
+                      }
                   });
 
               })

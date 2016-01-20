@@ -83,7 +83,8 @@
                     chart: {
                         spacingBottom: 0,
                         height: 400,
-                        type: 'column',
+                        type: 'column'
+                    },
                         events: {
                             load: function () {
 
@@ -167,7 +168,7 @@
 
                                 }, 1000 * 60);
                             }
-                        }
+                        
                     },
                     title: {
                         useHTML: true,
@@ -205,7 +206,7 @@
                         enabled: false
                     },
                     lang: {
-                        noData: "Nichts zu anzeigen"
+                        noData: "无数据!"
                     },
                     noData: {
                         style: {

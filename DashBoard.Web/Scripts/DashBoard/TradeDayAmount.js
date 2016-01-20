@@ -22,36 +22,36 @@ $.ajax(
             //var Date = result[0].tradeDate;
 
             //获取当日第五名交易量
-            var minresult = result[0].tradeAmount;
+            var minresult = result[0].TradeAmount;
             for (var i = 0; i < result.length; i++) {
-                if (minresult > result[i].tradeAmount) {
-                    minresult = result[i].tradeAmount;
+                if (minresult > result[i].TradeAmount) {
+                    minresult = result[i].TradeAmount;
                 }
             }
             //实时曲线数据转换
-            if (result[0].custId != null && minresult / 1000000 >= 1) {
+            if (result[0].CustId != null && minresult / 1000000 >= 1) {
                 for (var i = 0; i < result.length; i++) {
-                    CustId.push(result[i].custId);
-                    TradeAmount.push(result[i].tradeAmount / 1000000);
-                    if (result[i].creditTrade > 0) {
-                        CreditTrade.push(result[i].creditTrade / 1000000);
+                    CustId.push(result[i].CustId);
+                    TradeAmount.push(result[i].TradeAmount / 1000000);
+                    if (result[i].CreditTrade > 0) {
+                        CreditTrade.push(result[i].CreditTrade / 1000000);
                     } else {
                         CreditTrade.push(0);
                     }
-                    NormalTrade.push((result[i].tradeAmount - result[i].creditTrade) / 1000000);
+                    NormalTrade.push((result[i].TradeAmount - result[i].CreditTrade) / 1000000);
                 }
                 unit = "百万元";
             }
             else {
                 for (var i = 0; i < result.length; i++) {
-                    CustId.push(result[i].custId);
-                    TradeAmount.push(result[i].tradeAmount);
-                    if (result[i].creditTrade > 0) {
-                        CreditTrade.push(result[i].creditTrade);
+                    CustId.push(result[i].CustId);
+                    TradeAmount.push(result[i].TradeAmount);
+                    if (result[i].CreditTrade > 0) {
+                        CreditTrade.push(result[i].CreditTrade);
                     } else {
                         CreditTrade.push(0);
                     }
-                    NormalTrade.push(result[i].tradeAmount - result[i].creditTrade);
+                    NormalTrade.push(result[i].TradeAmount - result[i].CreditTrade);
                 }
                 unit = "元";
             }
@@ -71,7 +71,8 @@ $.ajax(
                         high: '400px',
                         type: 'bar',
                         animation: Highcharts.svg, // don't animate in old IE               
-                        marginRight: 10,
+                        marginRight: 10
+                    },
                         events: {
                             load: function () {
 
@@ -95,16 +96,16 @@ $.ajax(
                                             var rNormalTrade = [];
                                             if (data.lenth > 0) {
                                                 //实时曲线数据转换
-                                                if (data[0].custId != null) {
+                                                if (data[0].CustId != null) {
                                                     for (var i = 0; i < data.length; i++) {
-                                                        rCustId[i] = data[i].custId;
-                                                        rTradeAmount[i] = data[i].tradeAmount;
-                                                        if (data[i].creditTrade > 0) {
-                                                            rCreditTrade.push(data[i].creditTrade);
+                                                        rCustId[i] = data[i].CustId;
+                                                        rTradeAmount[i] = data[i].TradeAmount;
+                                                        if (data[i].CreditTrade > 0) {
+                                                            rCreditTrade.push(data[i].CreditTrade);
                                                         } else {
                                                             rCreditTrade.push(0);
                                                         }
-                                                        rNormalTrade.push(data[i].tradeAmount - data[i].creditTrade);
+                                                        rNormalTrade.push(data[i].TradeAmount - data[i].CreditTrade);
                                                     }
                                                 }
                                                 xAxis.setCategories(rCustId);
@@ -115,7 +116,7 @@ $.ajax(
                                     });
 
                                 }, 60000);
-                            }
+                            
                         }
                     },
                     title: {
@@ -189,7 +190,7 @@ $.ajax(
                         }
                     }],
                     lang: {
-                        noData: "Nichts zu anzeigen"
+                        noData: "无数据！"
                     },
                     noData: {
                         style: {

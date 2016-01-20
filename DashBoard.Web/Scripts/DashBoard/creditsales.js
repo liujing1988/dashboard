@@ -44,9 +44,8 @@ function GetSaleData(da) {
             $('#CreditSalesAmountTop').highcharts({
                 chart: {
                     high: '400px',
-                    type: 'bar',
-                    animation: Highcharts.svg, // don't animate in old IE               
-                    marginRight: 10,
+                    type: 'bar'
+                },
                     events: {
                         load: function () {
 
@@ -80,7 +79,6 @@ function GetSaleData(da) {
                                 });
 
                             }, refresh * 1000);
-                        }
                     }
                 },
                 title: {
@@ -132,7 +130,7 @@ function GetSaleData(da) {
                     }
                 }],
                 lang: {
-                    noData: "Nichts zu anzeigen"
+                    noData: "无数据!"
                 },
                 noData: {
                     style: {

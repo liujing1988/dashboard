@@ -40,7 +40,8 @@ $(function () {
             chart: {
                 type: 'column',  //图表类型为柱状图
                 animation: Highcharts.svg, // don't animate in old IE               
-                marginRight: 10,
+                marginRight: 10
+            },
                 events: {
                     load: function () {
 
@@ -70,7 +71,7 @@ $(function () {
                                         
                         }, 1000 * 60);
                     }
-                }
+                
             },
             title: {
                 text: '实时交易量'
@@ -120,7 +121,7 @@ $(function () {
                 data: MinuteTrade
             }],
             lang: {
-                noData: "Nichts zu anzeigen"
+                noData: "无数据！"
             },
             noData: {
                 style: {
