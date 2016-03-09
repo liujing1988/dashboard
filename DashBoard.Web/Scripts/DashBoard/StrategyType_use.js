@@ -148,7 +148,7 @@ function GetType(begindate, enddate) {
                             plotShadow: false
                         },
                         title: {
-                            text: '模块使用情况统计'
+                            text: '策略使用情况统计'
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <b>{point.y}股</b>'
@@ -225,7 +225,7 @@ function GetOpen(begindate, enddate) {
                             plotShadow: false
                         },
                         title: {
-                            text: '模块开仓次数统计'
+                            text: '策略开仓次数统计'
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <b>{point.y}次</b>'

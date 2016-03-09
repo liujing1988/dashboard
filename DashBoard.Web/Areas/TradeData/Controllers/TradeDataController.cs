@@ -100,7 +100,7 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
 
 
             var data = from c in result.List
-                       select new[] { "",c.StrategyName, c.StratInfo,
+                       select new[] { c.StrategyName, c.StratInfo,
                           c.SeriesNo, c.StrategyGroup,c.CreateDate };
 
             return Json(new

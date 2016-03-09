@@ -6,11 +6,11 @@ var table; //定义全局变量表格
 function format(d) {
     var s = '';
     var da = {
-        "strategyName": d[1],
-        "beginDate": d[5]
+        "strategyName": d[0],
+        "beginDate": d[4]
     };
     $.ajax({
-        url: "/DashBoard/api/GetTradeDate/GetSubStrategyTradeDetail",
+        url: "/dashboard/api/GetTradeDate/GetSubStrategyTradeDetail",
         type: "post",
         data: da,
         async: false,
@@ -52,25 +52,31 @@ $(document).ready(function ($) {  //加载页面
         "bProcessing": true,
         "aoColumns": [  //初始化列名
             {
-                "className": 'details-control',
+                //"fnRender": function (oObj) {  //数据填充
+                //    return '<a href=\"Details/' +
+                //    oObj.aData[0] + '\">View</a>';
+                //},
+                "class": 'details-control',
                 "orderable": false,
                 "data": null,
                 "defaultContent": '',
-                "fnRender": function (oObj) {  //数据填充
-                    return '<a href=\"Details/' +
-                    oObj.aData[0] + '\">View</a>';
-                }
+                "bSortable": false  //是否启用排序
             },
             {
-                "sName": "strategyname", //第一列列名
-                "bSearchable": true, //是否启动搜索
-                "bSortable": true  //是否启用排序
+                //"sName": "strategyname", //第一列列名
+                //"bSearchable": true, //是否启动搜索
+                //"bSortable": true  //是否启用排序
+                data:0
 
             },
-            { "sName": "stratinfo" },
-            { "sName": "seriesno" },
-            { "sName": "groupname" },
-            { "sName": "createdate" }
+            { data: 1 },
+            { data: 2 },
+            { data: 3 },
+            { data: 4 },
+            //{ "sName": "stratinfo" },
+            //{ "sName": "seriesno" },
+            //{ "sName": "groupname" },
+            //{ "sName": "createdate" }
         ],
         "language": { //汉化
             "sProcessing": "处理中...",
@@ -100,6 +106,7 @@ $(document).ready(function ($) {  //加载页面
                 "<'row'<'col-xs-6'l<'#mytoolbox'>><'col-xs-6'f>r>" +
                 "t" +
                 "<'row'<'col-xs-6'i><'col-xs-6'p>>",
+        
         initComplete: initComplete  //回调函数，表格加载完之后调用
 
     });

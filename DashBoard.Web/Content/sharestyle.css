@@ -86,6 +86,7 @@ body{
 .index_headertop{
 	overflow: hidden;
 	background:#2992DA;
+    height:60px;
 	border-bottom:1px solid #0476c4;
 }
 .index_headerbot{
