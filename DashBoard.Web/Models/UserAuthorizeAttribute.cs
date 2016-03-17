@@ -48,8 +48,8 @@ namespace DashBoard.Web.Models
         {
             //base.HandleUnauthorizedRequest(filterContext);
             string sid = filterContext.HttpContext.Request["sessionid"];
-            string flogin = "未登录！";
-            string loginurl = ConfigurationManager.AppSettings.Get("LoginUrl");
+            string url = "http://" + HttpContext.Current.Request.Url.Host;
+            string loginurl = url + ConfigurationManager.AppSettings.Get("LoginUrl");
             if (!string.IsNullOrEmpty(sid))
             {
                 if (Result.Code == 2)
