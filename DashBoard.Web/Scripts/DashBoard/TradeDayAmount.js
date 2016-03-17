@@ -3,7 +3,7 @@
 
 $.ajax(
 {
-    url: "/DashBoard/api/GetTradeDate/GetDayAmount", //表示提交给的action 
+    url: "/dashboard/api/GetTradeDate/GetDayAmount", //表示提交给的action 
     type: "post",   //提交方法 
     datatype: "json",//数据类型
     success: function (result) {

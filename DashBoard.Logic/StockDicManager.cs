@@ -60,12 +60,12 @@ namespace DashBoard.Logic
         /// </summary>
         /// <param name="stockCode"></param>
         /// <returns></returns>
-        public static string GetStockName(string stockCode)
+        public static string GetStockName(string stockCode, string market)
         {
             string result = string.Empty;
             foreach (var item in _stockList)
             {
-                if (item.StockCode == stockCode)
+                if (item.StockCode == stockCode && item.Market == Markets[int.Parse(market) - 1])
                 {
                     result = item.StockName;
                     break;
@@ -73,6 +73,15 @@ namespace DashBoard.Logic
             }
             return result;
         }
+
+        /// <summary>
+        /// 行情市场列表
+        /// SH：上海证券市场代码，SZ：深圳证券市场代码
+        /// CFFEX：中国金融期货交易所，SHEF：上海期货交易所
+        /// CZCE：郑州商品交易所，DCE：大连商品交易所
+        /// ZZZS：指数，SHOP：期权
+        /// </summary>
+        public static string[] Markets = { "SH", "SZ", "CFFEX", "CZCE", "DCE", "SHFE" };
 
         /// <summary>
         /// 根据股票代码获取股票信息

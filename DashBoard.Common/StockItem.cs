@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DashBoard.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,5 +33,7 @@ namespace Dashboard.Common
         /// 搜索关键词
         /// </summary>
         public string SearchText { get; set; }
+
+        
     }
 }

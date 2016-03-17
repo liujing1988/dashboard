@@ -90,9 +90,7 @@ $.ajax(
                                             if (data.length > 0) {
                                                 if (data[0].Minute != null) {
                                                     for (var i = 0; i < data.length; i++) {
-                                                        var s = data[i].Day + ' ' + data[i].Minute;
-                                                        h[i] = new Date(Date.parse(data[i].Day.replace(/-/g, "/")));
-                                                        rd = new Date(Date.parse(s.replace(/-/g, "/")));
+                                                        rd = new Date(Date.parse(data[i].Minute.replace(/-/g, "/")));
                                                         rRealtime.push(Number(Date.UTC(rd.getFullYear(), rd.getMonth(), rd.getDate(), rd.getHours() - 8, rd.getMinutes())));
                                                         rMinuteTrade.push(data[i].TradeAmount);
                                                         rdata.push([Realtime[i], MinuteTrade[i]]);

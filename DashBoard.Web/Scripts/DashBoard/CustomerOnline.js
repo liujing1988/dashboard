@@ -32,11 +32,14 @@
         var NormalCustomer = NumCustomer - CreditCustomer;
         //服务器日期
         var ServerDate = result.ServerDate;
-        var array = [['两融用户', CreditCustomer / NumCustomer * 100], ['普通用户', NormalCustomer / NumCustomer * 100]];
         var pieArray = [];
-        for (var k = 0; k < array.length; k++) {
-            pieArray.push(array[k]);
+        if (CreditCustomer > 0 && NormalCustomer > 0) {
+            var array = [['两融用户', CreditCustomer / NumCustomer * 100], ['普通用户', NormalCustomer / NumCustomer * 100]];
+            for (var k = 0; k < array.length; k++) {
+                pieArray.push(array[k]);
+            }
         }
+        
         $(function () {
             $(document).ready(function () {
                 Highcharts.setOptions({

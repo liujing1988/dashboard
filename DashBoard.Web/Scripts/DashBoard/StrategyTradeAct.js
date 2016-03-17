@@ -90,6 +90,7 @@
                         text: '本月功能热度排名'
                     },
                     xAxis: {
+                        allowDecimals:false, //不允许刻度有小数
                         categories: StrategyName
                     },
                     yAxis: {
