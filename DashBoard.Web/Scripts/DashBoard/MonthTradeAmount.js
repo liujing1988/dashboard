@@ -129,27 +129,28 @@ function GetMonth(begindate, enddate, munit, strategyname, stratkindname, series
               var Month = [];
               //月成交量
               var MonthAccont = [];
+
               //月曲线图数据转换
               var unit = "";
               if (result.length > 0) {
                   if (munit == "003") {
                       for (var i = 0; i < result.length; i++) {
                           Month.push(result[i].Month);
-                          MonthAccont.push(result[i].MatchAmount / 100000000);
+                          MonthAccont.push(changeTwoDecimal(result[i].MatchAmount / 100000000));
                           unit = "亿元";
                       }
                   }
                   else if (munit == "002") {
                       for (var i = 0; i < result.length; i++) {
                           Month.push(result[i].Month);
-                          MonthAccont.push(result[i].MatchAmount / 10000);
+                          MonthAccont.push(changeTwoDecimal(result[i].MatchAmount / 10000));
                           unit = "万元";
                       }
                   }
                   else {
                       for (var i = 0; i < result.length; i++) {
                           Month.push(result[i].Month);
-                          MonthAccont.push(result[i].MatchAmount);
+                          MonthAccont.push(changeTwoDecimal(result[i].MatchAmount));
                           unit = "元";
                       }
                   }
@@ -219,7 +220,9 @@ function GetMonth(begindate, enddate, munit, strategyname, stratkindname, series
                               borderWidth: 0,
                               dataLabels: {
                                   enabled: true,
-                                  format: '{point.y:.1f}'+unit
+                                  formatter: function () {
+                                      return Highcharts.numberFormat(this.y, 2, '.') + unit;
+                                  }
                               }
                           }
                       },
@@ -432,7 +435,7 @@ function GetStrategyTopMatchQty(begindate, enddate, strategyname, stratkindname,
         "seriesNo": seriesno
     }
     $.ajax({
-        url: '/dashboard/api/GetTradeDate/GetTopMatchQty',
+        url: '/dashboard/api/GetTradeDate/GetTopMatchAmt',
         data: da,
         type: 'post',
         success: function (result) {
@@ -455,7 +458,7 @@ function GetStrategyTopMatchQty(begindate, enddate, strategyname, stratkindname,
                             $(this).html(item.StrategyName);
                             break;
                         case (2):
-                            $(this).html(item.MatchQty);
+                            $(this).html(addCommas(changeTwoDecimal(item.MatchAmt)));
                             break;
                     }//end switch  
                 });//end children.each  
@@ -468,4 +471,28 @@ function GetStrategyTopMatchQty(begindate, enddate, strategyname, stratkindname,
             $("tr#clone").show();
         }
     })
+}
+
+function changeTwoDecimal(x) {
+    var f_x = parseFloat(x);
+    if (isNaN(f_x)) {
+        alert('function:changeTwoDecimal->parameter error');
+        return false;
+    }
+    f_x = Math.round(f_x * 100) / 100;
+
+    return f_x;
+}
+
+function addCommas(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    console.log(x.length)
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
 }

@@ -99,7 +99,7 @@ function GetType(begindate, enddate) {
     }
     $.ajax(
         {
-            url: "/DashBoard/api/GetCustomer/GetModuleName", //表示提交给的action 
+            url: "/DashBoard/api/GetCustomer/GetStrategyType", //表示提交给的action 
             type: "post",   //提交方法 
             data: da,
             datatype: "json",//数据类型
@@ -123,7 +123,7 @@ function GetType(begindate, enddate) {
                     if (result[0].ModuleName != null) {
                         for (var i = 0; i < result.length; i++) {
                             stratetp.push(result[i].ModuleName);
-                            nustratetp.push(result[i].NumModules);
+                            nustratetp.push(result[i].ModuleTradeAmt / 10000);
                             //numorder += result[i].NumModules;
                         }
                         //for (var j = 0; j < stratetp.length; j++) {
@@ -151,7 +151,7 @@ function GetType(begindate, enddate) {
                             text: '策略使用情况统计'
                         },
                         tooltip: {
-                            pointFormat: '{series.name}: <b>{point.y}股</b>'
+                            pointFormat: '{series.name}: <b>{point.y}万元</b>'
                         },
                         plotOptions: {
                             pie: {
@@ -164,7 +164,7 @@ function GetType(begindate, enddate) {
                             }
                         },
                         series: [{
-                            name: '成交量',
+                            name: '成交金额',
                             data: pieArray
                         }],
                         lang: {

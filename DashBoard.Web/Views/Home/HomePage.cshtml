@@ -18,7 +18,7 @@
     <script type="text/javascript" src="~/Scripts/highcharts/grid.js"></script>
     <script type="text/javascript" src="~/Scripts/DashBoard/TradeDayAmount.js"></script>
     <script type="text/javascript" src="~/Scripts/DashBoard/creditsales.js"></script>
-    <script type="text/javascript" src="~/Scripts/DashBoard/creditbuy.js"></script>
+    @*<script type="text/javascript" src="~/Scripts/DashBoard/creditbuy.js"></script>*@
     <script type="text/javascript" src="~/Scripts/DashBoard/StrategyTradeAmt.js"></script>
     <script type="text/javascript" src="~/Scripts/DashBoard/StrategyTradeAct.js"></script>
     <script type="text/javascript" src="~/Scripts/DashBoard/CustomerOnline.js"></script>
@@ -62,10 +62,10 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2">
+                                <td colspan="4">
                                     <div id="realtimeTrade" style="height:410px"></div>
                                 </td>
-                                <td>
+                                @*<td>
                                     <div id="CreditBuyAmountTop" style="height:100%"></div>
                                     <div style="margin:5px 0px 0px 0px;">
                                         <button class="creditbuy">今    日</button>
@@ -80,17 +80,25 @@
                                         <button class="creditsale">最近五日</button>
                                         <button class="creditsale">最近一月</button>
                                     </div>
-                                </td>
+                                </td>*@
                             </tr>
                             <tr>
                                 <td>
-                                    <div id="TradeDayVolume" style="height:100%"></div>
+                                    <div id="TradeDayVolume" style="height:430px"></div>
                                 </td>
                                 <td>
-                                    <div id="TradeDayVolumeAmt" style="height:100%"></div>
+                                    <div id="TradeDayVolumeAmt" style="height:430px"></div>
                                 </td>
                                 <td>
-                                    <div id="PRevoke" style="height:400px"></div>
+                                    <div id="PRevoke" style="height:430px"></div>
+                                </td>
+                                <td>
+                                    <div id="CreditSalesAmountTop" style="height:400px"></div>
+                                    <div style="margin:5px 0px 0px 0px;">
+                                        <button class="creditsale">今    日</button>
+                                        <button class="creditsale">最近五日</button>
+                                        <button class="creditsale">最近一月</button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

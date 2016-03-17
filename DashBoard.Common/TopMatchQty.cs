@@ -25,5 +25,7 @@ namespace DashBoard.Common
         /// 交易总量
         /// </summary>
         public Nullable<int> MatchQty { get; set; }
+
+        public decimal MatchAmt { get; set; }
     }
 }

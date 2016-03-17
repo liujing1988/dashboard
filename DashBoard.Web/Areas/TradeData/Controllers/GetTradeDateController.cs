@@ -46,9 +46,9 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         /// <param name="dateTime"></param>
         /// <returns></returns>
         [HttpPost]
-        public IEnumerable<TopMatchQty> GetTopMatchQty(StrategyDetail dateTime)
+        public IEnumerable<TopMatchQty> GetTopMatchAmt(StrategyDetail dateTime)
         {
-            return DataServiceHelper.GetTopMatchQty(dateTime);
+            return DataServiceHelper.GetTopMatchAmt(dateTime);
         }
 
         /// <summary>
@@ -117,17 +117,17 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         /// 获取融资买入交易标的前十
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        public List<CreditTrade> GetCreditBuyAmount(RealTimeData da)
-        {
-            List<CreditTrade> result = new List<CreditTrade>();
-            result = DataServiceHelper.GetCreditBuyAmount(da);
-            if (result.Count != 0)
-            {
-                result[0].RefreshRate = Int32.Parse(IndexManagers.ReadConfig().IndexRefreshRate);
-            }
-            return result;
-        }
+        //[HttpPost]
+        //public List<CreditTrade> GetCreditBuyAmount(RealTimeData da)
+        //{
+        //    List<CreditTrade> result = new List<CreditTrade>();
+        //    result = DataServiceHelper.GetCreditBuyAmount(da);
+        //    if (result.Count != 0)
+        //    {
+        //        result[0].RefreshRate = Int32.Parse(IndexManagers.ReadConfig().IndexRefreshRate);
+        //    }
+        //    return result;
+        //}
 
         /// <summary>
         /// 获取当前月策略开仓金额前三

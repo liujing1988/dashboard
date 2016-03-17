@@ -118,6 +118,16 @@ namespace DashBoard.Common
         public int ManualQty { get; set; }
 
         /// <summary>
+        /// 自动上传交易量
+        /// </summary>
+        public decimal AutoAmt { get; set; }
+
+        /// <summary>
+        /// 手动上载交易量
+        /// </summary>
+        public decimal ManualAmt { get; set; }
+
+        /// <summary>
         /// 客户ID
         /// </summary>
         public string CustId { get; set; }

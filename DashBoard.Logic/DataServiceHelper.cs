@@ -138,25 +138,25 @@ namespace Dashboard.Logic
         /// </summary>
         /// <param name="dateTime">查询条件，包括开始月份与结束月份、策略名、策略类型、策略序列号</param>
         /// <returns>符合条件的客户交易总量之和</returns>
-        public static List<TopMatchQty> GetTopMatchQty(StrategyDetail dateTime)
+        public static List<TopMatchQty> GetTopMatchAmt(StrategyDetail dateTime)
         {
             int bmonth = TranslateHelper.ConvertDate(dateTime.BeginDate);
             int emonth = TranslateHelper.ConvertDate(dateTime.EndDate);
             List<TopMatchQty> result = new List<TopMatchQty>();
             using (var db = new ModelDataContainer())
             {
-                var list = db.sp_GetStrategyMatchQty(bmonth, emonth, dateTime.StrategyName, dateTime.StrategyKindName, dateTime.SeriesNo).OrderBy(p=>p.tmatchqty);
+                var list = db.sp_GetStrategyMatchAmt(bmonth, emonth, dateTime.StrategyName, dateTime.StrategyKindName, dateTime.SeriesNo).OrderBy(p=>p.tmatchamt);
 
                 foreach (var item in list)
                 {
-                    if (item.tmatchqty != null)
+                    if (item.tmatchamt != null)
                     {
                         result.Add(new TopMatchQty()
                         {
 
                             CustId = item.custid.ToString(),
                             StrategyName = item.strategyno,
-                            MatchQty = item.tmatchqty
+                            MatchAmt = (decimal)(item.tmatchamt / 10000)
 
                         });
                     }
@@ -290,7 +290,7 @@ namespace Dashboard.Logic
         }
 
         /// <summary>
-        /// 调取系统功能模块交易量
+        /// 调取系统功能模块交易金额
         /// </summary>
         /// <param name="dateTime">日期参数，查询的起止时间</param>
         /// <returns>功能模块名称、交易量</returns>
@@ -303,27 +303,61 @@ namespace Dashboard.Logic
             {
                 var query = (from a in db.strategyorder
                              from b in db.strategyinfo
-                             where (a.strategyno == b.strategyno) && (a.tradetype == "0" || a.tradetype == "1") && a.orderstatus != "9"
-                             where a.cancelflag != "T" && a.orderstatus != "6"
+                             from c in db.menu
+                             where (a.strategyno == b.strategyno) && (a.tradetype == "0" || a.tradetype == "1") && a.orderstatus != "9" && b.menuid == c.id
+                             where a.cancelflag != "T" && a.orderstatus != "6" && c.name == "策略交易"
                              where (a.orderdate >= bdate && a.orderdate <= edate)
                              group a by new { b.strategyname } into h
                              select new
                              {
                                  strategytype = h.Key.strategyname,
-                                 Nstrage = h.Sum(p => p.matchqty)
+                                 Nstrage = h.Sum(p => p.matchamt)
                              }
-                    ).OrderByDescending(p=>p.Nstrage);
-                foreach (var item in query.OrderBy(p => p.strategytype))
+                    ).OrderByDescending(p=>p.Nstrage).Take(5);
+
+                var total =
+                    (from a in db.strategyorder
+                     from b in db.strategyinfo
+                     from c in db.menu
+                     where (a.strategyno == b.strategyno) && (a.tradetype == "0" || a.tradetype == "1") && a.orderstatus != "9" && b.menuid == c.id
+                     where a.cancelflag != "T" && a.orderstatus != "6" && c.name == "策略交易"
+                     where (a.orderdate >= bdate && a.orderdate <= edate)
+                     group a by new { c.name } into h
+                     select new
+                     {
+                         strategytype = h.Key.name,
+                         Nstrage = h.Sum(p => p.matchamt)
+                     }
+                    );
+                decimal totalnum = 0;
+                foreach(var item in total)
+                {
+                    if(item.Nstrage >= 0)
+                    {
+                        totalnum = (decimal)item.Nstrage;
+                    }
+                }
+
+                decimal top = 0;
+                foreach (var item in query)
                 {
                     if (item.strategytype != " ")
                     {
                         result.Add(new Modules()
                         {
                             ModuleName = item.strategytype,
-                            NumModules = item.Nstrage
-
+                            ModuleTradeAmt = item.Nstrage,
                         });
+                        top += (decimal)item.Nstrage;
                     }
+                }
+                if (totalnum - top > 0)
+                { 
+                result.Add(new Modules()
+                    {
+                        ModuleName = "其他",
+                        ModuleTradeAmt = totalnum - top
+                    });
                 }
             }
             return result;
@@ -344,7 +378,8 @@ namespace Dashboard.Logic
                 var query = (from d in
                                  (from a in db.positionbasicinfotable
                                   from b in db.strategyinfo
-                                  where a.strategyno != -1
+                                  from h in db.menu
+                                  where a.strategyno != -1 && b.menuid == h.id && h.name == "策略交易"
                                   where a.strategyno == b.strategyno && a.createdate >= bdate && a.createdate <= edate
                                   group a by new { a.custid, b.strategyname, a.createdate } into c
                                   select new
@@ -358,8 +393,39 @@ namespace Dashboard.Logic
                              {
                                  strategename = e.Key.strategyname,
                                  strategytradenum = e.Count()
+                             }).OrderByDescending(p=>p.strategytradenum).Take(5);
+
+                var total = (from d in
+                                 (from a in db.positionbasicinfotable
+                                  from b in db.strategyinfo
+                                  from h in db.menu
+                                  where a.strategyno != -1 && b.menuid == h.id && h.name == "策略交易"
+                                  where a.strategyno == b.strategyno && a.createdate >= bdate && a.createdate <= edate
+                                  group a by new { a.custid, h.name, a.createdate } into c
+                                  select new
+                                  {
+                                      createdate = c.Key.createdate,
+                                      modulename = c.Key.name,
+                                      strategytradenum = c.Count()
+                                  })
+                             group d by new { d.modulename } into e
+                             select new
+                             {
+                                 modulename = e.Key.modulename,
+                                 strategytradenum = e.Count()
                              });
-                foreach (var item in query.OrderBy(p => p.strategename))
+
+                var totalnum = 0;
+                foreach(var item in total)
+                {
+                    if(item.strategytradenum >= 0)
+                    {
+                        totalnum = item.strategytradenum;
+                    }
+                }
+
+                var top = 0;
+                foreach (var item in query)
                 {
                     if (item.strategename != " ")
                     {
@@ -367,9 +433,17 @@ namespace Dashboard.Logic
                         {
                             ModuleName = item.strategename,
                             NumModules = item.strategytradenum
-
                         });
+                        top += item.strategytradenum;
                     }
+                }
+                if (totalnum - top > 0)
+                {
+                    result.Add(new Modules()
+                    {
+                        ModuleName = "其他",
+                        NumModules = totalnum - top
+                    });
                 }
             }
             return result;
@@ -483,88 +557,88 @@ namespace Dashboard.Logic
         /// 获取融资买入交易标的前十
         /// </summary>
         /// <returns>当日用户融资买入总量前十名的总交易量、股票名称</returns>
-        public static List<CreditTrade> GetCreditBuyAmount(RealTimeData da)
-        {
-            int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
-            int mdate = Int32.Parse(DateTime.Now.AddMonths(-1).ToString("yyyyMMdd"));
-            int fdate = Int32.Parse(DateTime.Now.AddDays(-5).ToString("yyyyMMdd"));
-            int begindate = tdate;
-            int enddate = tdate;
-            if (da.Day == "30")
-            {
-                begindate = mdate;
-            }
-            if (da.Day == "5")
-            {
-                begindate = fdate;
-            }
+        //public static List<CreditTrade> GetCreditBuyAmount(RealTimeData da)
+        //{
+        //    int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
+        //    int mdate = Int32.Parse(DateTime.Now.AddMonths(-1).ToString("yyyyMMdd"));
+        //    int fdate = Int32.Parse(DateTime.Now.AddDays(-5).ToString("yyyyMMdd"));
+        //    int begindate = tdate;
+        //    int enddate = tdate;
+        //    if (da.Day == "30")
+        //    {
+        //        begindate = mdate;
+        //    }
+        //    if (da.Day == "5")
+        //    {
+        //        begindate = fdate;
+        //    }
 
-            List<CreditTrade> result = new List<CreditTrade>();
-            using (var db = new ModelDataContainer())
-            {
-                var bamt = from a in db.strategyorder
-                           where a.tradetype == "1"
-                           where a.orderdate >= begindate && a.orderdate <= enddate
-                           && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
-                           && a.matchqty > 0 && a.bsflag == "B"
-                           group a by new { a.stkcode,a.market } into b
-                           select new
-                           {
-                               info = b.Key.stkcode + b.Key.market,
-                               stockcode = b.Key.stkcode,
-                               market = b.Key.market,
-                               btradeamount = b.Sum(p => p.matchqty)
-                           };
-                var samt = from a in db.strategyorder
-                           where a.tradetype == "1"
-                           where a.orderdate >= begindate && a.orderdate <= enddate
-                           && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
-                           && a.matchqty > 0 && a.bsflag == "S"
-                           group a by new { a.stkcode,a.market } into b
-                           select new
-                           {
-                               info = b.Key.stkcode + b.Key.market,
-                               stockcode = b.Key.stkcode,
-                               market = b.Key.market,
-                               stradeamount = b.Sum(p => p.matchqty)
-                           };
-                var b_s = from a in bamt
-                          join b in samt
-                          on a.info equals b.info into BS
-                          from c in BS.DefaultIfEmpty()
-                          select new
-                          {
-                              stockcode = a.stockcode,
-                              market = a.market,
-                              btradeamount = a.btradeamount,
-                              stradeamount = (c == null) ? 0 : c.stradeamount
-                          };
+        //    List<CreditTrade> result = new List<CreditTrade>();
+        //    using (var db = new ModelDataContainer())
+        //    {
+        //        var bamt = from a in db.strategyorder
+        //                   where a.tradetype == "1"
+        //                   where a.orderdate >= begindate && a.orderdate <= enddate
+        //                   && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
+        //                   && a.matchqty > 0 && a.bsflag == "B"
+        //                   group a by new { a.stkcode,a.market } into b
+        //                   select new
+        //                   {
+        //                       info = b.Key.stkcode + b.Key.market,
+        //                       stockcode = b.Key.stkcode,
+        //                       market = b.Key.market,
+        //                       btradeamount = b.Sum(p => p.matchqty)
+        //                   };
+        //        var samt = from a in db.strategyorder
+        //                   where a.tradetype == "1"
+        //                   where a.orderdate >= begindate && a.orderdate <= enddate
+        //                   && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
+        //                   && a.matchqty > 0 && a.bsflag == "S"
+        //                   group a by new { a.stkcode,a.market } into b
+        //                   select new
+        //                   {
+        //                       info = b.Key.stkcode + b.Key.market,
+        //                       stockcode = b.Key.stkcode,
+        //                       market = b.Key.market,
+        //                       stradeamount = b.Sum(p => p.matchqty)
+        //                   };
+        //        var b_s = from a in bamt
+        //                  join b in samt
+        //                  on a.info equals b.info into BS
+        //                  from c in BS.DefaultIfEmpty()
+        //                  select new
+        //                  {
+        //                      stockcode = a.stockcode,
+        //                      market = a.market,
+        //                      btradeamount = a.btradeamount,
+        //                      stradeamount = (c == null) ? 0 : c.stradeamount
+        //                  };
 
-                var s_b = from a in samt
-                          join b in bamt
-                          on a.info equals b.info into SB
-                          from c in SB.DefaultIfEmpty()
-                          select new
-                          {
-                              stockcode = a.stockcode,
-                              market = a.market,
-                              btradeamount = (c == null) ? 0 : c.btradeamount,
-                              stradeamount = a.stradeamount
-                          };
-                var b_samt = b_s.Concat(s_b).Distinct();
+        //        var s_b = from a in samt
+        //                  join b in bamt
+        //                  on a.info equals b.info into SB
+        //                  from c in SB.DefaultIfEmpty()
+        //                  select new
+        //                  {
+        //                      stockcode = a.stockcode,
+        //                      market = a.market,
+        //                      btradeamount = (c == null) ? 0 : c.btradeamount,
+        //                      stradeamount = a.stradeamount
+        //                  };
+        //        var b_samt = b_s.Concat(s_b).Distinct();
 
-                var query = b_samt.OrderByDescending(p => (p.btradeamount - p.stradeamount)).Take(10);
-                StockDicManager.LoadDict();
-                foreach (var item in query)
-                    result.Add(new CreditTrade()
-                    {
-                        StockName = StockDicManager.GetStockName(item.stockcode,item.market),
-                        MatchQty = (item.btradeamount - item.stradeamount).ToString(),
-                        TradeDate = DateTime.Now.ToString("yyyy-MM-dd")
-                    });
-            }
-            return result;
-        }
+        //        var query = b_samt.OrderByDescending(p => (p.btradeamount - p.stradeamount)).Take(10);
+        //        StockDicManager.LoadDict();
+        //        foreach (var item in query)
+        //            result.Add(new CreditTrade()
+        //            {
+        //                StockName = StockDicManager.GetStockName(item.stockcode,item.market),
+        //                MatchQty = (item.btradeamount - item.stradeamount).ToString(),
+        //                TradeDate = DateTime.Now.ToString("yyyy-MM-dd")
+        //            });
+        //    }
+        //    return result;
+        //}
 
         /// <summary>
         /// 调用存储过程，获取客户交易流水
@@ -1151,8 +1225,8 @@ namespace Dashboard.Logic
                 StrategyDetail detail = new StrategyDetail()
                 {
                     Month = reader.GetInt32("month"),
-                    AutoQty = reader.GetInt32("autoqty"),
-                    ManualQty = reader.GetInt32("manualqty")
+                    AutoAmt = reader.GetDecimal("autoamt"),
+                    ManualAmt = reader.GetDecimal("manualamt")
                 };
                 result.Add(detail);
             }
@@ -1184,15 +1258,15 @@ namespace Dashboard.Logic
                              select new
                              {
                                  custid = d.Key.custid,
-                                 matchqty = d.Sum(p => p.matchqty)
-                             }).OrderByDescending(p => p.matchqty).Take(5);
+                                 matchamt = d.Sum(p => p.matchamt)
+                             }).OrderByDescending(p => p.matchamt).Take(5);
                 foreach (var item in query)
                 {
                     result.Add(new TopMatchQty()
                     {
 
                         CustId = item.custid.ToString(),
-                        MatchQty = item.matchqty
+                        MatchAmt = (decimal)item.matchamt
 
                     });
                 }

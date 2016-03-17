@@ -116,8 +116,8 @@ function GetStrategy(begindate, enddate) {
               if (result.length > 0) {
                 for (var i = 0; i < result.length; i++) {
                     Month.push(result[i].Month);
-                    AutoQty.push(result[i].AutoQty / 10000);
-                    ManualQty.push(result[i].ManualQty / 10000);
+                    AutoQty.push(changeTwoDecimal(result[i].AutoAmt / 10000));
+                    ManualQty.push(changeTwoDecimal(result[i].ManualAmt / 10000));
                   }
               }
               //添加元素
@@ -145,13 +145,13 @@ function GetStrategy(begindate, enddate) {
                       yAxis: {
                           min: 0,
                           title: {
-                              text: '交易量'
+                              text: '交易金额'
                           },
                       },
                       tooltip: {
                           formatter: function () {
                               return '' + this.series.name + '' +
-                                 this.x + ': ' + this.y + '万股';
+                                 this.x + ': ' + this.y + '万元';
                           },
                           //pointFormat: '{series.name}: <b>{point.y:.1f} millions</b>',
                       },
@@ -168,7 +168,9 @@ function GetStrategy(begindate, enddate) {
                               borderWidth: 0,
                               dataLabels: {
                                   enabled: true,
-                                  format: '{point.y:.2f}万股'
+                                  formatter: function () {
+                                      return Highcharts.numberFormat(this.y, 2, '.') + '万元';
+                                  }
                               }
                       },
                       credits: {
@@ -239,7 +241,7 @@ function CustomerCreateStrategyTopMatchQty(begindate, enddate) {
                             $(this).html(item.CustId);
                             break;
                         case (1):
-                            $(this).html(item.MatchQty / 10000);
+                            $(this).html(changeTwoDecimal(item.MatchAmt / 10000));
                             break;
                     }//end switch  
                 });//end children.each  
@@ -252,4 +254,28 @@ function CustomerCreateStrategyTopMatchQty(begindate, enddate) {
             $("tr#clone").show();
         }
     })
+}
+
+function changeTwoDecimal(x) {
+    var f_x = parseFloat(x);
+    if (isNaN(f_x)) {
+        alert('function:changeTwoDecimal->parameter error');
+        return false;
+    }
+    f_x = Math.round(f_x * 100) / 100;
+
+    return f_x;
+}
+
+function addCommas(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    console.log(x.length)
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
 }

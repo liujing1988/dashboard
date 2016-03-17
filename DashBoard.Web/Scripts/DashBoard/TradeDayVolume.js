@@ -82,7 +82,6 @@
                 $('#TradeDayVolume').highcharts({
                     chart: {
                         spacingBottom: 0,
-                        height: 400,
                         type: 'column'
                     },
                         events: {
@@ -221,7 +220,6 @@
                 $('#TradeDayVolumeAmt').highcharts({
                     chart: {
                         spacingBottom: 0,
-                        height: 400,
                         type: 'column',
                         events: {
                             load: function () {

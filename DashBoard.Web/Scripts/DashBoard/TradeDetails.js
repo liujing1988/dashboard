@@ -24,6 +24,7 @@ $(document).ready(function ($) {  //加载页面
                     { "name": "searchColumns", "value": searchtext });  //搜索内容
             },
             "bProcessing": true,
+            "bAutoWidth": false, //是否自适应宽度 
             "aoColumns": [  //初始化列名
                             {
                                 "sName": "custid", //第一列列名
@@ -130,7 +131,7 @@ function initComplete(data) {
     $('#mytoolbox').append(dataPlugin);  //将其加载至表格控件中
 
     //时间插件
-    $('#reportrange span').html(moment().subtract('months', 1).format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
+    $('#reportrange span').html(moment().subtract('day', 0).format('YYYY-MM-DD HH:mm:ss') + ' - ' + moment().format('YYYY-MM-DD HH:mm:ss'));
 
     //时间插件初始化
     $('#reportrange').daterangepicker(

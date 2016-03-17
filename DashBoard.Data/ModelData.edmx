@@ -315,7 +315,7 @@
           <Parameter Name="TotalRecords" Type="int" Mode="InOut" />
           <Parameter Name="TotalDisplayRecords" Type="int" Mode="InOut" />
         </Function>
-        <Function Name="sp_GetStrategyMatchQty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="sp_GetStrategyMatchAmt" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="BeginMonth" Type="int" Mode="In" />
           <Parameter Name="EndMonth" Type="int" Mode="In" />
           <Parameter Name="StrategyName" Type="varchar" Mode="In" />
@@ -391,6 +391,13 @@
           </FunctionImport>
           <EntitySet Name="generalparam" EntityType="ModelData.generalparam" />
           <EntitySet Name="menu" EntityType="ModelData.menu" />
+          <FunctionImport Name="sp_GetStrategyMatchAmt" ReturnType="Collection(ModelData.sp_GetStrategyMatchAmt_Result)">
+            <Parameter Name="BeginMonth" Mode="In" Type="Int32" />
+            <Parameter Name="EndMonth" Mode="In" Type="Int32" />
+            <Parameter Name="StrategyName" Mode="In" Type="String" />
+            <Parameter Name="KindName" Mode="In" Type="String" />
+            <Parameter Name="SeriesNo" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="strategyorder">
           <Key>
@@ -693,6 +700,11 @@
           <Property Name="isdelete" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="paramtype" Type="Int32" Nullable="false" />
         </EntityType>
+        <ComplexType Name="sp_GetStrategyMatchAmt_Result">
+          <Property Type="Int32" Name="custid" Nullable="false" />
+          <Property Type="String" Name="strategyno" Nullable="true" />
+          <Property Type="Decimal" Name="tmatchamt" Nullable="true" Precision="38" Scale="6" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -975,15 +987,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="sp_GetStrategyMatchQty" FunctionName="ModelData.Store.sp_GetStrategyMatchQty">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ModelData.sp_GetStrategyMatchQty_Result">
-                <ScalarProperty Name="custid" ColumnName="custid" />
-                <ScalarProperty Name="strategyno" ColumnName="strategyno" />
-                <ScalarProperty Name="tmatchqty" ColumnName="tmatchqty" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="generalparam">
             <EntityTypeMapping TypeName="ModelData.generalparam">
               <MappingFragment StoreEntitySet="generalparam">
@@ -1014,6 +1017,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetStrategyMatchAmt" FunctionName="ModelData.Store.sp_GetStrategyMatchAmt">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ModelData.sp_GetStrategyMatchAmt_Result">
+                <ScalarProperty Name="custid" ColumnName="custid" />
+                <ScalarProperty Name="strategyno" ColumnName="strategyno" />
+                <ScalarProperty Name="tmatchamt" ColumnName="tmatchamt" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

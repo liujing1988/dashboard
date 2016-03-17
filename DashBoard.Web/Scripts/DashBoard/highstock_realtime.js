@@ -126,7 +126,7 @@ $.ajax(
                          opposite: false,//是否把它显示到另一边（右边）
                         }],
                     title: {
-                        text: '成交量'
+                        text: '成交金额'
                     },
                     credits: {
                         enabled: false
@@ -156,7 +156,7 @@ $.ajax(
                     },
                     series: [{
                         type: 'column',
-                        name: '交易量',
+                        name: '交易金额',
                         data: data,
                         dataGrouping: {
                             units: [[
@@ -168,7 +168,9 @@ $.ajax(
                             ]]
                         }
                     }],
-                    
+                    tooltip: {
+                        valueSuffix: '元'
+                    },
                     lang: {
                         noData: "无数据！"
                     },

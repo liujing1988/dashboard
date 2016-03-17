@@ -161,5 +161,30 @@ namespace DashBoard.Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetStrategyMatchQty_Result>("sp_GetStrategyMatchQty", beginMonthParameter, endMonthParameter, strategyNameParameter, kindNameParameter, seriesNoParameter);
         }
+    
+        public virtual ObjectResult<sp_GetStrategyMatchAmt_Result> sp_GetStrategyMatchAmt(Nullable<int> beginMonth, Nullable<int> endMonth, string strategyName, string kindName, string seriesNo)
+        {
+            var beginMonthParameter = beginMonth.HasValue ?
+                new ObjectParameter("BeginMonth", beginMonth) :
+                new ObjectParameter("BeginMonth", typeof(int));
+    
+            var endMonthParameter = endMonth.HasValue ?
+                new ObjectParameter("EndMonth", endMonth) :
+                new ObjectParameter("EndMonth", typeof(int));
+    
+            var strategyNameParameter = strategyName != null ?
+                new ObjectParameter("StrategyName", strategyName) :
+                new ObjectParameter("StrategyName", typeof(string));
+    
+            var kindNameParameter = kindName != null ?
+                new ObjectParameter("KindName", kindName) :
+                new ObjectParameter("KindName", typeof(string));
+    
+            var seriesNoParameter = seriesNo != null ?
+                new ObjectParameter("SeriesNo", seriesNo) :
+                new ObjectParameter("SeriesNo", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetStrategyMatchAmt_Result>("sp_GetStrategyMatchAmt", beginMonthParameter, endMonthParameter, strategyNameParameter, kindNameParameter, seriesNoParameter);
+        }
     }
 }
