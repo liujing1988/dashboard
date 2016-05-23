@@ -58,20 +58,20 @@ namespace Dashboard.Logic
             List<TradeMonthAmount> result = new List<TradeMonthAmount>();
             using (var db = new ModelDataContainer())
             {
-                var query = from a in db.strategytrade
+                var query = from a in db.strategyorder
                             from c in db.strategyinfo
                             from d in db.strategykind
                             where a.strategyno == c.strategyno && c.kindid == d.kindid
-                            where a.tradedate > 0 && (a.matchtype == "0" || a.matchtype == "1")
+                            where a.orderdate > 0 && (a.tradetype == "0" || a.tradetype == "1")
                             && (dateTime.StrategyName == null || c.strategyname.Contains(dateTime.StrategyName))
                             && (dateTime.StrategyKindName == null || d.kindname == dateTime.StrategyKindName)
                             && (dateTime.SeriesNo == null || c.seriesno == dateTime.SeriesNo)
-                            where a.tradedate / 100 >= bmonth && a.tradedate / 100 <= emonth
-                            && a.strategyno != -1
-                            group a by a.tradedate / 100 into b
+                            where a.orderdate / 100 >= bmonth && a.orderdate / 100 <= emonth
+                            && a.strategyno != -1 && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
+                            group a by a.orderdate / 100 into b
                             select new
                             {
-                                Month = b.Max(p => p.tradedate / 100),
+                                Month = b.Max(p => p.orderdate / 100),
                                 MatchAmount = b.Sum(p => p.matchamt)
                             };
                 foreach (var item in query.OrderBy(p => p.Month))
@@ -145,7 +145,7 @@ namespace Dashboard.Logic
             List<TopMatchQty> result = new List<TopMatchQty>();
             using (var db = new ModelDataContainer())
             {
-                var list = db.sp_GetStrategyMatchQty(bmonth, emonth, dateTime.StrategyName, dateTime.StrategyKindName, dateTime.SeriesNo);
+                var list = db.sp_GetStrategyMatchQty(bmonth, emonth, dateTime.StrategyName, dateTime.StrategyKindName, dateTime.SeriesNo).OrderBy(p=>p.tmatchqty);
 
                 foreach (var item in list)
                 {
@@ -176,20 +176,20 @@ namespace Dashboard.Logic
             List<TradeMonthAmount> result = new List<TradeMonthAmount>();
             using (var db = new ModelDataContainer())
             {
-                var query = from a in db.strategytrade
+                var query = from a in db.strategyorder
                             from c in db.strategyinfo
                             from d in db.strategykind
                             where a.strategyno == c.strategyno && c.kindid == d.kindid
-                            && (a.matchtype == "0" || a.matchtype == "1")
-                            && a.strategyno != -1
+                            && (a.tradetype == "0" || a.tradetype == "1")
+                            && a.strategyno != -1 && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
                             && (dateTime.StrategyName == null || c.strategyname.Contains(dateTime.StrategyName))
                             && (dateTime.StratInfo == null || d.kindname == dateTime.StratInfo)
                             && (dateTime.SeriesNo == null || c.seriesno == dateTime.SeriesNo)
-                            where a.tradedate / 100 == bday
-                            group a by a.tradedate into b
+                            where a.orderdate / 100 == bday
+                            group a by a.orderdate into b
                             select new
                             {
-                                Date = b.Max(p => p.tradedate),
+                                Date = b.Max(p => p.orderdate),
                                 DateAmount = b.Sum(p => p.matchamt)
                             };
                 foreach (var item in query.OrderBy(p => p.Date))
@@ -294,32 +294,33 @@ namespace Dashboard.Logic
         /// </summary>
         /// <param name="dateTime">日期参数，查询的起止时间</param>
         /// <returns>功能模块名称、交易量</returns>
-        public static List<StrategyTypes> GetStrategyType(GetDateTime dateTime)
+        public static List<Modules> GetStrategyType(GetDateTime dateTime)
         {
             int bdate = TranslateHelper.ConvertDate(dateTime.BeginDate);
             int edate = TranslateHelper.ConvertDate(dateTime.EndDate);
-            List<StrategyTypes> result = new List<StrategyTypes>();
+            List<Modules> result = new List<Modules>();
             using (var db = new ModelDataContainer())
             {
-                var query = (from a in db.strategytrade
+                var query = (from a in db.strategyorder
                              from b in db.strategyinfo
-                             where (a.strategyno == b.strategyno) && (a.matchtype == "0" || a.matchtype == "1")
-                             where (a.tradedate >= bdate && a.tradedate <= edate)
+                             where (a.strategyno == b.strategyno) && (a.tradetype == "0" || a.tradetype == "1") && a.orderstatus != "9"
+                             where a.cancelflag != "T" && a.orderstatus != "6"
+                             where (a.orderdate >= bdate && a.orderdate <= edate)
                              group a by new { b.strategyname } into h
                              select new
                              {
                                  strategytype = h.Key.strategyname,
                                  Nstrage = h.Sum(p => p.matchqty)
                              }
-                    );
+                    ).OrderByDescending(p=>p.Nstrage);
                 foreach (var item in query.OrderBy(p => p.strategytype))
                 {
                     if (item.strategytype != " ")
                     {
-                        result.Add(new StrategyTypes()
+                        result.Add(new Modules()
                         {
-                            StrategyType = item.strategytype,
-                            NumStrategyType = item.Nstrage
+                            ModuleName = item.strategytype,
+                            NumModules = item.Nstrage
 
                         });
                     }
@@ -333,11 +334,11 @@ namespace Dashboard.Logic
         /// </summary>
         /// <param name="dateTime">日期参数，查询的起止时间</param>
         /// <returns>功能模块名称、使用次数</returns>
-        public static List<StrategyTypes> GetStrategyOpen(GetDateTime dateTime)
+        public static List<Modules> GetStrategyOpen(GetDateTime dateTime)
         {
             int bdate = TranslateHelper.ConvertDate(dateTime.BeginDate);
             int edate = TranslateHelper.ConvertDate(dateTime.EndDate);
-            List<StrategyTypes> result = new List<StrategyTypes>();
+            List<Modules> result = new List<Modules>();
             using (var db = new ModelDataContainer())
             {
                 var query = (from d in
@@ -362,10 +363,10 @@ namespace Dashboard.Logic
                 {
                     if (item.strategename != " ")
                     {
-                        result.Add(new StrategyTypes()
+                        result.Add(new Modules()
                         {
-                            StrategyType = item.strategename,
-                            NumStrategyType = item.strategytradenum
+                            ModuleName = item.strategename,
+                            NumModules = item.strategytradenum
 
                         });
                     }
@@ -384,18 +385,22 @@ namespace Dashboard.Logic
             List<TradeDayAmount> result = new List<TradeDayAmount>();
             using (var db = new ModelDataContainer())
             {
-                var creditTrade = from a in db.strategytrade
-                                  where a.tradedate == tdate
-                                  && a.strategyno != -1 && a.matchamt > 0 && a.matchtype == "1"
+
+                //根据委托表进行统计 按custid的总交易量排名
+                var creditTrade = from a in db.strategyorder
+                                  where a.orderdate == tdate
+                                  && a.strategyno != -1 && a.matchamt > 0 && a.tradetype == "1"
+                                  && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
                                   group a by new {a.custid} into b
                                   select new
                                   {
                                       custid = b.Key.custid,
                                       credittrade = b.Sum(p=>p.matchamt)
                                   };
-                var TotalTrade = (from a in db.strategytrade
-                                  where a.tradedate == tdate
+                var TotalTrade = (from a in db.strategyorder
+                                  where a.orderdate == tdate
                                   && a.strategyno != -1 && a.matchamt > 0
+                                  && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
                                   group a by new { a.custid } into b
                                   select new
                                   {
@@ -404,7 +409,7 @@ namespace Dashboard.Logic
                                   }).OrderByDescending(p => p.tradeamount).Take(5);
 
 
-                var query = from a in TotalTrade
+                var query = (from a in TotalTrade
                             join b in creditTrade
                             on a.custid equals b.custid into trade
                             from c in trade.DefaultIfEmpty()
@@ -413,7 +418,7 @@ namespace Dashboard.Logic
                                 custid = a.custid,
                                 tradeamount = a.tradeamount,
                                 credittrade = (c == null) ? 0 : c.credittrade
-                            };
+                            }).OrderByDescending(p=>p.tradeamount);
 
                 foreach (var item in query)
                     result.Add(new TradeDayAmount()
@@ -454,6 +459,7 @@ namespace Dashboard.Logic
                 var query = (from a in db.strategyorder
                              where a.orderdate >= begindate && a.orderdate <= enddate
                              && a.matchqty > 0 && a.bsflag == "S"
+                             && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
                              group a by new { a.stkcode,a.market } into b
                              select new
                              {
@@ -499,6 +505,7 @@ namespace Dashboard.Logic
                 var bamt = from a in db.strategyorder
                            where a.tradetype == "1"
                            where a.orderdate >= begindate && a.orderdate <= enddate
+                           && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
                            && a.matchqty > 0 && a.bsflag == "B"
                            group a by new { a.stkcode,a.market } into b
                            select new
@@ -511,6 +518,7 @@ namespace Dashboard.Logic
                 var samt = from a in db.strategyorder
                            where a.tradetype == "1"
                            where a.orderdate >= begindate && a.orderdate <= enddate
+                           && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
                            && a.matchqty > 0 && a.bsflag == "S"
                            group a by new { a.stkcode,a.market } into b
                            select new
@@ -609,7 +617,7 @@ namespace Dashboard.Logic
                     TradeDate = reader.GetString("tradedate"),
                     StockCode = reader.GetString("stkcode"),
                     MatchQty = reader.GetString("matchqty"),
-                    MatchPrice = reader.GetString("matchprice"),
+                    MatchPrice = Math.Round(reader.GetDouble("matchprice"),4).ToString("0.0000"),
                     BsFlag = TranslateHelper.ConvertBSFlag(reader.GetString("bsflag"))
                 };
                 result.List.Add(detail);
@@ -751,16 +759,17 @@ namespace Dashboard.Logic
         /// 获取本月策略开仓金额前五
         /// </summary>
         /// <returns>策略名称、开仓金额</returns>
-        public static List<StrategyTypes> GetStrategyTradeAmt()
+        public static List<Modules> GetStrategyTradeAmt()
         {
-            List<StrategyTypes> result = new List<StrategyTypes>();
+            List<Modules> result = new List<Modules>();
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             using (var db = new ModelDataContainer())
             {
-                var query = (from a in db.strategytrade
+                var query = (from a in db.strategyorder
                              from b in db.strategyinfo
-                             where a.strategyno != -1
-                             where a.strategyno == b.strategyno && a.tradedate / 100 == tdate / 100
+                             from d in db.menu
+                             where a.strategyno != -1 && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6" && b.menuid == d.id
+                             where a.strategyno == b.strategyno && a.orderdate / 100 == tdate / 100 && d.name == "策略交易"
                              group a by new { b.strategyname } into c
                              select new
                              {
@@ -770,10 +779,10 @@ namespace Dashboard.Logic
 
                 foreach (var item in query)
                 {
-                    result.Add(new StrategyTypes()
+                    result.Add(new Modules()
                     {
-                        StrategyType = item.strategyname,
-                        StrategyTradeAmt = item.strategytradeamt
+                        ModuleName = item.strategyname,
+                        ModuleTradeAmt = item.strategytradeamt
                     });
                 }
             }
@@ -876,37 +885,42 @@ namespace Dashboard.Logic
         /// 获取本月策略开仓次数前五
         /// </summary>
         /// <returns>策略名称、开仓次数</returns>
-        public static List<StrategyTypes> GetStrategyTradeAct()
+        public static List<Modules> GetStrategyTradeAct()
         {
-            List<StrategyTypes> result = new List<StrategyTypes>();
+            List<Modules> result = new List<Modules>();
             int tdate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
             using (var db = new ModelDataContainer())
             {
-                var query = (from d in
+                var query = (from e in
                                  (from a in db.positionbasicinfotable
                                   from b in db.strategyinfo
+                                  from c in db.menu
                                   where a.strategyno != -1
                                   where a.strategyno == b.strategyno && a.createdate / 100 == tdate / 100
-                                  group a by new { a.custid, b.strategyname, a.createdate } into c
+                                  && b.menuid == c.id
+                                  group a by new { a.custid, c.name, a.createdate } into d
                                   select new
                                   {
-                                      createdate = c.Key.createdate,
-                                      strategyname = c.Key.strategyname,
-                                      strategytradenum = c.Count()
+                                      createdate = d.Key.createdate,
+                                      modulename = d.Key.name,
+                                      strategytradenum = d.Count(),
+                                      tradeaccount = d.Sum(p=>p.openamount) + d.Sum(p=>p.closeamount)
                                   })
-                             group d by new { d.strategyname } into e
+                             group e by new { modulename = e.modulename} into f
                              select new
                              {
-                                 strategename = e.Key.strategyname,
-                                 strategytradenum = e.Count()
+                                 modulename = f.Key.modulename,
+                                 strategytradenum = f.Count(),
+                                 tradeaccount = f.Sum(p=>p.tradeaccount)
                              }).OrderByDescending(p => p.strategytradenum).Take(5);
 
                 foreach (var item in query)
                 {
-                    result.Add(new StrategyTypes()
+                    result.Add(new Modules()
                     {
-                        StrategyType = item.strategename,
-                        NumStrategyType = item.strategytradenum
+                        ModuleName = item.modulename,
+                        NumModules = item.strategytradenum,
+                        ModuleTradeAmt = item.tradeaccount
                     });
                 }
             }
@@ -926,7 +940,7 @@ namespace Dashboard.Logic
             {
                 var numcust = from a in db.strategyorder
                               where a.orderdate == tdate
-                              && (a.tradetype == "0" || a.tradetype == "1")
+                              && (a.tradetype == "0" || a.tradetype == "1") 
                               group a by a.custid into b
                               select new
                               {
@@ -971,7 +985,7 @@ namespace Dashboard.Logic
                 //当日委托笔数
                 var ordercount = from a in db.strategyorder
                                  where a.orderdate == tdate && a.cancelflag == "F"
-                                 && a.orderstatus != "9"
+                                 && a.orderstatus != "9" && a.orderstatus != "6"
                                  group a by a.orderdate into b
                                  select new
                                  {
@@ -986,7 +1000,7 @@ namespace Dashboard.Logic
                 var miordercount = from a in db.strategyorder
                                    where a.orderdate == tdate
                                    && a.cancelflag == "F"
-                                   && a.orderstatus != "9"
+                                   && a.orderstatus != "9" && a.orderstatus != "6"
                                    group a by a.opertime / 10000 into b
                                    select new
                                    {
@@ -1006,7 +1020,7 @@ namespace Dashboard.Logic
                 var seordercount = from a in db.strategyorder
                                    where a.orderdate == tdate
                                    && a.cancelflag == "F"
-                                   && a.orderstatus != "9"
+                                   && a.orderstatus != "9" && a.orderstatus != "6"
                                    group a by (a.opertime / 100) into b
                                    select new
                                    {
@@ -1025,7 +1039,7 @@ namespace Dashboard.Logic
                 //当日交易量
                 var volumecount = from a in db.strategyorder
                                   where a.orderdate == tdate && a.cancelflag == "F"
-                                  && a.orderstatus != "9" && a.matchqty > 0
+                                  && a.orderstatus != "9" && a.matchqty > 0 && a.orderstatus != "6"
                                   group a by a.orderdate into b
                                   select new
                                   {
@@ -1053,7 +1067,7 @@ namespace Dashboard.Logic
                 //当日成交金额
                 var volumeamt = from a in db.strategyorder
                                 where a.orderdate == tdate && a.cancelflag == "F"
-                                && a.orderstatus != "9" && a.matchqty > 0
+                                && a.orderstatus != "9" && a.matchqty > 0 && a.orderstatus != "6"
                                 group a by a.orderdate into b
                                 select new
                                 {
@@ -1067,7 +1081,7 @@ namespace Dashboard.Logic
                 //当日逆回购金额
                 var rrpamt = from a in db.strategyorder
                              where a.orderdate == tdate && a.cancelflag == "F"
-                             && a.orderstatus != "9" && a.matchqty > 0
+                             && a.orderstatus != "9" && a.matchqty > 0 && a.orderstatus != "6"
                              && a.bsflag == "["
                              group a by a.orderdate into b
                              select new
@@ -1082,7 +1096,7 @@ namespace Dashboard.Logic
                 //当日买入金额
                 var buyamt = from a in db.strategyorder
                              where a.orderdate == tdate && a.cancelflag == "F"
-                             && a.orderstatus != "9" && a.matchqty > 0
+                             && a.orderstatus != "9" && a.matchqty > 0 && a.orderstatus != "6"
                              && a.bsflag == "B"
                              group a by a.orderdate into b
                              select new
@@ -1097,7 +1111,7 @@ namespace Dashboard.Logic
                 //当日卖出金额
                 var salesamt = from a in db.strategyorder
                                where a.orderdate == tdate && a.cancelflag == "F"
-                               && a.orderstatus != "9" && a.matchqty > 0
+                               && a.orderstatus != "9" && a.matchqty > 0 && a.orderstatus != "6"
                                && a.bsflag == "S"
                                group a by a.orderdate into b
                                select new
@@ -1158,13 +1172,14 @@ namespace Dashboard.Logic
             List<TopMatchQty> result = new List<TopMatchQty>();
             using (var db = new ModelDataContainer())
             {
-                var query = (from a in db.strategytrade
+                var query = (from a in db.strategyorder
                              from b in db.strategyinfo
                              from c in db.generalparam
                              where a.strategyno == b.strategyno && b.strategyno == c.strategyno
                              && b.isprivate == "1" && a.strategyno != -1
-                             && (a.matchtype == "0" || a.matchtype == "1")
-                             && a.tradedate / 100 >= bmonth && a.tradedate / 100 <= emonth
+                             && (a.tradetype == "0" || a.tradetype == "1") && a.orderstatus != "6" && a.cancelflag != "T"
+                             && a.orderstatus != "9"
+                             && a.orderdate / 100 >= bmonth && a.orderdate / 100 <= emonth
                              group a by new { a.custid } into d
                              select new
                              {

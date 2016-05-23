@@ -12,14 +12,17 @@ namespace DashBoard.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class customer
+    public partial class menu
     {
-        public int custid { get; set; }
-        public string trdpwd { get; set; }
-        public string isactive { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public int fatherid { get; set; }
+        public string strategydir { get; set; }
+        public int strategyparam { get; set; }
+        public int sortid { get; set; }
+        public string status { get; set; }
         public string revs1 { get; set; }
-        public int ownerid { get; set; }
-        public int createdate { get; set; }
-        public string isorg { get; set; }
+        public string isdelete { get; set; }
+        public int paramtype { get; set; }
     }
 }

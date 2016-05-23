@@ -18,12 +18,12 @@ namespace DashBoard.Common
         /// <summary>
         /// 交易量
         /// </summary>
-        public decimal TradeAmount { get; set; }
+        public decimal? TradeAmount { get; set; }
 
         /// <summary>
         /// 信用交易
         /// </summary>
-        public decimal CreditTrade { get; set; }
+        public decimal? CreditTrade { get; set; }
 
         /// <summary>
         /// 客户ID

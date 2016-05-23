@@ -35,6 +35,7 @@ namespace DashBoard.Data
         public virtual DbSet<positionbasicinfotable> positionbasicinfotable { get; set; }
         public virtual DbSet<strategykind> strategykind { get; set; }
         public virtual DbSet<generalparam> generalparam { get; set; }
+        public virtual DbSet<menu> menu { get; set; }
     
         public virtual ObjectResult<GetCustomer> sp_GetCustomer(Nullable<int> begindate, Nullable<int> enddate)
         {

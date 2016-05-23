@@ -5,13 +5,17 @@
     $("#unit").change(function () {
         GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
     });
-    $("#strategyname").on('blur', function () {
-        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
-    });
-    $("#stratkindname").on('blur', function () {
-        GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
-    });
-    $("#seriesno").on('blur', function () {
+    //$("#strategyname").on('blur', function () {
+    //    GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
+    //});
+    //$("#stratkindname").on('blur', function () {
+    //    GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
+    //});
+    //$("#seriesno").on('blur', function () {
+    //    GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
+    //});
+
+    $("#query").on('click', function (){
         GetMonth($('#getMonth_Trade span').html().substr(0, 7), $('#getMonth_Trade span').html().substr(10, 7), $("#unit").val(), $("#strategyname").val(), $("#stratkindname").val(), $("#seriesno").val());
     });
     //时间插件
@@ -176,7 +180,7 @@ function GetMonth(begindate, enddate, munit, strategyname, stratkindname, series
                       yAxis: {
                           min: 0,
                           title: {
-                              text: '交易金额'
+                              text: '交易金额(' + unit + ')'
                           },
                       },
                       tooltip: {
@@ -320,7 +324,7 @@ function DynamicCreateSubChart(object, width, height, left, top, strategyname, s
                  yAxis: {
                      min: 0,
                      title: {
-                         text: '交易金额'
+                         text: '交易金额(' + unit +')'
                      },
                  },
                  tooltip: {

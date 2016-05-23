@@ -134,7 +134,7 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public List<StrategyTypes> GetStrategyTradeAmt()
+        public List<Modules> GetStrategyTradeAmt()
         {
             return DataServiceHelper.GetStrategyTradeAmt();
         }
@@ -144,7 +144,7 @@ namespace DashBoard.Web.Areas.TradeData.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public List<StrategyTypes> GetStrategyTradeAct()
+        public List<Modules> GetStrategyTradeAct()
         {
             return DataServiceHelper.GetStrategyTradeAct();
         }

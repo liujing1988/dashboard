@@ -65,7 +65,7 @@ $(document).ready(function ($) {  //加载页面
                 }
             },
             "dom":  //调整控件布局，添加#mytoolbox时间选择控件
-                    "<'row'<'col-xs-7'l<'#mytoolbox'>><'col-xs-5'>r>" +
+                    "<'row'<'col-xs-7'<'#mytoolbox'>l><'col-xs-5'>r>" +
                     "t" +
                     "<'row'<'col-xs-6'i><'col-xs-6'p>>",
             initComplete: initComplete  //回调函数，表格加载完之后调用

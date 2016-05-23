@@ -16,10 +16,8 @@
     <script type="text/javascript" src="~/Scripts/highcharts/highcharts.js"></script>
     <script type="text/javascript" src="~/Scripts/highcharts/exporting.js"></script>
     <script type="text/javascript" src="~/Scripts/highcharts/Export-csv.js"></script>
-    <script type="text/javascript" src="~/Scripts/DashBoard/RealTimeTradeAmount.js"></script>
     <script type="text/javascript" src="~/Scripts/highcharts/grid.js"></script>
     <script type="text/javascript" src="~/Scripts/DashBoard/MonthTradeAmount.js"></script>
-    <script type="text/javascript" src="~/Scripts/DashBoard/TradeDetails.js"></script>
     <script type="text/javascript" src="~/Scripts/DashBoard/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/Scripts/moment.js"></script>
@@ -39,11 +37,12 @@
                     </div>
                     <br>
                 </td>
-                <td>
+                <td valign="middle">
                     <div>
                         策略名称:<input id="strategyname" type="text" />
                         策略类型:<input id="stratkindname" type="text" />
                         序列号:<input id="seriesno" type="text" />
+                        <button id="query" style="width:80px;">查询</button>
                     </div>
                 </td>
                 <td align="right">
@@ -79,7 +78,7 @@
                             <tr>
                                 <th style='width:10%; align-items:center'>客户ID</th>
                                 <th style='width:80%;align-items:center'>策略名</th>
-                                <th style='width:10%;' align="center">总交易量</th>
+                                <th style='width:10%;' align="center">总交易量(股)</th>
 
                             </tr>
                         </thead>

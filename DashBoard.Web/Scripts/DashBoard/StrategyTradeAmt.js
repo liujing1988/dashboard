@@ -4,7 +4,7 @@
     type: "post",   //提交方法 
     datatype: "json",//数据类型
     success: function (result) {
-        //用户ID
+        //策略名
         var StrategyName = [];
         //交易金额
         var TradeAmount = [];
@@ -13,25 +13,32 @@
         if (result.length > 0) {
             //获取服务器日期
             var Date = result[0].TradeDate;
-            //获取当日第三名交易量
-            var minresult = result[0].StrategyTradeAmt;
+            //获取当日第一名交易金额
+            var maxresult = result[0].ModuleTradeAmt;
             for (var i = 0; i < result.length; i++) {
-                if (minresult > result[i].StrategyTradeAmt) {
-                    minresult = Number(result[i].StrategyTradeAmt);
+                if (maxresult < result[i].ModuleTradeAmt) {
+                    maxresult = Number(result[i].ModuleTradeAmt);
                 }
             }
             //实时曲线数据转换
-            if (result[0].StrategyType != null && minresult / 1000000 >= 1) {
+            if (result[0].ModuleName != null && maxresult / 1000000 >= 1) {
                 for (var i = 0; i < result.length; i++) {
-                    StrategyName.push(result[i].StrategyType);
-                    TradeAmount.push(Number(result[i].StrategyTradeAmt) / 1000000);
+                    StrategyName.push(result[i].ModuleName);
+                    TradeAmount.push(Number(result[i].ModuleTradeAmt) / 1000000);
                 }
                 unit = "百万元";
             }
+            else if(result[0].ModuleName != null && maxresult / 10000 >= 1) {
+                for (var i = 0; i < result.length; i++) {
+                    StrategyName.push(result[i].ModuleName);
+                    TradeAmount.push(Number(result[i].ModuleTradeAmt) / 10000);
+                }
+                unit = "万元";
+            }
             else {
                 for (var i = 0; i < result.length; i++) {
-                    StrategyName.push(result[i].StrategyType);
-                    TradeAmount.push(Number(result[i].StrategyTradeAmt));
+                    StrategyName.push(result[i].ModuleName);
+                    TradeAmount.push(Number(result[i].ModuleTradeAmt));
                 }
                 unit = "元";
             }
@@ -43,7 +50,6 @@
                         useUTC: false
                     }
                 });
-
                 var chart;
                 $('#StrategyTradeAmt').highcharts({
                     chart: {
@@ -65,36 +71,43 @@
                                         dataType: "json",
                                         success: function (data) {
                                             //实时更新图对应时间
-                                            var rStrategyType = [];
+                                            var rModuleName = [];
                                             //分钟级交易量
                                             var rTradeAmount = [];
                                             if (data.length > 0) {
                                                 //实时曲线数据转换
-                                                if (data[0].StrategyType != null) {
+                                                if (data[0].ModuleName != null) {
                                                     //获取当日第三名交易量
-                                                    var rminresult = data[0].StrategyTradeAmt;
+                                                    var rmaxresult = data[0].ModuleTradeAmt;
                                                     for (var i = 0; i < result.length; i++) {
-                                                        if (rminresult > result[i].StrategyTradeAmt) {
-                                                            rminresult = Number(result[i].StrategyTradeAmt);
+                                                        if (rmaxresult < result[i].ModuleTradeAmt) {
+                                                            rmaxresult = Number(result[i].ModuleTradeAmt);
                                                         }
                                                     }
                                                     
-                                                    if (minresult / 1000000 >= 1) {
+                                                    if (maxresult / 1000000 >= 1) {
                                                         for (var i = 0; i < data.length; i++) {
-                                                            rStrategyType[i] = data[i].StrategyType;
-                                                            rTradeAmount[i] = data[i].StrategyTradeAmt / 1000000;
+                                                            rModuleName[i] = data[i].ModuleName;
+                                                            rTradeAmount[i] = data[i].ModuleTradeAmt / 1000000;
                                                         }
                                                         unit = "百万元";
                                                     }
+                                                    else if (maxresult / 10000 >= 1) {
+                                                        for (var i = 0; i < data.length; i++) {
+                                                            rModuleName[i] = data[i].ModuleName;
+                                                            rTradeAmount[i] = data[i].ModuleTradeAmt /10000;
+                                                        }
+                                                        unit = "万元";
+                                                    }
                                                     else {
                                                         for (var i = 0; i < data.length; i++) {
-                                                            rStrategyType[i] = data[i].StrategyType;
-                                                            rTradeAmount[i] = data[i].StrategyTradeAmt;
+                                                            rModuleName[i] = data[i].ModuleName;
+                                                            rTradeAmount[i] = data[i].ModuleTradeAmt;
                                                         }
                                                         unit = "元";
                                                     }
                                                 }
-                                                xAxis.setCategories(rStrategyType);
+                                                xAxis.setCategories(rModuleName);
                                                 series.update({
                                                     data: rTradeAmount,
                                                     dataLabels: {
@@ -151,7 +164,7 @@
                         enabled: false
                     },
                     series: [{
-                        name: '交易量',
+                        name: '交易金额',
                         data: TradeAmount,
                         dataLabels: {
                             enabled: true,

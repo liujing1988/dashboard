@@ -5,33 +5,38 @@
     datatype: "json",//数据类型
     success: function (result) {
         //用户ID
-        var StrategyName = [];
-        //分钟级交易量
-        var TradeNum = [];
+        var ModuleName = [];
+        //访问次数
+        var VisitNum = [];
+        //交易金额
+        var TradeAmt = [];
+
         //单位
         var unit = "";
         if (result.length > 0) {
             //获取服务器日期
             var Date = result[0].TradeDate;
-            //获取当日第五名交易数
-            var minresult = result[0].NumStrategyType;
+            //获取本月第五名访问次数
+            var minresult = result[0].NumModules;
             for (var i = 0; i < result.length; i++) {
-                if (minresult > result[i].NumStrategyType) {
-                    minresult = Number(result[i].NumStrategyType);
+                if (minresult > result[i].NumModules) {
+                    minresult = Number(result[i].NumModules);
                 }
             }
             //实时曲线数据转换
-            if (result[0].StrategyType != null && minresult / 10000 >= 1) {
+            if (result[0].ModuleName != null && minresult / 10000 >= 1) {
                 for (var i = 0; i < result.length; i++) {
-                    StrategyName.push(result[i].StrategyType);
-                    TradeNum.push(Number(result[i].NumStrategyType) / 10000);
+                    ModuleName.push(result[i].ModuleName);
+                    VisitNum.push(result[i].ModuleName + "<br/>(" + Number(result[i].NumModules) / 10000 + "万人次)");
+                    TradeAmt.push(result[i].ModuleTradeAmt / 10000);
                 }
                 unit = "万人次";
             }
             else {
                 for (var i = 0; i < result.length; i++) {
-                    StrategyName.push(result[i].StrategyType);
-                    TradeNum.push(Number(result[i].NumStrategyType));
+                    ModuleName.push(result[i].ModuleName);
+                    VisitNum.push(result[i].ModuleName + "<br/>(" + Number(result[i].NumModules) +"人次)");
+                    TradeAmt.push(result[i].ModuleTradeAmt / 10000);
                 }
                 unit = "人次";
             }
@@ -65,19 +70,19 @@
                                         dataType: "json",
                                         success: function (data) {
                                             //实时更新图对应时间
-                                            var rStrategyType = [];
+                                            var rModuleName = [];
                                             //分钟级交易量
-                                            var rTradeNum = [];
+                                            var rVisitNum = [];
                                             if (data.length > 0) {
                                                 //实时曲线数据转换
-                                                if (data[0].StrategyType != null) {
+                                                if (data[0].ModuleName != null) {
                                                     for (var i = 0; i < data.length; i++) {
-                                                        rStrategyType[i] = data[i].StrategyType;
-                                                        rTradeNum[i] = data[i].NumStrategyType;
+                                                        rModuleName[i] = data[i].ModuleName;
+                                                        rVisitNum[i] = data[i].NumModules;
                                                     }
                                                 }
-                                                xAxis.setCategories(rStrategyType);
-                                                series.setData(rTradeNum);
+                                                xAxis.setCategories(rModuleName);
+                                                series.setData(rVisitNum);
                                             }
                                         }
                                     });
@@ -90,12 +95,13 @@
                         text: '本月功能热度排名'
                     },
                     xAxis: {
-                        allowDecimals:false, //不允许刻度有小数
-                        categories: StrategyName
+                        allowDecimals: false, //不允许刻度有小数
+                        categories:VisitNum
+                        //categories: ModuleName
                     },
                     yAxis: {
                         title: {
-                            text: '访问人次'
+                            text: '交易金额(万元)'
                         },
                         plotLines: [{
                             value: 0,
@@ -105,8 +111,8 @@
                     },
                     tooltip: {
                         formatter: function () {
-                            return '' + this.x + '<br>' +
-                               this.series.name + ': ' + Highcharts.numberFormat(this.y, 0, '.') + unit;
+                            return '访问人次 ' + this.x + '<br>' +
+                               this.series.name + ': ' + Highcharts.numberFormat(this.y, 2, '.') + "万元";
                         }
                     },
                     legend: {
@@ -119,8 +125,8 @@
                         enabled: false
                     },
                     series: [{
-                        name: '访问人次',
-                        data: TradeNum,
+                        name: '交易金额(万元)',
+                        data: TradeAmt,
                         dataLabels: {
                             enabled: true,
                             color: '#000000',
@@ -130,7 +136,7 @@
                                 textShadow: '0 0 0 black'
                             },
                             formatter: function () {
-                                return Highcharts.numberFormat(this.y, 0, '.') + unit
+                                return Highcharts.numberFormat(this.y, 2, '.') + "万元"
                             }
                         }
                     }],

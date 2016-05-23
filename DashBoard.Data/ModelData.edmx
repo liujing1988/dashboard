@@ -34,6 +34,7 @@
           <Property Name="revs1" Type="varchar" MaxLength="32" />
           <Property Name="ownerid" Type="int" Nullable="false" />
           <Property Name="createdate" Type="int" Nullable="false" />
+          <Property Name="isorg" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="generalparam">
           <Key>
@@ -48,6 +49,21 @@
           <Property Name="ispersonality" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="version" Type="int" />
           <Property Name="substrategyno" Type="int" />
+        </EntityType>
+        <EntityType Name="menu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="fatherid" Type="int" Nullable="false" />
+          <Property Name="strategydir" Type="varchar" MaxLength="128" />
+          <Property Name="strategyparam" Type="int" Nullable="false" />
+          <Property Name="sortid" Type="int" Nullable="false" />
+          <Property Name="status" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="revs1" Type="varchar" MaxLength="32" />
+          <Property Name="isdelete" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="paramtype" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="positionbasicinfotable">
           <Key>
@@ -186,6 +202,8 @@
           <Property Name="seriesno" Type="varchar" MaxLength="32" />
           <Property Name="accounttype" Type="int" Nullable="false" />
           <Property Name="basketid" Type="int" Nullable="false" />
+          <Property Name="menuid" Type="int" Nullable="false" />
+          <Property Name="createdatetime" Type="numeric" Precision="16" Scale="0" />
         </EntityType>
         <EntityType Name="strategykind">
           <Key>
@@ -311,6 +329,7 @@
           <EntitySet Name="custacctinfo" EntityType="Self.custacctinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="generalparam" EntityType="Self.generalparam" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="menu" EntityType="Self.menu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="positionbasicinfotable" EntityType="Self.positionbasicinfotable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategyinfo" EntityType="Self.strategyinfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="strategykind" EntityType="Self.strategykind" Schema="dbo" store:Type="Tables" />
@@ -371,6 +390,7 @@
             <Parameter Name="SeriesNo" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="generalparam" EntityType="ModelData.generalparam" />
+          <EntitySet Name="menu" EntityType="ModelData.menu" />
         </EntityContainer>
         <EntityType Name="strategyorder">
           <Key>
@@ -449,6 +469,7 @@
           <Property Name="revs1" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="ownerid" Type="Int32" Nullable="false" />
           <Property Name="createdate" Type="Int32" Nullable="false" />
+          <Property Name="isorg" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <ComplexType Name="GetCustomer" >
           <Property Type="Int32" Name="allmonth" Nullable="false" />
@@ -478,6 +499,8 @@
           <Property Name="seriesno" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="accounttype" Type="Int32" Nullable="false" />
           <Property Name="basketid" Type="Int32" Nullable="false" />
+          <Property Name="menuid" Type="Int32" Nullable="false" />
+          <Property Name="createdatetime" Type="Decimal" Precision="16" Scale="0" />
         </EntityType>
         <EntityType Name="custacctinfo">
           <Key>
@@ -655,6 +678,21 @@
           <Property Name="version" Type="Int32" />
           <Property Name="substrategyno" Type="Int32" />
         </EntityType>
+        <EntityType Name="menu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="fatherid" Type="Int32" Nullable="false" />
+          <Property Name="strategydir" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="strategyparam" Type="Int32" Nullable="false" />
+          <Property Name="sortid" Type="Int32" Nullable="false" />
+          <Property Name="status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="revs1" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="isdelete" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="paramtype" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -726,6 +764,7 @@
           <EntitySetMapping Name="customer">
             <EntityTypeMapping TypeName="ModelData.customer">
               <MappingFragment StoreEntitySet="customer">
+                <ScalarProperty Name="isorg" ColumnName="isorg" />
                 <ScalarProperty Name="createdate" ColumnName="createdate" />
                 <ScalarProperty Name="ownerid" ColumnName="ownerid" />
                 <ScalarProperty Name="revs1" ColumnName="revs1" />
@@ -747,6 +786,8 @@
           <EntitySetMapping Name="strategyinfo">
             <EntityTypeMapping TypeName="ModelData.strategyinfo">
               <MappingFragment StoreEntitySet="strategyinfo">
+                <ScalarProperty Name="createdatetime" ColumnName="createdatetime" />
+                <ScalarProperty Name="menuid" ColumnName="menuid" />
                 <ScalarProperty Name="basketid" ColumnName="basketid" />
                 <ScalarProperty Name="accounttype" ColumnName="accounttype" />
                 <ScalarProperty Name="seriesno" ColumnName="seriesno" />
@@ -954,6 +995,22 @@
                 <ScalarProperty Name="paramname" ColumnName="paramname" />
                 <ScalarProperty Name="strategyno" ColumnName="strategyno" />
                 <ScalarProperty Name="generalparamid" ColumnName="generalparamid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="menu">
+            <EntityTypeMapping TypeName="ModelData.menu">
+              <MappingFragment StoreEntitySet="menu">
+                <ScalarProperty Name="paramtype" ColumnName="paramtype" />
+                <ScalarProperty Name="isdelete" ColumnName="isdelete" />
+                <ScalarProperty Name="revs1" ColumnName="revs1" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="sortid" ColumnName="sortid" />
+                <ScalarProperty Name="strategyparam" ColumnName="strategyparam" />
+                <ScalarProperty Name="strategydir" ColumnName="strategydir" />
+                <ScalarProperty Name="fatherid" ColumnName="fatherid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

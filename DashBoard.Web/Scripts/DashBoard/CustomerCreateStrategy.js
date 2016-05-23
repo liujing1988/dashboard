@@ -116,8 +116,8 @@ function GetStrategy(begindate, enddate) {
               if (result.length > 0) {
                 for (var i = 0; i < result.length; i++) {
                     Month.push(result[i].Month);
-                    AutoQty.push(result[i].AutoQty);
-                    ManualQty.push(result[i].ManualQty);
+                    AutoQty.push(result[i].AutoQty / 10000);
+                    ManualQty.push(result[i].ManualQty / 10000);
                   }
               }
               //添加元素
@@ -151,7 +151,7 @@ function GetStrategy(begindate, enddate) {
                       tooltip: {
                           formatter: function () {
                               return '' + this.series.name + '' +
-                                 this.x + ': ' + this.y + '股';
+                                 this.x + ': ' + this.y + '万股';
                           },
                           //pointFormat: '{series.name}: <b>{point.y:.1f} millions</b>',
                       },
@@ -168,7 +168,7 @@ function GetStrategy(begindate, enddate) {
                               borderWidth: 0,
                               dataLabels: {
                                   enabled: true,
-                                  format: '{point.y:.0f}股'
+                                  format: '{point.y:.2f}万股'
                               }
                       },
                       credits: {
@@ -239,7 +239,7 @@ function CustomerCreateStrategyTopMatchQty(begindate, enddate) {
                             $(this).html(item.CustId);
                             break;
                         case (1):
-                            $(this).html(item.MatchQty);
+                            $(this).html(item.MatchQty / 10000);
                             break;
                     }//end switch  
                 });//end children.each  

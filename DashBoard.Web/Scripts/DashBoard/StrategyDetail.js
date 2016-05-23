@@ -36,7 +36,7 @@ function format(d) {
             '<td>股票代码</td>' +
             '<td>股票名称</td>' +
             '<td>交易方向</td>' +
-            '<td>交易量</td>' +
+            '<td>委托量</td>' +
         '</tr>' + s +
     '</table>';
 }
@@ -103,7 +103,7 @@ $(document).ready(function ($) {  //加载页面
             }
         },
         "dom":  //调整控件布局，添加#mytoolbox时间选择控件
-                "<'row'<'col-xs-6'l<'#mytoolbox'>><'col-xs-6'f>r>" +
+                "<'row'<'col-xs-6'<'#mytoolbox'>l><'col-xs-6'f>r>" +
                 "t" +
                 "<'row'<'col-xs-6'i><'col-xs-6'p>>",
         

@@ -33,7 +33,7 @@
         //服务器日期
         var ServerDate = result.ServerDate;
         var pieArray = [];
-        if (CreditCustomer > 0 && NormalCustomer > 0) {
+        if (CreditCustomer > 0 || NormalCustomer > 0) {
             var array = [['两融用户', CreditCustomer / NumCustomer * 100], ['普通用户', NormalCustomer / NumCustomer * 100]];
             for (var k = 0; k < array.length; k++) {
                 pieArray.push(array[k]);
@@ -54,7 +54,7 @@
 
                                 // set up the updating of the chart each second   
                                 var series0 = this.series[0];
-                                var series1 = this.series[1];
+                                //var series1 = this.series[1];
                                 setInterval(function () {
                                     $.ajax({
                                         type: "post",
@@ -97,8 +97,8 @@
                                             for (var k = 0; k < rarray.length; k++) {
                                                 rpieArray.push(rarray[k]);
                                             }
-                                            series0.setData(rPerOnline);
-                                            series1.setData(rpieArray);
+                                            series0.setData(rpieArray);
+                                            //series1.setData(rpieArray);
                                         }
                                     });
 
@@ -140,30 +140,30 @@
                                     textShadow: '0px 0px 0px black'
                                 }
                             }
-                        },
-                        column: {
-                            borderWidth: 0,
-                            dataLabels: {
-                                enabled: true,
-                                format: '{point.y:.1f}%'
-                            }
                         }
+                        //column: {
+                        //    borderWidth: 0,
+                        //    dataLabels: {
+                        //        enabled: true,
+                        //        format: '{point.y:.1f}%'
+                        //    }
+                        //}
                     },
                     tooltip: {
                         enabled:false
                     },
-                    series: [{
-                        name: '在线用户',
-                        type: 'column',
-                        data: [PerOnline],
-                        pointPadding: 0.4,
-                        pointPlacement: -0.3
-                    }, {
+                    series: [
+                        //{
+                        //name: '在线用户',
+                        //type: 'column',
+                        //data: [PerOnline],
+                        //pointPadding: 0.4,
+                        //pointPlacement: -0.3
+                        //},
+                    {
                         name: '两融用户占比',
                         type: 'pie',
                         data: pieArray,
-                        center: [180, 50],
-                        size: 100,
                         showInLegend: false,
 
                     }],

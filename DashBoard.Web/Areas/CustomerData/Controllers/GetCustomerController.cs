@@ -19,7 +19,7 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
         /// <param name="dateTime"></param>
         /// <returns></returns>
         [HttpPost]
-        public List<StrategyTypes> GetStrategyType(GetDateTime dateTime)
+        public List<Modules> GetStrategyType(GetDateTime dateTime)
         {
             return DataServiceHelper.GetStrategyType(dateTime);
         }
@@ -30,7 +30,7 @@ namespace DashBoard.Web.Areas.CustomerData.Controllers
         /// <param name="dateTime"></param>
         /// <returns></returns>
         [HttpPost]
-        public List<StrategyTypes> GetStrategyOpen(GetDateTime dateTime)
+        public List<Modules> GetStrategyOpen(GetDateTime dateTime)
         {
             return DataServiceHelper.GetStrategyOpen(dateTime);
         }

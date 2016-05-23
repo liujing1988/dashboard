@@ -13,6 +13,7 @@
         <EntityTypeShape EntityType="ModelData.positionbasicinfotable" Width="1.5" PointX="0.75" PointY="7.75" />
         <EntityTypeShape EntityType="ModelData.strategykind" Width="1.5" PointX="7.375" PointY="5.75" />
         <EntityTypeShape EntityType="ModelData.generalparam" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ModelData.menu" Width="1.5" PointX="9.375" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

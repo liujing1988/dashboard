@@ -10,9 +10,9 @@ namespace Dashboard.Common
     {
         public string Month { get; set; }
 
-        public decimal MatchAmount { get; set; }
+        public decimal? MatchAmount { get; set; }
         public string Date { get; set; }
-        public decimal DateAmount { get; set; }
+        public decimal? DateAmount { get; set; }
 
 
 

@@ -99,7 +99,7 @@ function GetType(begindate, enddate) {
     }
     $.ajax(
         {
-            url: "/DashBoard/api/GetCustomer/GetStrategyType", //表示提交给的action 
+            url: "/DashBoard/api/GetCustomer/GetModuleName", //表示提交给的action 
             type: "post",   //提交方法 
             data: da,
             datatype: "json",//数据类型
@@ -120,11 +120,11 @@ function GetType(begindate, enddate) {
                 }
                 else {
                     //饼图数据转换
-                    if (result[0].StrategyType != null) {
+                    if (result[0].ModuleName != null) {
                         for (var i = 0; i < result.length; i++) {
-                            stratetp.push(result[i].StrategyType);
-                            nustratetp.push(result[i].NumStrategyType);
-                            //numorder += result[i].NumStrategyType;
+                            stratetp.push(result[i].ModuleName);
+                            nustratetp.push(result[i].NumModules);
+                            //numorder += result[i].NumModules;
                         }
                         //for (var j = 0; j < stratetp.length; j++) {
                         //    percent.push(nustratetp[j] / numorder * 100);
@@ -207,10 +207,10 @@ function GetOpen(begindate, enddate) {
                 }
                 else {
                     //数据转换
-                    if (result[0].StrategyType != null) {
+                    if (result[0].ModuleName != null) {
                         for (var i = 0; i < result.length; i++) {
-                            stratetp.push(result[i].StrategyType);
-                            nustratetp.push(result[i].NumStrategyType);
+                            stratetp.push(result[i].ModuleName);
+                            nustratetp.push(result[i].NumModules);
                         }
                     }
                 }

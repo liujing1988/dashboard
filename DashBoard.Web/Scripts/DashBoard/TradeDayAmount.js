@@ -21,15 +21,15 @@ $.ajax(
             ////获取服务器日期
             //var Date = result[0].tradeDate;
 
-            //获取当日第五名交易量
-            var minresult = result[0].TradeAmount;
+            //获取当日第一名交易量
+            var maxresult = result[0].TradeAmount;
             for (var i = 0; i < result.length; i++) {
-                if (minresult > result[i].TradeAmount) {
-                    minresult = result[i].TradeAmount;
+                if (maxresult < result[i].TradeAmount) {
+                    maxresult = result[i].TradeAmount;
                 }
             }
             //实时曲线数据转换
-            if (result[0].CustId != null && minresult / 1000000 >= 1) {
+            if (result[0].CustId != null && maxresult / 1000000 >= 1) {
                 for (var i = 0; i < result.length; i++) {
                     CustId.push(result[i].CustId);
                     TradeAmount.push(result[i].TradeAmount / 1000000);
@@ -41,6 +41,19 @@ $.ajax(
                     NormalTrade.push((result[i].TradeAmount - result[i].CreditTrade) / 1000000);
                 }
                 unit = "百万元";
+            }
+            else if (result[0].CustId != null && maxresult / 10000 >= 1) {
+                for (var i = 0; i < result.length; i++) {
+                    CustId.push(result[i].CustId);
+                    TradeAmount.push(result[i].TradeAmount / 10000);
+                    if (result[i].CreditTrade > 0) {
+                        CreditTrade.push(result[i].CreditTrade / 10000);
+                    } else {
+                        CreditTrade.push(0);
+                    }
+                    NormalTrade.push((result[i].TradeAmount - result[i].CreditTrade) / 10000);
+                }
+                unit = "万元";
             }
             else {
                 for (var i = 0; i < result.length; i++) {
@@ -131,12 +144,7 @@ $.ajax(
                     yAxis: {
                         title: {
                             text: '交易金额'
-                        },
-                        plotLines: [{
-                            value: 0,
-                            width: 1,
-                            color: '#808080'
-                        }]
+                        }
                     },
                     tooltip: {
                         formatter: function () {
@@ -152,7 +160,7 @@ $.ajax(
                     },
                     plotOptions: {
                         series: {
-                            stacking: 'percent'
+                            stacking: 'normal'
                         }
                     },
                     series: [{

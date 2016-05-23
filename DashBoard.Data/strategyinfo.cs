@@ -33,5 +33,7 @@ namespace DashBoard.Data
         public string seriesno { get; set; }
         public int accounttype { get; set; }
         public int basketid { get; set; }
+        public int menuid { get; set; }
+        public Nullable<decimal> createdatetime { get; set; }
     }
 }
