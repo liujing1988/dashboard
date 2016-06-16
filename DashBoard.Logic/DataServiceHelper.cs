@@ -61,8 +61,10 @@ namespace Dashboard.Logic
                 var query = from a in db.strategyorder
                             from c in db.strategyinfo
                             from d in db.strategykind
+                            from e in db.menu
                             where a.strategyno == c.strategyno && c.kindid == d.kindid
                             where a.orderdate > 0 && (a.tradetype == "0" || a.tradetype == "1")
+                            && c.menuid == e.id && e.name == "策略交易"
                             && (dateTime.StrategyName == null || c.strategyname.Contains(dateTime.StrategyName))
                             && (dateTime.StrategyKindName == null || d.kindname == dateTime.StrategyKindName)
                             && (dateTime.SeriesNo == null || c.seriesno == dateTime.SeriesNo)
@@ -102,8 +104,10 @@ namespace Dashboard.Logic
                                  (from a in db.positionbasicinfotable
                                   from c in db.strategyinfo
                                   from d in db.strategykind
+                                  from h in db.menu
                                   where a.strategyno == c.strategyno && c.kindid == d.kindid
                                   where a.strategyno != -1 && a.createdate / 100 >= bmonth && a.createdate / 100 <= emonth
+                                  && c.menuid == h.id && h.name == "策略交易"
                                   && (dateTime.StrategyName == null || c.strategyname.Contains(dateTime.StrategyName))
                                   && (dateTime.StrategyKindName == null || d.kindname == dateTime.StrategyKindName)
                                   && (dateTime.SeriesNo == null || c.seriesno == dateTime.SeriesNo)
@@ -179,9 +183,11 @@ namespace Dashboard.Logic
                 var query = from a in db.strategyorder
                             from c in db.strategyinfo
                             from d in db.strategykind
+                            from e in db.menu
                             where a.strategyno == c.strategyno && c.kindid == d.kindid
                             && (a.tradetype == "0" || a.tradetype == "1")
                             && a.strategyno != -1 && a.cancelflag != "T" && a.orderstatus != "9" && a.orderstatus != "6"
+                            && c.menuid == e.id && e.name == "策略交易"
                             && (dateTime.StrategyName == null || c.strategyname.Contains(dateTime.StrategyName))
                             && (dateTime.StratInfo == null || d.kindname == dateTime.StratInfo)
                             && (dateTime.SeriesNo == null || c.seriesno == dateTime.SeriesNo)

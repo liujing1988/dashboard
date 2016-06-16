@@ -151,7 +151,7 @@ function GetStrategy(begindate, enddate) {
                       tooltip: {
                           formatter: function () {
                               return '' + this.series.name + '' +
-                                 this.x + ': ' + this.y + '万元';
+                                 this.x + ': ' + Highcharts.numberFormat(this.y, 2, '.') + '万元';
                           },
                           //pointFormat: '{series.name}: <b>{point.y:.1f} millions</b>',
                       },
@@ -241,7 +241,7 @@ function CustomerCreateStrategyTopMatchQty(begindate, enddate) {
                             $(this).html(item.CustId);
                             break;
                         case (1):
-                            $(this).html(changeTwoDecimal(item.MatchAmt / 10000));
+                            $(this).html(addCommas(changeTwoDecimal(item.MatchAmt / 10000)));
                             break;
                     }//end switch  
                 });//end children.each  
